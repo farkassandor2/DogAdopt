@@ -20,6 +20,11 @@ public class Shelter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
+    @OneToMany(mappedBy = "shelter")
+    private List<Address> address;
+
     @OneToMany(mappedBy = "shelter")
     private List<Dog> dogs;
 }
