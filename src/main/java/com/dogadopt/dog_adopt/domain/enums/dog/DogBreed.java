@@ -1,8 +1,10 @@
-package com.dogadopt.dog_adopt.domain.enums;
+package com.dogadopt.dog_adopt.domain.enums.dog;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum DogBreed {
     OTHER("Other", "Egyéb"),
     MIXED_BREED("Mixed Breed", "Keverék"),
@@ -92,9 +94,4 @@ public enum DogBreed {
 
     private final String englishBreedName;
     private final String hungarianBreedName;
-
-    DogBreed(String englishBreedName, String hungarianBreedName) {
-        this.englishBreedName = englishBreedName;
-        this.hungarianBreedName = hungarianBreedName;
-    }
 }

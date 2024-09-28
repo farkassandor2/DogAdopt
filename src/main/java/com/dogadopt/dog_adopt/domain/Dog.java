@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.domain;
 
-import com.dogadopt.dog_adopt.domain.enums.DogBreed;
+import com.dogadopt.dog_adopt.domain.enums.dog.DogBreed;
+import com.dogadopt.dog_adopt.domain.enums.dog.DogSize;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,6 @@ public class Dog {
     private Integer age;
 
     private DogBreed breed;
+
+    private DogSize dogSize;
 }
