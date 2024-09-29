@@ -55,6 +55,6 @@ public class Shelter {
         this.countryTelephoneCode = addresses
                 .get(0)
                 .getCountry()
-                .getTelephoneCode();
+                .getTelephoneCountryCode();
     }
 }

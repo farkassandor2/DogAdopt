@@ -200,8 +200,8 @@ public enum Country {
 
     private final String name;
     private final String hungarianName;
-    private final String code;
-    private final String telephoneCode;
+    private final String countryCode;
+    private final String telephoneCountryCode;
 
     public String getPreferredName(boolean useHungarianName) {
         return useHungarianName ? hungarianName : name;

@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.domain;
 
+import com.dogadopt.dog_adopt.domain.enums.AdoptionType;
 import com.dogadopt.dog_adopt.domain.enums.dog.DogBreed;
 import com.dogadopt.dog_adopt.domain.enums.dog.DogSize;
 import com.dogadopt.dog_adopt.domain.enums.dog.DonationGoal;
@@ -56,6 +57,11 @@ public class Dog {
     @Enumerated(EnumType.STRING)
     private DonationGoal donationGoal;
 
+    @Enumerated(EnumType.STRING)
+    private AdoptionType adoptionType;
+
+    private int virtuallyAdoptedBy;
+
     private int donationReceived;
 
     private LocalDateTime createdAt;
@@ -64,5 +70,7 @@ public class Dog {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.donationReceived = 0;
+        this.adoptionType = AdoptionType.NONE;
+        this.virtuallyAdoptedBy = 0;
     }
 }

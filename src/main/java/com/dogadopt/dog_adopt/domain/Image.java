@@ -1,15 +1,15 @@
 package com.dogadopt.dog_adopt.domain;
 
+import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table
-@NoArgsConstructor
 public class Image {
 
     @Id
@@ -20,9 +20,16 @@ public class Image {
 
     private String url;
 
+    @NonNull
+    private ImageType imageType;
+
     @ManyToOne
     @JoinColumn(name = "dog-id")
     private Dog dog;
+
+    @ManyToOne
+    @JoinColumn(name = "user-id")
+    private AppUser user;
 
     public Image(String imageUrl, String originalFilename) {
         this.url = imageUrl;
