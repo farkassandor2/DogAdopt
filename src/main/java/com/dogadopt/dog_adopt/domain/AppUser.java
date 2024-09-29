@@ -39,9 +39,13 @@ public class AppUser {
 
     private int totalAmountOfDonation;
 
+    @Enumerated(EnumType.STRING)
     private UserLevel userLevel;
 
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<DogAndUser> dogAndUser;
 
     @PrePersist
     protected void onCreate() {
