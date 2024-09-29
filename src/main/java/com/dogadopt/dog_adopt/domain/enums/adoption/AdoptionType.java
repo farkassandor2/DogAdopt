@@ -1,4 +1,4 @@
-package com.dogadopt.dog_adopt.domain.enums;
+package com.dogadopt.dog_adopt.domain.enums.adoption;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

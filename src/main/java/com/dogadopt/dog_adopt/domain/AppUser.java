@@ -1,13 +1,13 @@
 package com.dogadopt.dog_adopt.domain;
 
-import com.dogadopt.dog_adopt.domain.enums.UserLevel;
+import com.dogadopt.dog_adopt.domain.enums.user.NewsLetterSubscriptionType;
+import com.dogadopt.dog_adopt.domain.enums.user.UserLevel;
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -43,6 +43,10 @@ public class AppUser {
     private UserLevel userLevel;
 
     private LocalDateTime createdAt;
+
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    private NewsLetterSubscriptionType newsLetterSubscriptionType;
 
     @OneToMany(mappedBy = "user")
     private List<DogAndUser> dogAndUser;

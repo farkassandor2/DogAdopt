@@ -1,6 +1,5 @@
 package com.dogadopt.dog_adopt.domain;
 
-import com.dogadopt.dog_adopt.domain.enums.AdoptionType;
 import com.dogadopt.dog_adopt.domain.enums.dog.DogBreed;
 import com.dogadopt.dog_adopt.domain.enums.dog.DogSize;
 import com.dogadopt.dog_adopt.domain.enums.dog.DonationGoal;
