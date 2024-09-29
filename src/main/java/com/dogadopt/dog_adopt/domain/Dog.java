@@ -60,14 +60,14 @@ public class Dog {
 
     private int donationReceived;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime takenToAdoptionCenter;
 
     @OneToMany(mappedBy = "dog")
     private List<DogAndUser> dogAndUser;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
+        this.takenToAdoptionCenter = LocalDateTime.now();
         this.donationReceived = 0;
         this.numberOfVirtualAdopters = 0;
     }
