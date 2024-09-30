@@ -51,6 +51,9 @@ public class AppUser {
     @OneToMany(mappedBy = "user")
     private List<DogAndUser> dogAndUser;
 
+    @OneToMany(mappedBy = "user")
+    private List<Donation> donations;
+
     @PrePersist
     protected void onCreate() {
         this.countryTelephoneCode = country

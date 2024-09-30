@@ -49,6 +49,9 @@ public class Shelter {
     @OneToMany(mappedBy = "shelter")
     private List<Dog> dogs;
 
+    @OneToMany(mappedBy = "shelter")
+    private List<Donation> donations;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

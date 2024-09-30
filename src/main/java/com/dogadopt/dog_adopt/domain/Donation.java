@@ -32,4 +32,18 @@ public class Donation {
 
     private PaymentStatus paymentStatus;
 
+    private String transactionId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
+    @ManyToOne
+    @JoinColumn(name = "shelter_id")
+    private Shelter shelter;
+
+    @ManyToOne
+    @JoinColumn(name = "dog_id")
+    private Dog dog;
+
 }

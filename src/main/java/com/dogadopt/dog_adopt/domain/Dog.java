@@ -65,6 +65,9 @@ public class Dog {
     @OneToMany(mappedBy = "dog")
     private List<DogAndUser> dogAndUser;
 
+    @OneToMany(mappedBy = "dog")
+    private List<Donation> donations;
+
     @PrePersist
     protected void onCreate() {
         this.takenToAdoptionCenter = LocalDateTime.now();
