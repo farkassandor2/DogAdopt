@@ -1,4 +1,4 @@
-package com.dogadopt.dog_adopt.domain.enums.user;
+package com.dogadopt.dog_adopt.domain.enums.payment;
 
 public enum PaymentMethod {
     CREDIT_CARD,
