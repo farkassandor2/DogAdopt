@@ -56,10 +56,6 @@ public class Dog {
     @Enumerated(EnumType.STRING)
     private DonationGoal donationGoal;
 
-    private int numberOfVirtualAdopters;
-
-    private int donationReceived;
-
     private LocalDateTime takenToAdoptionCenter;
 
     @OneToMany(mappedBy = "dog")
@@ -71,7 +67,5 @@ public class Dog {
     @PrePersist
     protected void onCreate() {
         this.takenToAdoptionCenter = LocalDateTime.now();
-        this.donationReceived = 0;
-        this.numberOfVirtualAdopters = 0;
     }
 }

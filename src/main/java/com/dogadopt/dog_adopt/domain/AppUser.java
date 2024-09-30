@@ -37,8 +37,6 @@ public class AppUser {
     @OneToMany(mappedBy = "user")
     private List<Image> images;
 
-    private int totalAmountOfDonation;
-
     @Enumerated(EnumType.STRING)
     private UserLevel userLevel;
 
@@ -58,7 +56,6 @@ public class AppUser {
     protected void onCreate() {
         this.countryTelephoneCode = country
                 .getTelephoneCountryCode();
-        this.totalAmountOfDonation = 0;
         this.userLevel = UserLevel.PUPPY_IN_THE_PACK;
         this.createdAt = LocalDateTime.now();
     }

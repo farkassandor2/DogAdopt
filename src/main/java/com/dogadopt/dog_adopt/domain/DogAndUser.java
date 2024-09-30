@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -30,7 +32,10 @@ public class DogAndUser {
     @Enumerated(EnumType.STRING)
     private AdoptionType adoptionType;
 
+    private LocalDateTime createdAt;
+
     protected void onCreate() {
         this.adoptionType = AdoptionType.NONE;
+        this.createdAt = LocalDateTime.now();
     }
 }

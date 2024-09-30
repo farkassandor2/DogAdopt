@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table
@@ -45,5 +45,9 @@ public class Donation {
     @ManyToOne
     @JoinColumn(name = "dog_id")
     private Dog dog;
+
+    protected void onCreate() {
+        this.donationDate = LocalDateTime.now();
+    }
 
 }
