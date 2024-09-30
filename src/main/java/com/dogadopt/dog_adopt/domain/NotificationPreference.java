@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.domain.enums.notification.NotificationType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 @Getter
@@ -29,7 +30,9 @@ public class NotificationPreference {
     @JoinColumn(name = "user_id")
     private AppUser appUser;
 
+    @PrePersist
     protected void onCreate() {
         this.isEnabled = true;
+        this.notificationType = EnumSet.allOf(NotificationType.class);
     }
 }
