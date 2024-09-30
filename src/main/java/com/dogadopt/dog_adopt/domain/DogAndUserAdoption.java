@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Dog and User")
-public class DogAndUser {
+@Table(name = "Dog and User Adoption")
+public class DogAndUserAdoption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

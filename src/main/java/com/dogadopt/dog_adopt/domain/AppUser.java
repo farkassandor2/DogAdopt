@@ -47,7 +47,10 @@ public class AppUser {
     private NewsLetterSubscriptionType newsLetterSubscriptionType;
 
     @OneToMany(mappedBy = "user")
-    private List<DogAndUser> dogAndUser;
+    private List<DogAndUserAdoption> dogAndUserAdoptions;
+
+    @OneToMany(mappedBy = "user")
+    private List<DogAndUserAdoption> dogAndUserFavorite;
 
     @OneToMany(mappedBy = "user")
     private List<Donation> donations;

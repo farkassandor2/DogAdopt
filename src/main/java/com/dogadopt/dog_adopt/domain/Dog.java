@@ -59,7 +59,10 @@ public class Dog {
     private LocalDateTime takenToAdoptionCenter;
 
     @OneToMany(mappedBy = "dog")
-    private List<DogAndUser> dogAndUser;
+    private List<DogAndUserAdoption> dogAndUserAdoptions;
+
+    @OneToMany(mappedBy = "dog")
+    private List<DogAndUserAdoption> dogAndUserFavorite;
 
     @OneToMany(mappedBy = "dog")
     private List<Donation> donations;
