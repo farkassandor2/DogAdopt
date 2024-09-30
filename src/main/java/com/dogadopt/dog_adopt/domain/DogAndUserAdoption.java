@@ -34,6 +34,7 @@ public class DogAndUserAdoption {
 
     private LocalDateTime createdAt;
 
+    @PrePersist
     protected void onCreate() {
         this.adoptionType = AdoptionType.NONE;
         this.createdAt = LocalDateTime.now();

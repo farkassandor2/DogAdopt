@@ -46,6 +46,7 @@ public class Donation {
     @JoinColumn(name = "dog_id")
     private Dog dog;
 
+    @PrePersist
     protected void onCreate() {
         this.donationDate = LocalDateTime.now();
     }

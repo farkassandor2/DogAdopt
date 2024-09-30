@@ -34,6 +34,7 @@ public class Comment {
     @JoinColumn(name = "dog_id")
     private Dog dog;
 
+    @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
