@@ -6,10 +6,7 @@ import com.dogadopt.dog_adopt.service.dog.DogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -23,7 +20,7 @@ public class DogController {
 
     @PostMapping("/register")
     @ResponseStatus(CREATED)
-    public DogInfoOneDog registerDog(@Valid DogCreateUpdateCommand command) {
+    public DogInfoOneDog registerDog(@Valid @ModelAttribute DogCreateUpdateCommand command) {
         log.info("Http request / POST / dog-adopt / dog / register, body: {}", command.toString());
         return dogService.registerDog(command);
     }

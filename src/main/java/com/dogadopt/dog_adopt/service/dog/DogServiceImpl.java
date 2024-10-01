@@ -28,8 +28,9 @@ public class DogServiceImpl implements DogService{
 
         Dog dog = modelMapper.map(command, Dog.class);
 
-        List<MultipartFile> images = command.getImages();
-        imageService.uploadFile(images);
+        List<MultipartFile> multipartFiles = command.getImages();
+
+        setImageToDog(multipartFiles, dog);
 
         dogRepository.save(dog);
 
@@ -41,5 +42,13 @@ public class DogServiceImpl implements DogService{
 
         info.setImageUrls(imgUrls);
         return info;
+    }
+
+    private void setImageToDog(List<MultipartFile> multipartFiles, Dog dog) {
+        if (!multipartFiles.isEmpty()) {
+            List<Image> images = imageService.uploadFile(multipartFiles);
+            dog.setImages(images);
+            images.forEach(i -> i.setDog(dog));
+        }
     }
 }

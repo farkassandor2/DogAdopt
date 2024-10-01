@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.service.image;
 
 
+import com.dogadopt.dog_adopt.domain.Image;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -8,5 +9,5 @@ import java.util.List;
 public interface ImageService {
 
 
-    void uploadFile(List<MultipartFile> images);
+    List<Image> uploadFile(List<MultipartFile> images);
 }
