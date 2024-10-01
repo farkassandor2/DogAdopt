@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,9 +28,11 @@ public class WalkingReservation {
 
     private ReservationStatus reservationStatus;
 
-    @OneToMany(mappedBy = "walkingReservation")
-    private List<AppUser> users;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
 
-    @OneToMany(mappedBy = "walkingReservation")
-    private List<Dog> dogs;
+    @ManyToOne
+    @JoinColumn(name = "dog_id")
+    private Dog dog;
 }

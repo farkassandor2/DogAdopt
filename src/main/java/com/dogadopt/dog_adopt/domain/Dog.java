@@ -48,7 +48,7 @@ public class Dog {
     @OneToMany(mappedBy = "dog")
     private List<Image> images;
 
-    @NonNull
+    //@NonNull
     @ManyToOne
     @JoinColumn(name = "shelter-id")
     private Shelter shelter;
@@ -70,9 +70,8 @@ public class Dog {
     @OneToMany(mappedBy = "dog")
     private List<Comment> comments;
 
-    @ManyToOne
-    @JoinColumn(name = "walking_id")
-    private WalkingReservation walkingReservation;
+    @OneToMany(mappedBy = "dog")
+    private List<WalkingReservation> walkingReservations;
 
     @PrePersist
     protected void onCreate() {

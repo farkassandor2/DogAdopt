@@ -65,9 +65,8 @@ public class AppUser {
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
 
-    @ManyToOne
-    @JoinColumn(name = "walking_id")
-    private WalkingReservation walkingReservation;
+    @OneToMany(mappedBy = "user")
+    private List<WalkingReservation> walkingReservations;
 
     @PrePersist
     protected void onCreate() {

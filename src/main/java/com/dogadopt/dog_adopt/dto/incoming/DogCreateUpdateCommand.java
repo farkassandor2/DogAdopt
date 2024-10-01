@@ -48,7 +48,7 @@ public class DogCreateUpdateCommand {
 
     private List<MultipartFile> images;
 
-    @NotNull
+    //@NotNull
     private Shelter shelter;
 
     @Enumerated(EnumType.STRING)
