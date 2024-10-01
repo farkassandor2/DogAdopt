@@ -4,6 +4,8 @@ import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -21,7 +23,10 @@ public class Image {
     private String url;
 
     @NonNull
+    @Enumerated(EnumType.STRING)
     private ImageType imageType;
+
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "dog-id")
@@ -31,8 +36,9 @@ public class Image {
     @JoinColumn(name = "user-id")
     private AppUser user;
 
-    public Image(String imageUrl, String originalFilename) {
+    public Image(String imageUrl, ImageType imageType) {
         this.url = imageUrl;
-        this.name = originalFilename;
+        this.imageType = imageType;
+        this.createdAt = LocalDateTime.now();
     }
 }
