@@ -70,6 +70,10 @@ public class Dog {
     @OneToMany(mappedBy = "dog")
     private List<Comment> comments;
 
+    @ManyToOne
+    @JoinColumn(name = "walking_id")
+    private WalkingReservation walkingReservation;
+
     @PrePersist
     protected void onCreate() {
         this.takenToAdoptionCenter = LocalDateTime.now();
