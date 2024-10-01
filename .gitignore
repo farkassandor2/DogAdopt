@@ -60,3 +60,6 @@ yarn-error.log*
 ### Other ###
 *.swp
 *.swo
+
+### API keys ###
+apikey.properties
