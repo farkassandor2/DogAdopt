@@ -3,6 +3,7 @@ package com.dogadopt.dog_adopt.domain;
 import com.dogadopt.dog_adopt.domain.enums.user.NewsLetterSubscriptionType;
 import com.dogadopt.dog_adopt.domain.enums.user.UserLevel;
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
+import com.dogadopt.dog_adopt.domain.enums.user.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,6 +41,9 @@ public class AppUser {
     @Enumerated(EnumType.STRING)
     private UserLevel userLevel;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
     private LocalDateTime createdAt;
 
     @NonNull
@@ -70,6 +74,7 @@ public class AppUser {
         this.countryTelephoneCode = country
                 .getTelephoneCountryCode();
         this.userLevel = UserLevel.PUPPY_IN_THE_PACK;
+        this.userRole = UserRole.REGISTERED_USER;
         this.createdAt = LocalDateTime.now();
     }
 }
