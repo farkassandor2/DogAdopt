@@ -33,7 +33,3 @@ spring:
           auth: true
           starttls:
             enable: true
-cloudinary:
-  cloudName: dog-adopt
-  apiKey: 861749131936424
-  apiSecret: x2HM694YpuZupEuDpk-2OVen5qk
