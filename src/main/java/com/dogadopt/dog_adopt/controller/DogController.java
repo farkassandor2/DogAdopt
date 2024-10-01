@@ -1,7 +1,7 @@
 package com.dogadopt.dog_adopt.controller;
 
-import com.dogadopt.dog_adopt.dto.dog.DogCreateUpdateCommand;
-import com.dogadopt.dog_adopt.dto.dog.DogInfo;
+import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.outgoing.DogInfo;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

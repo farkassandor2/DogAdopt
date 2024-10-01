@@ -54,7 +54,7 @@ public class AppUser {
     private List<DogAndUserAdoption> dogAndUserAdoptions;
 
     @OneToMany(mappedBy = "user")
-    private List<DogAndUserAdoption> dogAndUserFavorite;
+    private List<DogAndUserFavorite> dogAndUserFavorite;
 
     @OneToMany(mappedBy = "user")
     private List<Donation> donations;
