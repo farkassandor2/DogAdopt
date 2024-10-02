@@ -19,7 +19,7 @@ public class Address {
     private Long id;
 
     @NonNull
-    @Zip
+    //@Zip
     private String zip;
 
     @NonNull

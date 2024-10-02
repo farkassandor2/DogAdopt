@@ -15,7 +15,7 @@ import lombok.*;
 public class CreateUpdateAddressCommand {
 
     @NotNull
-    @Zip
+    //@Zip
     private String zip;
 
     @NotNull

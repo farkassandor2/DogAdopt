@@ -38,7 +38,10 @@ public class ShelterServiceImpl implements ShelterService{
         shelter.setAddresses(new ArrayList<>(List.of(address)));
         address.setShelter(shelter);
         shelterRepository.save(shelter);
-        return null;
+
+        ShelterInfo shelterInfo = modelMapper.map(shelter, ShelterInfo.class);
+        shelterInfo.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
+        return shelterInfo;
     }
 
     private CreateUpdateAddressCommand transformShelterCommandToAddressCommand(ShelterCreateUpdateCommand command) {

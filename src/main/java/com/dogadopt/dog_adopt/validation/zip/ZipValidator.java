@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.domain.Address;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.ValidationException;
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
@@ -34,14 +35,35 @@ public class ZipValidator implements ConstraintValidator<Zip, String> {
         // No initialization required
     }
 
+//    @Override
+//    public boolean isValid(String zipCode, ConstraintValidatorContext context) {
+//        if (zipCode == null || zipCode.isEmpty()) {
+//            return false;
+//        }
+//
+//        String countryCode = getCountryCode(context);
+//
+//        String regex = getRegexForCountry(countryCode);
+//
+//        return Pattern.matches(regex, zipCode);
+//    }
+
     @Override
     public boolean isValid(String zipCode, ConstraintValidatorContext context) {
         if (zipCode == null || zipCode.isEmpty()) {
             return false;
         }
 
-        String countryCode = getCountryCode(context);
+        // Unwrap the context to access the rootBean (Address)
+        HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
 
+        // Access the validated entity, which should be an instance of Address
+        Address address = hibernateContext.getConstraintValidatorPayload(Address.class);
+        if (address == null) {
+            throw new ValidationException("Unable to retrieve Address object from context");
+        }
+
+        String countryCode = address.getCountry().getCountryCode();
         String regex = getRegexForCountry(countryCode);
 
         return Pattern.matches(regex, zipCode);
