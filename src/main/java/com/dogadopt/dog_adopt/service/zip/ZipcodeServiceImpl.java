@@ -1,15 +1,15 @@
-package com.dogadopt.dog_adopt.validation.zip;
+package com.dogadopt.dog_adopt.service.zip;
 
-import com.dogadopt.dog_adopt.domain.Address;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import com.dogadopt.dog_adopt.domain.enums.address.Country;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
-import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 
-public class ZipValidator implements ConstraintValidator<Zip, String> {
+@Service
+@Transactional
+public class ZipcodeServiceImpl implements ZipcodeService{
 
     private static final String US_ZIP_REGEX = "^\\d{5}(-\\d{4})?$"; // United States: 12345 or 12345-6789
     private static final String CANADA_ZIP_REGEX = "^[A-Za-z]\\d[A-Za-z] \\d[A-Za-z]\\d$"; // Canada: A1A 1A1
@@ -31,57 +31,12 @@ public class ZipValidator implements ConstraintValidator<Zip, String> {
             "^\\d{4}(-\\d{3})?$|^[A-Z]{1}\\d{4}[A-Z]{3}$|^\\d{6}$";
 
     @Override
-    public void initialize(Zip annotation) {
-        // No initialization required
-    }
+    public boolean validate(String zip, Country country) {
 
-//    @Override
-//    public boolean isValid(String zipCode, ConstraintValidatorContext context) {
-//        if (zipCode == null || zipCode.isEmpty()) {
-//            return false;
-//        }
-//
-//        String countryCode = getCountryCode(context);
-//
-//        String regex = getRegexForCountry(countryCode);
-//
-//        return Pattern.matches(regex, zipCode);
-//    }
-
-    @Override
-    public boolean isValid(String zipCode, ConstraintValidatorContext context) {
-        if (zipCode == null || zipCode.isEmpty()) {
-            return false;
-        }
-
-        // Unwrap the context to access the rootBean (Address)
-        HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
-
-        // Access the validated entity, which should be an instance of Address
-        Address address = hibernateContext.getConstraintValidatorPayload(Address.class);
-        if (address == null) {
-            throw new ValidationException("Unable to retrieve Address object from context");
-        }
-
-        String countryCode = address.getCountry().getCountryCode();
+        String countryCode = country.getCountryCode();
         String regex = getRegexForCountry(countryCode);
 
-        return Pattern.matches(regex, zipCode);
-    }
-
-    private String getCountryCode(ConstraintValidatorContext context) {
-        try {
-            Field field = context.getClass().getDeclaredField("rootBean");
-            field.setAccessible(true);
-            Object obj = field.get(context);
-
-            if (obj instanceof Address address) {
-                return address.getCountry().getCountryCode();
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new ValidationException("Unable to retrieve Address object from context", e);
-        }
-        throw new ValidationException("Expected an instance of Address.");
+        return Pattern.matches(regex, zip);
     }
 
     private String getRegexForCountry(String countryCode) {

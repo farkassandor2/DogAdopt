@@ -11,6 +11,7 @@ import com.dogadopt.dog_adopt.repository.ShelterRepository;
 import com.dogadopt.dog_adopt.service.address.AddressService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ShelterServiceImpl implements ShelterService{
 
     private final ShelterRepository shelterRepository;
@@ -32,12 +34,13 @@ public class ShelterServiceImpl implements ShelterService{
         Shelter shelter = modelMapper.map(command, Shelter.class);
 
         CreateUpdateAddressCommand addressCommand = transformShelterCommandToAddressCommand(command);
-        AddressInfo addressInfo = addressService.registerAddress(addressCommand);
-        Address address = modelMapper.map(addressInfo, Address.class);
+        Address address = addressService.registerAddress(addressCommand);
 
         shelter.setAddresses(new ArrayList<>(List.of(address)));
         address.setShelter(shelter);
         shelterRepository.save(shelter);
+
+        AddressInfo addressInfo = modelMapper.map(address, AddressInfo.class);
 
         ShelterInfo shelterInfo = modelMapper.map(shelter, ShelterInfo.class);
         shelterInfo.setAddressInfos(new ArrayList<>(List.of(addressInfo)));

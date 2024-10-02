@@ -1,7 +1,6 @@
 package com.dogadopt.dog_adopt.domain;
 
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
-import com.dogadopt.dog_adopt.validation.zip.Zip;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -19,7 +18,6 @@ public class Address {
     private Long id;
 
     @NonNull
-    //@Zip
     private String zip;
 
     @NonNull

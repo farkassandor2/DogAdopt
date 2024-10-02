@@ -33,6 +33,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
     public List<ErrorResponse> handleCloudinaryException(CloudinaryException ex) {
-        return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
+        return Collections.singletonList(new ErrorResponse("cloudinary", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ZipInvalidException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleZipInvalidException(ZipInvalidException ex) {
+        return Collections.singletonList(new ErrorResponse("zip", ex.getMessage()));
     }
 }

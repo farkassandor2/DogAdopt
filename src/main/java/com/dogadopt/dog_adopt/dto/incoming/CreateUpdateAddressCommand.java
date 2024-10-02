@@ -1,7 +1,6 @@
 package com.dogadopt.dog_adopt.dto.incoming;
 
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
-import com.dogadopt.dog_adopt.validation.zip.Zip;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +14,6 @@ import lombok.*;
 public class CreateUpdateAddressCommand {
 
     @NotNull
-    //@Zip
     private String zip;
 
     @NotNull
