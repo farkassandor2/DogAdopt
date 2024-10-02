@@ -7,7 +7,6 @@ import com.dogadopt.dog_adopt.exception.CloudinaryException;
 import com.dogadopt.dog_adopt.repository.ImageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +20,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class ImageServiceImpl implements ImageService{
 
     boolean isFirstPicture = false;
