@@ -24,13 +24,14 @@ public class DogController {
     @PostMapping("/admin/register")
     @ResponseStatus(CREATED)
     public DogInfoOneDog registerDog(@Valid @ModelAttribute DogCreateUpdateCommand command) {
-        log.info("Http request / POST / dog-adopt / dog / register, body: {}", command.toString());
+        log.info("Http request / POST / dog-adopt / dog / admin / register, body: {}", command.toString());
         return dogService.registerDog(command);
     }
 
     @GetMapping("/all-dogs")
+    @ResponseStatus(OK)
     public List<DogInfoListOfDogs> listAllDogs() {
-        log.info("Http request / POST / dog-adopt / dog / register");
+        log.info("Http request / GET / dog-adopt / all-dogs");
         return dogService.listAllDogs();
     }
 }

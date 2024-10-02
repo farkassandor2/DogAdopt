@@ -41,7 +41,7 @@ public class Shelter {
              message = "Invalid URL format")
     private String websiteUrl;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime registeredOnWebsite;
 
     @OneToMany(mappedBy = "shelter")
     private List<Address> addresses;
@@ -52,9 +52,12 @@ public class Shelter {
     @OneToMany(mappedBy = "shelter")
     private List<Donation> donations;
 
+    @OneToMany(mappedBy = "shelter")
+    private List<Image> images;
+
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
+        this.registeredOnWebsite = LocalDateTime.now();
         this.countryTelephoneCode = addresses
                 .get(0)
                 .getCountry()

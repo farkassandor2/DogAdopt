@@ -38,6 +38,10 @@ public class Image {
     @JoinColumn(name = "user-id")
     private AppUser user;
 
+    @ManyToOne
+    @JoinColumn(name = "shelter-id")
+    private Shelter shelter;
+
     public Image(String imageUrl, ImageType imageType, String name, boolean isFirstPicture) {
         this.url = imageUrl;
         this.imageType = imageType;
