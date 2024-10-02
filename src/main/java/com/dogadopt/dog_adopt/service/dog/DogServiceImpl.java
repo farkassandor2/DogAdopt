@@ -1,9 +1,11 @@
 package com.dogadopt.dog_adopt.service.dog;
 
+import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.repository.DogRepository;
 import com.dogadopt.dog_adopt.service.image.ImageService;
@@ -13,7 +15,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.Utilities;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -44,6 +50,13 @@ public class DogServiceImpl implements DogService{
         info.setImageUrls(imgUrls);
 
         return info;
+    }
+
+    @Override
+    public List<DogInfoListOfDogs> listAllDogs() {
+
+        List<Dog> dogs = dogRepository.findAll();
+        return ObjectMapperUtil.mapAll(dogs, DogInfoListOfDogs.class);
     }
 
     private void setImageToDog(List<MultipartFile> multipartFiles, Dog dog) {

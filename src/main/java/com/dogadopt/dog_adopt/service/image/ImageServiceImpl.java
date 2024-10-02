@@ -26,7 +26,9 @@ public class ImageServiceImpl implements ImageService{
     private final ImageRepository imageRepository;
 
     @Override
-    public List<Image> uploadFile(List<MultipartFile> imageFiles, String folder, Long dogId, ImageType imageType) {
+    public List<Image> uploadFile(List<MultipartFile> imageFiles, String folder, Long id, ImageType imageType) {
+
+        Map<String, String> uploadOptions = new HashMap<>();
         List<Image> images = new ArrayList<>();
         AtomicReference<Map> uploadResult = new AtomicReference<>();
 
@@ -37,20 +39,35 @@ public class ImageServiceImpl implements ImageService{
         imageFiles.forEach(file -> {
             if (file != null && !file.isEmpty()) {
                 try {
-                    Map<String, Object> uploadOptions = new HashMap<>();
+
                     uploadOptions.put("folder", folder);
-                    uploadOptions.put("public_id", dogId.toString());
+
+                    String newId = createNewId(id, uploadOptions);
+
+                    uploadOptions.put("public_id",newId);
 
                     uploadResult.set(cloudinary.uploader().upload(file.getBytes(), uploadOptions));
+
                 } catch (IOException e) {
                     throw new CloudinaryException("Error uploading file");
                 }
                 String imageUrl = (String) uploadResult.get().get("secure_url");
-                images.add(new Image(imageUrl, imageType));
+                images.add(new Image(imageUrl, imageType, file.getOriginalFilename()));
             }
         });
 
         imageRepository.saveAll(images);
         return images;
+    }
+
+    private String createNewId(Long id, Map<String, String> uploadOptions) {
+        String existingId = uploadOptions.getOrDefault("public_id", "0/0");
+        String[] idPerCharacter = existingId.split("/");
+        String firstHalfOfId = String.valueOf(id);
+        String secondHalfOfIdExistingString = idPerCharacter[1];
+        long secondHalfOfIdExistingLong = Long.parseLong(secondHalfOfIdExistingString);
+        long secondHalfOfIdNewLong = secondHalfOfIdExistingLong + 1;
+        String secondHalfOfIdNewString = Long.toString(secondHalfOfIdNewLong);
+        return firstHalfOfId + "/" + secondHalfOfIdNewString;
     }
 }

@@ -36,9 +36,10 @@ public class Image {
     @JoinColumn(name = "user-id")
     private AppUser user;
 
-    public Image(String imageUrl, ImageType imageType) {
+    public Image(String imageUrl, ImageType imageType, String name) {
         this.url = imageUrl;
         this.imageType = imageType;
         this.createdAt = LocalDateTime.now();
+        this.name = name;
     }
 }
