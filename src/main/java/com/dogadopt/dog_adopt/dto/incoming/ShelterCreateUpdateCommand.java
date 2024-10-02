@@ -34,7 +34,7 @@ public class ShelterCreateUpdateCommand {
              message = "Invalid URL format")
     private String websiteUrl;
 
-    private List<Address> addresses;
+    private List<AddressInfo> addressInfos;
 
     private List<MultipartFile> images;
 }
