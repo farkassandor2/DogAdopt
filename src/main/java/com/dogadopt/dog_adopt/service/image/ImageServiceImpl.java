@@ -7,6 +7,7 @@ import com.dogadopt.dog_adopt.exception.CloudinaryException;
 import com.dogadopt.dog_adopt.repository.ImageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ImageServiceImpl implements ImageService{
+
+    boolean isFirstPicture = false;
 
     private final Cloudinary cloudinary;
     private final ImageRepository imageRepository;
@@ -42,7 +46,8 @@ public class ImageServiceImpl implements ImageService{
 
                     uploadOptions.put("folder", folder);
 
-                    String newId = createNewId(id, uploadOptions);
+                     String newId = createNewId(id, uploadOptions);
+                     checkIfFirstPicture(newId);
 
                     uploadOptions.put("public_id",newId);
 
@@ -52,12 +57,28 @@ public class ImageServiceImpl implements ImageService{
                     throw new CloudinaryException("Error uploading file");
                 }
                 String imageUrl = (String) uploadResult.get().get("secure_url");
-                images.add(new Image(imageUrl, imageType, file.getOriginalFilename()));
+                images.add(new Image(imageUrl, imageType, file.getOriginalFilename(), isFirstPicture));
             }
         });
 
         imageRepository.saveAll(images);
         return images;
+    }
+
+    @Override
+    public List<Image> getFirstImageOfDogs() {
+        return imageRepository.getFirstImageOfDogs();
+    }
+
+    private void checkIfFirstPicture(String newId) {
+        isFirstPicture = false;
+        String[] idPerCharacter = newId.split("/");
+        String secondHalf = idPerCharacter[1];
+
+        int secondHalfInt = Integer.parseInt(secondHalf);
+        if (secondHalfInt == 1) {
+            isFirstPicture = true;
+        }
     }
 
     private String createNewId(Long id, Map<String, String> uploadOptions) {

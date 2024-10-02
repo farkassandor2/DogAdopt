@@ -10,4 +10,7 @@ public interface ImageService {
 
 
     List<Image> uploadFile(List<MultipartFile> images, String folder, Long dogId, ImageType imageType);
+
+
+    List<Image> getFirstImageOfDogs();
 }

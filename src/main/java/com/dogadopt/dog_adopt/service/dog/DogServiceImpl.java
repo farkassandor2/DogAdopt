@@ -15,11 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.Utilities;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -56,7 +52,17 @@ public class DogServiceImpl implements DogService{
     public List<DogInfoListOfDogs> listAllDogs() {
 
         List<Dog> dogs = dogRepository.findAll();
-        return ObjectMapperUtil.mapAll(dogs, DogInfoListOfDogs.class);
+        List<Image> firstImageOfDogs = imageService.getFirstImageOfDogs();
+        List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogs, DogInfoListOfDogs.class);
+
+        for (int i = 0; i < dogs.size(); i++) {
+            for (Image firstImageOfDog : firstImageOfDogs) {
+                if (dogs.get(i) == firstImageOfDog.getDog()) {
+                    dogInfos.get(i).setImgUrl(firstImageOfDog.getUrl());
+                }
+            }
+        }
+        return dogInfos;
     }
 
     private void setImageToDog(List<MultipartFile> multipartFiles, Dog dog) {

@@ -28,6 +28,8 @@ public class Image {
 
     private LocalDateTime createdAt;
 
+    private boolean isFirstPicture;
+
     @ManyToOne
     @JoinColumn(name = "dog-id")
     private Dog dog;
@@ -36,10 +38,11 @@ public class Image {
     @JoinColumn(name = "user-id")
     private AppUser user;
 
-    public Image(String imageUrl, ImageType imageType, String name) {
+    public Image(String imageUrl, ImageType imageType, String name, boolean isFirstPicture) {
         this.url = imageUrl;
         this.imageType = imageType;
         this.createdAt = LocalDateTime.now();
         this.name = name;
+        this.isFirstPicture = isFirstPicture;
     }
 }
