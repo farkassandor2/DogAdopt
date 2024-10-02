@@ -1,6 +1,6 @@
 package com.dogadopt.dog_adopt.dto.incoming;
 
-import com.dogadopt.dog_adopt.domain.Address;
+import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -34,7 +34,7 @@ public class ShelterCreateUpdateCommand {
              message = "Invalid URL format")
     private String websiteUrl;
 
-    private List<AddressInfo> addressInfos;
+    private AddressInfo addressInfo;
 
     private List<MultipartFile> images;
 }

@@ -28,7 +28,7 @@ public class ShelterInfo {
 
     private String websiteUrl;
 
-    private List<Address> addresses;
+    private List<AddressInfo> addressInfos;
 
     private String imageUrl;
 }
