@@ -30,23 +30,36 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public Address registerAddress(CreateUpdateAddressCommand addressCommand) {
+        Address address = null;
+
         if (addressCommand != null) {
             String zip = addressCommand.getZip();
             boolean isValidZip = zipcodeService.validate(zip, addressCommand.getCountry());
 
             if (isValidZip) {
-                Address address = modelMapper.map(addressCommand, Address.class);
-                addressRepository.save(address);
-                return address;
+                address = getAddressIfExists(addressCommand);
+
+                if (address == null) {
+                    address = modelMapper.map(addressCommand, Address.class);
+                    addressRepository.save(address);
+                }
             } else {
                 throw new ZipInvalidException("This zipcode is invalid int the specified country!");
             }
         }
-        return new Address();
+        return address;
     }
 
     @Override
     public List<Address> getAddresses() {
         return addressRepository.findAll();
+    }
+
+    private Address getAddressIfExists(CreateUpdateAddressCommand command) {
+        return addressRepository.findByAllArgs(command.getZip(),
+                                                          command.getCountry(),
+                                                          command.getCity(),
+                                                          command.getStreet(),
+                                                          command.getHouseNumber());
     }
 }
