@@ -1,8 +1,8 @@
 package com.dogadopt.dog_adopt.service.shelter;
 
 import com.dogadopt.dog_adopt.domain.Address;
+import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
-import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.CreateUpdateAddressCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
@@ -56,7 +56,6 @@ public class ShelterServiceImpl implements ShelterService{
             throw new ShelterAlreadyRegisteredException("Shelter with same credentials have already been registered");
         }
 
-
         List<MultipartFile> multipartFiles = command.getImages();
         setImageToShelter(multipartFiles, shelter);
 
@@ -67,10 +66,12 @@ public class ShelterServiceImpl implements ShelterService{
     }
 
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
+        List<Image> images = new ArrayList<>();
 
         if (multipartFiles != null && !multipartFiles.isEmpty()) {
             List<MultipartFile> oneElementMultipartList = Collections.singletonList(multipartFiles.get(0));
-            imageService.uploadFile(oneElementMultipartList, SHELTER_FOLDER, shelter.getId(), SHELTER_IMAGE);
+            images = imageService.uploadFile(oneElementMultipartList, SHELTER_FOLDER, shelter.getId(), SHELTER_IMAGE);
         }
+        shelter.setImages(images);
     }
 }
