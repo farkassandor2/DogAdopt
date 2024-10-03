@@ -64,8 +64,8 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public List<Image> getFirstImageOfDogs() {
-        return imageRepository.getFirstImageOfDogs();
+    public List<Image> getFirstImage(ImageType imageType) {
+        return imageRepository.getFirstImage(imageType);
     }
 
     private void checkIfFirstPicture(String newId) {

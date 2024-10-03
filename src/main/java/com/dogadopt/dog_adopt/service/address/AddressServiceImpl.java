@@ -39,7 +39,6 @@ public class AddressServiceImpl implements AddressService{
             } else {
                 throw new ZipInvalidException("This zipcode is invalid int the specified country!");
             }
-
         }
         return new Address();
     }

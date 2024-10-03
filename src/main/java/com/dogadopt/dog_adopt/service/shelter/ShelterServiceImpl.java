@@ -9,6 +9,7 @@ import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfo;
 import com.dogadopt.dog_adopt.repository.ShelterRepository;
 import com.dogadopt.dog_adopt.service.address.AddressService;
+import com.dogadopt.dog_adopt.service.image.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class ShelterServiceImpl implements ShelterService{
 
     private final ShelterRepository shelterRepository;
     private final AddressService addressService;
+    private final ImageService imageService;
     private final ModelMapper modelMapper;
 
     @Override

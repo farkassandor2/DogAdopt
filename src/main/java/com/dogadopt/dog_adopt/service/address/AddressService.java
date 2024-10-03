@@ -7,5 +7,4 @@ public interface AddressService {
 
     Address registerAddress(CreateUpdateAddressCommand addressCommand);
 
-
 }
