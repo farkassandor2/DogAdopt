@@ -14,7 +14,7 @@ public interface ImageService {
     List<Image> uploadFile(List<MultipartFile> images, String folder, Long id, ImageType imageType);
 
 
-    List<Image> getFirstImage(ImageType imageType);
+    List<Image> getFirstImagesForAllDogs(ImageType imageType);
 
     Image getImagesForShelter(Shelter actualShelter);
 

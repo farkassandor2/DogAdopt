@@ -10,8 +10,8 @@ import java.util.List;
 
 
 public interface DogService {
-    DogInfoOneDog registerDog(@Valid DogCreateUpdateCommand command);
 
+    DogInfoOneDog registerDog(@Valid DogCreateUpdateCommand command);
 
     List<DogInfoListOfDogs> listAllDogs();
 }
