@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -21,9 +23,15 @@ public class ShelterController {
     @PostMapping("/admin/register")
     @ResponseStatus(CREATED)
     public ShelterInfo registerShelter(@Valid @ModelAttribute ShelterCreateUpdateCommand command) {
-        log.info("Http request / POST / dog-adopt / dog / register, body: {}", command.toString());
         log.info("HTTP request / POST / dop-adopt / shelter / admin / register, body {}", command.toString());
         return shelterService.registerShelter(command);
+    }
+
+    @GetMapping("/all-shelters")
+    @ResponseStatus(OK)
+    public List<ShelterInfo> listAllShelters() {
+        log.info("HTTP request / GET / dop-adopt / shelter / all-shelters");
+        return shelterService.listAllShelters();
     }
 
 

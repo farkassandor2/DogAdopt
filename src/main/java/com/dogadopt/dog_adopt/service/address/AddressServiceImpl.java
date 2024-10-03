@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -41,5 +43,10 @@ public class AddressServiceImpl implements AddressService{
             }
         }
         return new Address();
+    }
+
+    @Override
+    public List<Address> getAddresses() {
+        return addressRepository.findAll();
     }
 }

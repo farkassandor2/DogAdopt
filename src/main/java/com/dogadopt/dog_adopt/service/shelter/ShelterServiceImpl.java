@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.service.shelter;
 
+import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.Address;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
@@ -65,6 +66,29 @@ public class ShelterServiceImpl implements ShelterService{
         return shelterInfo;
     }
 
+    @Override
+    public List<ShelterInfo> listAllShelters() {
+        List<Shelter> shelters = shelterRepository.findAll();
+        List<Image> imagesOfShelter = imageService.getFirstImage(ImageType.SHELTER);
+        List<Address> addresses = addressService.getAddresses();
+        List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addresses, AddressInfo.class);
+        List<ShelterInfo> shelterInfos = ObjectMapperUtil.mapAll(shelters, ShelterInfo.class);
+
+        for (int i = 0; i < shelters.size(); i++) {
+            for (Image image : imagesOfShelter) {
+                if (shelters.get(i) == image.getShelter()) {
+                    shelterInfos.get(i).setImageUrl(image.getUrl());
+                }
+            }
+            for (Address address : addresses) {
+                if(shelters.get(i) == address.getShelter()) {
+                    shelterInfos.get(i).setAddressInfos(addressInfos);
+                }
+            }
+        }
+        return shelterInfos;
+    }
+
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
         List<Image> images = new ArrayList<>();
 
@@ -73,5 +97,6 @@ public class ShelterServiceImpl implements ShelterService{
             images = imageService.uploadFile(oneElementMultipartList, SHELTER_FOLDER, shelter.getId(), SHELTER_IMAGE);
         }
         shelter.setImages(images);
+        images.get(0).setShelter(shelter);
     }
 }
