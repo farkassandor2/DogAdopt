@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -34,7 +36,13 @@ public class Address {
 
     private String houseNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "shelter_id")
-    private Shelter shelter;
+//    @ManyToOne
+//    @JoinColumn(name = "shelter_id")
+//    private Shelter shelter;
+
+    @OneToMany
+    private List<AddressShelter> addressShelters;
+
+    ////////////////////
+
 }

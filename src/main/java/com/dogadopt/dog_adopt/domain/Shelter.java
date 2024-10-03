@@ -46,8 +46,13 @@ public class Shelter {
 
     private LocalDateTime registeredOnWebsite;
 
+//    @OneToMany(mappedBy = "shelter")
+//    private List<Address> addresses;
+
     @OneToMany(mappedBy = "shelter")
-    private List<Address> addresses;
+    private List<AddressShelter> addressShelters;
+
+    /////////////////
 
     @OneToMany(mappedBy = "shelter")
     private List<Dog> dogs;
@@ -61,9 +66,9 @@ public class Shelter {
     @PrePersist
     protected void onCreate() {
         this.registeredOnWebsite = LocalDateTime.now();
-        this.countryTelephoneCode = addresses
-                .get(0)
-                .getCountry()
-                .getTelephoneCountryCode();
+//        this.countryTelephoneCode = addresses
+//                .get(0)
+//                .getCountry()
+//                .getTelephoneCountryCode();
     }
 }

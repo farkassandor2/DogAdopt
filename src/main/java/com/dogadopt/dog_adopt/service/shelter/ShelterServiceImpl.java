@@ -2,6 +2,7 @@ package com.dogadopt.dog_adopt.service.shelter;
 
 import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.Address;
+import com.dogadopt.dog_adopt.domain.AddressShelter;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
@@ -12,6 +13,7 @@ import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfo;
 import com.dogadopt.dog_adopt.exception.ShelterAlreadyRegisteredException;
 import com.dogadopt.dog_adopt.repository.ShelterRepository;
 import com.dogadopt.dog_adopt.service.address.AddressService;
+import com.dogadopt.dog_adopt.service.addressshelter.AddressShelterService;
 import com.dogadopt.dog_adopt.service.image.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class ShelterServiceImpl implements ShelterService{
     private final ShelterRepository shelterRepository;
     private final AddressService addressService;
     private final ImageService imageService;
+    private final AddressShelterService addressShelterService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -48,8 +51,15 @@ public class ShelterServiceImpl implements ShelterService{
         CreateUpdateAddressCommand addressCommand = modelMapper.map(addressInfo, CreateUpdateAddressCommand.class);
         Address address = addressService.registerAddress(addressCommand);
 
-        shelter.setAddresses(new ArrayList<>(List.of(address)));
-        address.setShelter(shelter);
+//        shelter.setAddresses(new ArrayList<>(List.of(address)));
+//        address.setShelter(shelter);
+
+        AddressShelter addressShelter = new AddressShelter();
+        addressShelter.setAddress(address);
+        addressShelter.setShelter(shelter);
+        addressShelterService.save(addressShelter);
+
+        ////////////////////////
 
         try {
             shelterRepository.save(shelter);
@@ -82,11 +92,18 @@ public class ShelterServiceImpl implements ShelterService{
 
             List<Address> addressesOfActualShelter = new ArrayList<>();
 
+//            for (Address address : addresses) {
+//                if(shelters.get(i) == address.getShelter()) {
+//                    addressesOfActualShelter.add(address);
+//                }
+//            }
+
             for (Address address : addresses) {
-                if(shelters.get(i) == address.getShelter()) {
+                if(shelters.get(i).getAddressShelters() == address.getAddressShelters()) {
                     addressesOfActualShelter.add(address);
                 }
             }
+
             List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressesOfActualShelter, AddressInfo.class);
             shelterInfos.get(i).setAddressInfos(addressInfos);
         }
