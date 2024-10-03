@@ -51,15 +51,7 @@ public class ShelterServiceImpl implements ShelterService{
         CreateUpdateAddressCommand addressCommand = modelMapper.map(addressInfo, CreateUpdateAddressCommand.class);
         Address address = addressService.registerAddress(addressCommand);
 
-//        shelter.setAddresses(new ArrayList<>(List.of(address)));
-//        address.setShelter(shelter);
-
-        AddressShelter addressShelter = new AddressShelter();
-        addressShelter.setAddress(address);
-        addressShelter.setShelter(shelter);
-        addressShelterService.save(addressShelter);
-
-        ////////////////////////
+        setAddressAndShelterToAddressShelter(address, shelter);
 
         try {
             shelterRepository.save(shelter);
@@ -71,8 +63,8 @@ public class ShelterServiceImpl implements ShelterService{
         setImageToShelter(multipartFiles, shelter);
 
         ShelterInfo shelterInfo = modelMapper.map(shelter, ShelterInfo.class);
-        shelterInfo.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
-        shelterInfo.setImageUrl(shelter.getImages().get(0).getUrl());
+        setAddressInfoAndShelterToShelterInfo(shelterInfo, addressInfo, shelter);
+
         return shelterInfo;
     }
 
@@ -119,5 +111,19 @@ public class ShelterServiceImpl implements ShelterService{
         }
         shelter.setImages(images);
         images.get(0).setShelter(shelter);
+    }
+
+    private void setAddressInfoAndShelterToShelterInfo(ShelterInfo shelterInfo, AddressInfo addressInfo, Shelter shelter) {
+        shelterInfo.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
+        shelterInfo.setImageUrl(shelter.getImages().get(0).getUrl());
+    }
+
+    private void setAddressAndShelterToAddressShelter(Address address, Shelter shelter) {
+        AddressShelter addressShelter = new AddressShelter();
+        addressShelter.setAddress(address);
+        addressShelter.setShelter(shelter);
+        addressShelterService.save(addressShelter);
+        shelter.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
+        address.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
     }
 }

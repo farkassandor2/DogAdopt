@@ -36,13 +36,6 @@ public class Address {
 
     private String houseNumber;
 
-//    @ManyToOne
-//    @JoinColumn(name = "shelter_id")
-//    private Shelter shelter;
-
-    @OneToMany
+    @OneToMany(mappedBy = "address")
     private List<AddressShelter> addressShelters;
-
-    ////////////////////
-
 }

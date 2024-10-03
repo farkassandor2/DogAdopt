@@ -17,6 +17,8 @@ public class ShelterInfo {
 
     private String email;
 
+    private String countryTelephoneCode;
+
     private String phoneNumber;
 
     private String description;
