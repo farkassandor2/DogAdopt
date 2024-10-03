@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.service.address;
 
 import com.dogadopt.dog_adopt.domain.Address;
+import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.dto.incoming.CreateUpdateAddressCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.exception.ZipInvalidException;
@@ -53,6 +54,11 @@ public class AddressServiceImpl implements AddressService{
     @Override
     public List<Address> getAddresses() {
         return addressRepository.findAll();
+    }
+
+    @Override
+    public List<Address> getAddressesForShelter(Shelter actualShelter) {
+        return addressRepository.getAddressesForShelter(actualShelter.getId());
     }
 
     private Address getAddressIfExists(CreateUpdateAddressCommand command) {

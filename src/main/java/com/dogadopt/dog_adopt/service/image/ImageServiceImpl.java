@@ -1,7 +1,9 @@
 package com.dogadopt.dog_adopt.service.image;
 
 import com.cloudinary.Cloudinary;
+import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
+import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.exception.CloudinaryException;
 import com.dogadopt.dog_adopt.repository.ImageRepository;
@@ -66,6 +68,16 @@ public class ImageServiceImpl implements ImageService{
     @Override
     public List<Image> getFirstImage(ImageType imageType) {
         return imageRepository.getFirstImage(imageType);
+    }
+
+    @Override
+    public Image getImagesForShelter(Shelter actualShelter) {
+        return imageRepository.getImageForShelter(actualShelter);
+    }
+
+    @Override
+    public Image getFirstImageOfDog(Dog actualDog) {
+        return imageRepository.getFirstImageOfDog(actualDog);
     }
 
     private void checkIfFirstPicture(String newId) {

@@ -1,6 +1,8 @@
 package com.dogadopt.dog_adopt.service.image;
 
+import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
+import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,4 +15,8 @@ public interface ImageService {
 
 
     List<Image> getFirstImage(ImageType imageType);
+
+    Image getImagesForShelter(Shelter actualShelter);
+
+    Image getFirstImageOfDog(Dog actualDog);
 }

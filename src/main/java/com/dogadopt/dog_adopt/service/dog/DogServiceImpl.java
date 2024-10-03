@@ -52,15 +52,12 @@ public class DogServiceImpl implements DogService{
     public List<DogInfoListOfDogs> listAllDogs() {
 
         List<Dog> dogs = dogRepository.findAll();
-        List<Image> firstImageOfDogs = imageService.getFirstImage(ImageType.DOG);
         List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogs, DogInfoListOfDogs.class);
 
         for (int i = 0; i < dogs.size(); i++) {
-            for (Image firstImageOfDog : firstImageOfDogs) {
-                if (dogs.get(i) == firstImageOfDog.getDog()) {
-                    dogInfos.get(i).setImgUrl(firstImageOfDog.getUrl());
-                }
-            }
+            Dog actualDog = dogs.get(i);
+            Image imageOfActualDog = imageService.getFirstImageOfDog(actualDog);
+            dogInfos.get(i).setImgUrl(imageOfActualDog.getUrl());
         }
         return dogInfos;
     }

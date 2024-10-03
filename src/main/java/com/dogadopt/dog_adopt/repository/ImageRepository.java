@@ -1,6 +1,8 @@
 package com.dogadopt.dog_adopt.repository;
 
+import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
+import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,15 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
            "WHERE i.imageType = ?1 " +
            "AND i.isFirstPicture = true")
     List<Image> getFirstImage(ImageType imageType);
+
+    @Query("SELECT i " +
+           "FROM Image i " +
+           "WHERE i.shelter = ?1")
+    Image getImageForShelter(Shelter shelter);
+
+    @Query("SELECT i " +
+           "FROM Image i " +
+           "WHERE i.dog = ?1 " +
+           "AND i.isFirstPicture = true ")
+    Image getFirstImageOfDog(Dog actualDog);
 }

@@ -71,32 +71,17 @@ public class ShelterServiceImpl implements ShelterService{
     @Override
     public List<ShelterInfo> listAllShelters() {
         List<Shelter> shelters = shelterRepository.findAll();
-        List<Image> imagesOfShelter = imageService.getFirstImage(ImageType.SHELTER);
-        List<Address> addresses = addressService.getAddresses();
         List<ShelterInfo> shelterInfos = ObjectMapperUtil.mapAll(shelters, ShelterInfo.class);
 
         for (int i = 0; i < shelters.size(); i++) {
-            for (Image image : imagesOfShelter) {
-                if (shelters.get(i) == image.getShelter()) {
-                    shelterInfos.get(i).setImageUrl(image.getUrl());
-                }
-            }
 
-            List<Address> addressesOfActualShelter = new ArrayList<>();
+            Shelter actualShelter = shelters.get(i);
 
-//            for (Address address : addresses) {
-//                if(shelters.get(i) == address.getShelter()) {
-//                    addressesOfActualShelter.add(address);
-//                }
-//            }
+            Image imageOfActualShelter = imageService.getImagesForShelter(actualShelter);
+            shelterInfos.get(i).setImageUrl(imageOfActualShelter.getUrl());
 
-            for (Address address : addresses) {
-                if(shelters.get(i).getAddressShelters() == address.getAddressShelters()) {
-                    addressesOfActualShelter.add(address);
-                }
-            }
-
-            List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressesOfActualShelter, AddressInfo.class);
+            List<Address> addressListOfActualShelter = addressService.getAddressesForShelter(actualShelter);
+            List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressListOfActualShelter, AddressInfo.class);
             shelterInfos.get(i).setAddressInfos(addressInfos);
         }
         return shelterInfos;
