@@ -3,6 +3,7 @@ package com.dogadopt.dog_adopt.service.shelter;
 import com.dogadopt.dog_adopt.domain.Address;
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
+import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.CreateUpdateAddressCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
@@ -15,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,6 +27,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ShelterServiceImpl implements ShelterService{
+
+    private static final String SHELTER_FOLDER = "shelter";
+    private static final ImageType SHELTER_IMAGE = ImageType.SHELTER;
 
     private final ShelterRepository shelterRepository;
     private final AddressService addressService;
@@ -35,27 +41,27 @@ public class ShelterServiceImpl implements ShelterService{
 
         Shelter shelter = modelMapper.map(command, Shelter.class);
 
-        CreateUpdateAddressCommand addressCommand = transformShelterCommandToAddressCommand(command);
+        AddressInfo addressInfo = command.getAddressInfo();
+        CreateUpdateAddressCommand addressCommand = modelMapper.map(addressInfo, CreateUpdateAddressCommand.class);
         Address address = addressService.registerAddress(addressCommand);
 
         shelter.setAddresses(new ArrayList<>(List.of(address)));
         address.setShelter(shelter);
         shelterRepository.save(shelter);
 
-        AddressInfo addressInfo = modelMapper.map(address, AddressInfo.class);
+        List<MultipartFile> multipartFiles = command.getImages();
+        setImageToShelter(multipartFiles, shelter);
 
         ShelterInfo shelterInfo = modelMapper.map(shelter, ShelterInfo.class);
         shelterInfo.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
         return shelterInfo;
     }
 
-    private CreateUpdateAddressCommand transformShelterCommandToAddressCommand(ShelterCreateUpdateCommand command) {
-        String zip = command.getAddressInfo().getZip();
-        Country country = command.getAddressInfo().getCountry();
-        String city = command.getAddressInfo().getCity();
-        String street = command.getAddressInfo().getStreet();
-        String houseNumber = command.getAddressInfo().getHouseNumber();
+    private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
 
-        return new CreateUpdateAddressCommand(zip, country, city, street, houseNumber);
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            List<MultipartFile> oneElementMultipartList = Collections.singletonList(multipartFiles.get(0));
+            imageService.uploadFile(oneElementMultipartList, SHELTER_FOLDER, shelter.getId(), SHELTER_IMAGE);
+        }
     }
 }

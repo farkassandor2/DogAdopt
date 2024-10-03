@@ -9,7 +9,7 @@ import java.util.List;
 public interface ImageService {
 
 
-    List<Image> uploadFile(List<MultipartFile> images, String folder, Long dogId, ImageType imageType);
+    List<Image> uploadFile(List<MultipartFile> images, String folder, Long id, ImageType imageType);
 
 
     List<Image> getFirstImage(ImageType imageType);
