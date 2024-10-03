@@ -71,7 +71,6 @@ public class ShelterServiceImpl implements ShelterService{
         List<Shelter> shelters = shelterRepository.findAll();
         List<Image> imagesOfShelter = imageService.getFirstImage(ImageType.SHELTER);
         List<Address> addresses = addressService.getAddresses();
-        List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addresses, AddressInfo.class);
         List<ShelterInfo> shelterInfos = ObjectMapperUtil.mapAll(shelters, ShelterInfo.class);
 
         for (int i = 0; i < shelters.size(); i++) {
@@ -80,11 +79,16 @@ public class ShelterServiceImpl implements ShelterService{
                     shelterInfos.get(i).setImageUrl(image.getUrl());
                 }
             }
+
+            List<Address> addressesOfActualShelter = new ArrayList<>();
+
             for (Address address : addresses) {
                 if(shelters.get(i) == address.getShelter()) {
-                    shelterInfos.get(i).setAddressInfos(addressInfos);
+                    addressesOfActualShelter.add(address);
                 }
             }
+            List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressesOfActualShelter, AddressInfo.class);
+            shelterInfos.get(i).setAddressInfos(addressInfos);
         }
         return shelterInfos;
     }
