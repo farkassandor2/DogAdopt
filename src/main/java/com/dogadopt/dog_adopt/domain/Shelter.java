@@ -27,11 +27,13 @@ public class Shelter {
 
     @NonNull
     @Email
+    @Column(unique = true)
     private String email;
 
     private String countryTelephoneCode;
 
     @NonNull
+    @Column(unique = true)
     private String phoneNumber;
 
     @Size(max = 1000, message = "Description can hava maximum {max} characters.")
@@ -39,6 +41,7 @@ public class Shelter {
 
     @Pattern(regexp = "^(https?://)?(www\\.)?([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}(/\\S*)?$",
              message = "Invalid URL format")
+    @Column(unique = true)
     private String websiteUrl;
 
     private LocalDateTime registeredOnWebsite;

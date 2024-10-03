@@ -8,6 +8,7 @@ import com.dogadopt.dog_adopt.dto.incoming.CreateUpdateAddressCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfo;
+import com.dogadopt.dog_adopt.exception.ShelterAlreadyRegisteredException;
 import com.dogadopt.dog_adopt.repository.ShelterRepository;
 import com.dogadopt.dog_adopt.service.address.AddressService;
 import com.dogadopt.dog_adopt.service.image.ImageService;
@@ -15,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,13 +49,20 @@ public class ShelterServiceImpl implements ShelterService{
 
         shelter.setAddresses(new ArrayList<>(List.of(address)));
         address.setShelter(shelter);
-        shelterRepository.save(shelter);
+
+        try {
+            shelterRepository.save(shelter);
+        } catch (DataIntegrityViolationException e) {
+            throw new ShelterAlreadyRegisteredException("Shelter with same credentials have already been registered");
+        }
+
 
         List<MultipartFile> multipartFiles = command.getImages();
         setImageToShelter(multipartFiles, shelter);
 
         ShelterInfo shelterInfo = modelMapper.map(shelter, ShelterInfo.class);
         shelterInfo.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
+        shelterInfo.setImageUrl(shelter.getImages().get(0).getUrl());
         return shelterInfo;
     }
 
