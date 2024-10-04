@@ -19,4 +19,6 @@ public interface ImageService {
     Image getImagesForShelter(Shelter actualShelter);
 
     Image getFirstImageOfDog(Dog actualDog);
+
+    List<String> getAllImagesForOneDog(Dog dog);
 }

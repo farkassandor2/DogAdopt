@@ -14,4 +14,6 @@ public interface DogService {
     DogInfoOneDog registerDog(@Valid DogCreateUpdateCommand command);
 
     List<DogInfoListOfDogs> listAllDogs();
+
+    DogInfoOneDog getOneDog(String dogId);
 }

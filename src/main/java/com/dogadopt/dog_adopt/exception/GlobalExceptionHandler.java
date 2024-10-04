@@ -68,4 +68,11 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleShelterAlreadyRegisteredException(ShelterAlreadyRegisteredException ex) {
         return Collections.singletonList(new ErrorResponse("shelter", ex.getMessage()));
     }
+
+    @ExceptionHandler(DogNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleDogNotFoundException(DogNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
+    }
 }

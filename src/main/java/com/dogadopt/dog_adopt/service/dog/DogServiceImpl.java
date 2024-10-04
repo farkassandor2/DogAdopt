@@ -7,6 +7,7 @@ import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
+import com.dogadopt.dog_adopt.exception.DogNotFoundException;
 import com.dogadopt.dog_adopt.repository.DogRepository;
 import com.dogadopt.dog_adopt.service.image.ImageService;
 import jakarta.transaction.Transactional;
@@ -36,7 +37,7 @@ public class DogServiceImpl implements DogService{
         dogRepository.save(dog);
 
         List<MultipartFile> multipartFiles = command.getImages();
-        setImageToDog(multipartFiles, dog);
+        saveImagesOfDog(multipartFiles, dog);
 
         List<String> imgUrls = dog.getImages().stream()
                 .map(Image::getUrl)
@@ -62,11 +63,28 @@ public class DogServiceImpl implements DogService{
         return dogInfos;
     }
 
-    private void setImageToDog(List<MultipartFile> multipartFiles, Dog dog) {
+    @Override
+    public DogInfoOneDog getOneDog(String dogId) {
+        Dog dog = dogRepository.findById(Long.parseLong(dogId))
+                            .orElseThrow(() -> new DogNotFoundException("Dog not found with ID: " + dogId));
+
+        DogInfoOneDog info = modelMapper.map(dog, DogInfoOneDog.class);
+
+        List<String> imgUrls = imageService.getAllImagesForOneDog(dog);
+        info.setImageUrls(imgUrls);
+
+        return info;
+    }
+
+    private void saveImagesOfDog(List<MultipartFile> multipartFiles, Dog dog) {
         if (!multipartFiles.isEmpty()) {
             List<Image> images = imageService.uploadFile(multipartFiles, DOG_FOLDER, dog.getId(), DOG_IMAGE);
-            dog.setImages(images);
-            images.forEach(i -> i.setDog(dog));
+            setDogToImageAndImageToDog(dog, images);
         }
+    }
+
+    private void setDogToImageAndImageToDog(Dog dog, List<Image> images) {
+        dog.setImages(images);
+        images.forEach(i -> i.setDog(dog));
     }
 }

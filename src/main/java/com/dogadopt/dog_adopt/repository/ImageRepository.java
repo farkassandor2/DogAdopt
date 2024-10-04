@@ -29,4 +29,9 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
            "WHERE i.dog = ?1 " +
            "AND i.isFirstPicture = true ")
     Image getFirstImageOfDog(Dog actualDog);
+
+    @Query("SELECT i.url " +
+           "FROM Image i " +
+           "WHERE i.dog = ?1")
+    List<String> getAllImagesForOneDog(Dog dog);
 }

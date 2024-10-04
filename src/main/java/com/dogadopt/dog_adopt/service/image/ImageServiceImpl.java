@@ -80,6 +80,11 @@ public class ImageServiceImpl implements ImageService{
         return imageRepository.getFirstImageOfDog(actualDog);
     }
 
+    @Override
+    public List<String> getAllImagesForOneDog(Dog dog) {
+        return imageRepository.getAllImagesForOneDog(dog);
+    }
+
     private void checkIfFirstPicture(String newId) {
         isFirstPicture = false;
         String[] idPerCharacter = newId.split("/");
