@@ -20,6 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 public class DogInfoOneDog {
 
+    private Long id;
+
     private String name;
 
     private Integer age;

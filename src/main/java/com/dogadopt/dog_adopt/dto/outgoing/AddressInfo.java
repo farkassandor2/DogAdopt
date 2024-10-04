@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddressInfo {
 
+    private Long id;
+
     private String zip;
 
     private Country country;

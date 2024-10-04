@@ -34,4 +34,11 @@ public class DogController {
         log.info("Http request / GET / dog-adopt / all-dogs");
         return dogService.listAllDogs();
     }
+
+    @GetMapping("/{dogId}")
+    @ResponseStatus(OK)
+    public DogInfoOneDog getOneDog(@PathVariable String dogId) {
+        log.info("Http request / GET / dog-adopt / dogId");
+        return dogService.getOneDog(dogId);
+    }
 }

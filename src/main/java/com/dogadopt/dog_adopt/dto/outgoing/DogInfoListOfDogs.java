@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DogInfoListOfDogs {
 
+    private Long id;
+
     private String name;
 
     private Integer age;
