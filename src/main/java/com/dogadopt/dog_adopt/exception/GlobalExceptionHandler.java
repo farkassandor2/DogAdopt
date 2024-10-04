@@ -75,4 +75,11 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleDogNotFoundException(DogNotFoundException ex) {
         return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
     }
+
+    @ExceptionHandler(ShelterNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleShelterNotFoundException(ShelterNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("shelterId", ex.getMessage()));
+    }
 }

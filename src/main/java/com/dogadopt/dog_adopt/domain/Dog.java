@@ -48,7 +48,7 @@ public class Dog {
     @OneToMany(mappedBy = "dog")
     private List<Image> images;
 
-    //@NonNull
+    @NonNull
     @ManyToOne
     @JoinColumn(name = "shelter-id")
     private Shelter shelter;

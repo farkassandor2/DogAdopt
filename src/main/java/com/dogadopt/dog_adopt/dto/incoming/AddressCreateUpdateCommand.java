@@ -11,7 +11,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUpdateAddressCommand {
+public class AddressCreateUpdateCommand {
 
     @NotNull
     private String zip;

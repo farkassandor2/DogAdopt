@@ -37,8 +37,16 @@ public class DogController {
 
     @GetMapping("/{dogId}")
     @ResponseStatus(OK)
-    public DogInfoOneDog getOneDog(@PathVariable String dogId) {
+    public DogInfoOneDog getOneDog(@PathVariable Long dogId) {
         log.info("Http request / GET / dog-adopt / dogId");
-        return dogService.getOneDog(dogId);
+        return dogService.getOneDogInfo(dogId);
     }
+
+    @RequestMapping("/get-dogs-shelter/{shelterId}")
+    public List<DogInfoListOfDogs> getAllDogsFromShelter(@PathVariable Long shelterId) {
+        log.info("Http request / GET / dog-adopt / shelters / shelterId / dogs");
+        return dogService.getAllDogsFromShelter(shelterId);
+    }
+
+
 }

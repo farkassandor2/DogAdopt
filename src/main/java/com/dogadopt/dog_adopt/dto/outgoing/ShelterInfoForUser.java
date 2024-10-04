@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShelterInfo {
+public class ShelterInfoForUser {
 
     private Long id;
 

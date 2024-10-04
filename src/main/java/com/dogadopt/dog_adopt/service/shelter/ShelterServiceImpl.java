@@ -6,11 +6,13 @@ import com.dogadopt.dog_adopt.domain.AddressShelter;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
-import com.dogadopt.dog_adopt.dto.incoming.CreateUpdateAddressCommand;
+import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
-import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.ShelterDTOForDropDownMenu;
+import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfoForUser;
 import com.dogadopt.dog_adopt.exception.ShelterAlreadyRegisteredException;
+import com.dogadopt.dog_adopt.exception.ShelterNotFoundException;
 import com.dogadopt.dog_adopt.repository.ShelterRepository;
 import com.dogadopt.dog_adopt.service.address.AddressService;
 import com.dogadopt.dog_adopt.service.addressshelter.AddressShelterService;
@@ -43,12 +45,12 @@ public class ShelterServiceImpl implements ShelterService{
     private final ModelMapper modelMapper;
 
     @Override
-    public ShelterInfo registerShelter(ShelterCreateUpdateCommand command) {
+    public ShelterInfoForUser registerShelter(ShelterCreateUpdateCommand command) {
 
         Shelter shelter = modelMapper.map(command, Shelter.class);
 
         AddressInfo addressInfo = command.getAddressInfo();
-        CreateUpdateAddressCommand addressCommand = modelMapper.map(addressInfo, CreateUpdateAddressCommand.class);
+        AddressCreateUpdateCommand addressCommand = modelMapper.map(addressInfo, AddressCreateUpdateCommand.class);
         Address address = addressService.registerAddress(addressCommand);
 
         setAddressAndShelterToAddressShelter(address, shelter);
@@ -62,29 +64,41 @@ public class ShelterServiceImpl implements ShelterService{
         List<MultipartFile> multipartFiles = command.getImages();
         setImageToShelter(multipartFiles, shelter);
 
-        ShelterInfo shelterInfo = modelMapper.map(shelter, ShelterInfo.class);
-        setAddressInfoAndShelterToShelterInfo(shelterInfo, addressInfo, shelter);
+        ShelterInfoForUser shelterInfoForUser = modelMapper.map(shelter, ShelterInfoForUser.class);
+        setAddressInfoAndShelterToShelterInfo(shelterInfoForUser, addressInfo, shelter);
 
-        return shelterInfo;
+        return shelterInfoForUser;
     }
 
     @Override
-    public List<ShelterInfo> listAllShelters() {
+    public List<ShelterInfoForUser> listAllShelters() {
         List<Shelter> shelters = shelterRepository.findAll();
-        List<ShelterInfo> shelterInfos = ObjectMapperUtil.mapAll(shelters, ShelterInfo.class);
+        List<ShelterInfoForUser> shelterInfoForUsers = ObjectMapperUtil.mapAll(shelters, ShelterInfoForUser.class);
 
         for (int i = 0; i < shelters.size(); i++) {
 
             Shelter actualShelter = shelters.get(i);
 
             Image imageOfActualShelter = imageService.getImagesForShelter(actualShelter);
-            shelterInfos.get(i).setImageUrl(imageOfActualShelter.getUrl());
+            shelterInfoForUsers.get(i).setImageUrl(imageOfActualShelter.getUrl());
 
             List<Address> addressListOfActualShelter = addressService.getAddressesForShelter(actualShelter);
             List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressListOfActualShelter, AddressInfo.class);
-            shelterInfos.get(i).setAddressInfos(addressInfos);
+            shelterInfoForUsers.get(i).setAddressInfos(addressInfos);
         }
-        return shelterInfos;
+        return shelterInfoForUsers;
+    }
+
+    @Override
+    public List<ShelterDTOForDropDownMenu> getSheltersListForDropDown() {
+        List<Shelter> shelters = shelterRepository.findAll();
+        return ObjectMapperUtil.mapAll(shelters, ShelterDTOForDropDownMenu.class);
+    }
+
+    @Override
+    public Shelter getShelter(Long shelterId) {
+        return shelterRepository.findById(shelterId)
+                .orElseThrow(() -> new ShelterNotFoundException("Shelter not found with ID: " + shelterId));
     }
 
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
@@ -98,9 +112,9 @@ public class ShelterServiceImpl implements ShelterService{
         images.get(0).setShelter(shelter);
     }
 
-    private void setAddressInfoAndShelterToShelterInfo(ShelterInfo shelterInfo, AddressInfo addressInfo, Shelter shelter) {
-        shelterInfo.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
-        shelterInfo.setImageUrl(shelter.getImages().get(0).getUrl());
+    private void setAddressInfoAndShelterToShelterInfo(ShelterInfoForUser shelterInfoForUser, AddressInfo addressInfo, Shelter shelter) {
+        shelterInfoForUser.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
+        shelterInfoForUser.setImageUrl(shelter.getImages().get(0).getUrl());
     }
 
     private void setAddressAndShelterToAddressShelter(Address address, Shelter shelter) {

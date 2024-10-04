@@ -48,8 +48,8 @@ public class DogCreateUpdateCommand {
 
     private List<MultipartFile> images;
 
-    //@NotNull
-    private Shelter shelter;
+    @NotNull
+    private Long shelterId;
 
     @Enumerated(EnumType.STRING)
     private DonationGoal donationGoal;

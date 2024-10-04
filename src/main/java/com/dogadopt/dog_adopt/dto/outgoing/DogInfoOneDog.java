@@ -36,7 +36,7 @@ public class DogInfoOneDog {
 
     private List<String> imageUrls;
 
-    private String nameOfShelter;
+    private Long shelterId;
 
     private DonationGoal donationGoal;
 

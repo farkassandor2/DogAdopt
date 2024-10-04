@@ -1,14 +1,22 @@
 package com.dogadopt.dog_adopt.service.shelter;
 
+import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
-import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
+import com.dogadopt.dog_adopt.dto.outgoing.ShelterDTOForDropDownMenu;
+import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfoForUser;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public interface ShelterService {
 
-    ShelterInfo registerShelter(@Valid ShelterCreateUpdateCommand command);
+    ShelterInfoForUser registerShelter(@Valid ShelterCreateUpdateCommand command);
 
-    List<ShelterInfo> listAllShelters();
+    List<ShelterInfoForUser> listAllShelters();
+
+    List<ShelterDTOForDropDownMenu> getSheltersListForDropDown();
+
+    Shelter getShelter(@NotNull Long shelterId);
 }

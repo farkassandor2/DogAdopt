@@ -2,7 +2,7 @@ package com.dogadopt.dog_adopt.service.address;
 
 import com.dogadopt.dog_adopt.domain.Address;
 import com.dogadopt.dog_adopt.domain.Shelter;
-import com.dogadopt.dog_adopt.dto.incoming.CreateUpdateAddressCommand;
+import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.exception.ZipInvalidException;
 import com.dogadopt.dog_adopt.repository.AddressRepository;
@@ -23,14 +23,14 @@ public class AddressServiceImpl implements AddressService{
     private final ZipcodeService zipcodeService;
     private final ModelMapper modelMapper;
 
-    public AddressInfo getAddressInfo(CreateUpdateAddressCommand command) {
+    public AddressInfo getAddressInfo(AddressCreateUpdateCommand command) {
         Address address = registerAddress(command);
         return modelMapper.map(address, AddressInfo.class);
     }
 
 
     @Override
-    public Address registerAddress(CreateUpdateAddressCommand addressCommand) {
+    public Address registerAddress(AddressCreateUpdateCommand addressCommand) {
         Address address = null;
 
         if (addressCommand != null) {
@@ -61,7 +61,7 @@ public class AddressServiceImpl implements AddressService{
         return addressRepository.getAddressesForShelter(actualShelter.getId());
     }
 
-    private Address getAddressIfExists(CreateUpdateAddressCommand command) {
+    private Address getAddressIfExists(AddressCreateUpdateCommand command) {
         return addressRepository.findByAllArgs(command.getZip(),
                                                           command.getCountry(),
                                                           command.getCity(),

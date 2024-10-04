@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.service.dog;
 
 
+import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
@@ -15,5 +16,9 @@ public interface DogService {
 
     List<DogInfoListOfDogs> listAllDogs();
 
-    DogInfoOneDog getOneDog(String dogId);
+    DogInfoOneDog getOneDogInfo(Long dogId);
+
+    List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId);
+
+    Dog getOneDog(Long id);
 }

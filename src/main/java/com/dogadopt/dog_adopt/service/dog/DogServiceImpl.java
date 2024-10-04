@@ -3,6 +3,7 @@ package com.dogadopt.dog_adopt.service.dog;
 import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
+import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
@@ -10,6 +11,7 @@ import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.exception.DogNotFoundException;
 import com.dogadopt.dog_adopt.repository.DogRepository;
 import com.dogadopt.dog_adopt.service.image.ImageService;
+import com.dogadopt.dog_adopt.service.shelter.ShelterService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -28,6 +30,7 @@ public class DogServiceImpl implements DogService{
 
     private final DogRepository dogRepository;
     private final ImageService imageService;
+    private final ShelterService shelterService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -35,6 +38,9 @@ public class DogServiceImpl implements DogService{
 
         Dog dog = modelMapper.map(command, Dog.class);
         dogRepository.save(dog);
+
+        Shelter shelter = shelterService.getShelter(command.getShelterId());
+        dog.setShelter(shelter);
 
         List<MultipartFile> multipartFiles = command.getImages();
         saveImagesOfDog(multipartFiles, dog);
@@ -45,6 +51,7 @@ public class DogServiceImpl implements DogService{
 
         DogInfoOneDog info = modelMapper.map(dog, DogInfoOneDog.class);
         info.setImageUrls(imgUrls);
+        info.setShelterId(command.getShelterId());
 
         return info;
     }
@@ -59,21 +66,33 @@ public class DogServiceImpl implements DogService{
             Dog actualDog = dogs.get(i);
             Image imageOfActualDog = imageService.getFirstImageOfDog(actualDog);
             dogInfos.get(i).setImgUrl(imageOfActualDog.getUrl());
+            dogInfos.get(i).setShelterId(dogs.get(i).getShelter().getId());
         }
         return dogInfos;
     }
 
     @Override
-    public DogInfoOneDog getOneDog(String dogId) {
-        Dog dog = dogRepository.findById(Long.parseLong(dogId))
-                            .orElseThrow(() -> new DogNotFoundException("Dog not found with ID: " + dogId));
+    public DogInfoOneDog getOneDogInfo(Long dogId) {
+        Dog dog = getOneDog(dogId);
 
         DogInfoOneDog info = modelMapper.map(dog, DogInfoOneDog.class);
 
         List<String> imgUrls = imageService.getAllImagesForOneDog(dog);
         info.setImageUrls(imgUrls);
+        info.setShelterId(dog.getShelter().getId());
 
         return info;
+    }
+
+    @Override
+    public List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId) {
+        return dogRepository.getAllDogsFromShelter(shelterId);
+    }
+
+    @Override
+    public Dog getOneDog(Long dogId) {
+        return dogRepository.findById(dogId)
+                .orElseThrow(() -> new DogNotFoundException("Dog not found with ID: " + dogId));
     }
 
     private void saveImagesOfDog(List<MultipartFile> multipartFiles, Dog dog) {
