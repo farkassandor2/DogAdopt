@@ -66,7 +66,7 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public List<Image> getFirstImagesForAllDogs(ImageType imageType) {
+    public List<Image> getFirstImagesForAllDogs(ImageType imageType) {      //Ha nem lesz használva törölni
         return imageRepository.getFirstImage(imageType);
     }
 

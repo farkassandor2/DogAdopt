@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
-    @Query("SELECT i " +
+    @Query("SELECT i " +            //Ha nem lesz használva akkor törölni
            "FROM Image i " +
            "WHERE i.imageType = ?1 " +
            "AND i.isFirstPicture = true")
