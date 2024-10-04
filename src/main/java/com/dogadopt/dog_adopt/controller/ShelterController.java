@@ -1,7 +1,6 @@
 package com.dogadopt.dog_adopt.controller;
 
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
-import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterDTOForDropDownMenu;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfoForUser;
 import com.dogadopt.dog_adopt.service.shelter.ShelterService;
@@ -36,7 +35,7 @@ public class ShelterController {
         return shelterService.listAllShelters();
     }
 
-    @RequestMapping("/for-dropdown")
+    @RequestMapping("/admin/for-dropdown")
     @ResponseStatus(OK)
     public List<ShelterDTOForDropDownMenu> getSheltersListForDropdown() {
         log.info("Http request / GET / dog-adopt / shelters / for-dropdown");
