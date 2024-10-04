@@ -62,12 +62,7 @@ public class DogServiceImpl implements DogService{
         List<Dog> dogs = dogRepository.findAll();
         List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogs, DogInfoListOfDogs.class);
 
-        for (int i = 0; i < dogs.size(); i++) {
-            Dog actualDog = dogs.get(i);
-            Image imageOfActualDog = imageService.getFirstImageOfDog(actualDog);
-            dogInfos.get(i).setImgUrl(imageOfActualDog.getUrl());
-            dogInfos.get(i).setShelterId(dogs.get(i).getShelter().getId());
-        }
+        setImgUrlAndShelterIdToDogInfo(dogs, dogInfos);
         return dogInfos;
     }
 
@@ -87,13 +82,24 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId) {
         List<Dog> dogsInShelter = dogRepository.getAllDogsFromShelter(shelterId);
-        return ObjectMapperUtil.mapAll(dogsInShelter, DogInfoListOfDogs.class);
+        List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogsInShelter, DogInfoListOfDogs.class);
+        setImgUrlAndShelterIdToDogInfo(dogsInShelter, dogInfos);
+        return dogInfos;
     }
 
     @Override
     public Dog getOneDog(Long dogId) {
         return dogRepository.findById(dogId)
                 .orElseThrow(() -> new DogNotFoundException("Dog not found with ID: " + dogId));
+    }
+
+    private void setImgUrlAndShelterIdToDogInfo(List<Dog> dogs, List<DogInfoListOfDogs> dogInfos) {
+        for (int i = 0; i < dogs.size(); i++) {
+            Dog actualDog = dogs.get(i);
+            Image imageOfActualDog = imageService.getFirstImageOfDog(actualDog);
+            dogInfos.get(i).setImgUrl(imageOfActualDog.getUrl());
+            dogInfos.get(i).setShelterId(dogs.get(i).getShelter().getId());
+        }
     }
 
     private void saveImagesOfDog(List<MultipartFile> multipartFiles, Dog dog) {
