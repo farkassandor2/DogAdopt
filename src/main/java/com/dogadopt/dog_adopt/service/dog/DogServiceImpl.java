@@ -86,7 +86,8 @@ public class DogServiceImpl implements DogService{
 
     @Override
     public List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId) {
-        return dogRepository.getAllDogsFromShelter(shelterId);
+        List<Dog> dogsInShelter = dogRepository.getAllDogsFromShelter(shelterId);
+        return ObjectMapperUtil.mapAll(dogsInShelter, DogInfoListOfDogs.class);
     }
 
     @Override

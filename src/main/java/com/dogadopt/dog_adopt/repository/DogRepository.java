@@ -14,5 +14,5 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
     @Query("SELECT d " +
            "FROM Dog d " +
            "WHERE d.shelter.id = ?1")
-    List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId);
+    List<Dog> getAllDogsFromShelter(Long shelterId);
 }
