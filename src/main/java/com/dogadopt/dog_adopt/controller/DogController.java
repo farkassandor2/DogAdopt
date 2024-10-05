@@ -53,7 +53,7 @@ public class DogController {
     @PatchMapping("/admin/update/{dogId}")
     @ResponseStatus(OK)
     public DogInfoOneDog updateDog(@PathVariable Long dogId, @Valid @RequestBody Map<String, Object> updates) {
-        log.info("Http request / GET / dog-adopt / admin / update / dogId");
+        log.info("Http request / PATCH / dog-adopt / admin / update / dogId");
         return dogService.updateDog(dogId, updates);
     }
 

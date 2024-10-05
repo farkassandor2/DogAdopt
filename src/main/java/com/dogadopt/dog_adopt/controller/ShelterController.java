@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -35,11 +36,18 @@ public class ShelterController {
         return shelterService.listAllShelters();
     }
 
-    @RequestMapping("/admin/for-dropdown")
+    @GetMapping("/admin/for-dropdown")
     @ResponseStatus(OK)
     public List<ShelterDTOForDropDownMenu> getSheltersListForDropdown() {
         log.info("Http request / GET / dog-adopt / shelters / for-dropdown");
         return shelterService.getSheltersListForDropDown();
+    }
+
+    @PatchMapping("/admin/update/{shelterId}")
+    @ResponseStatus(OK)
+    public ShelterInfoForUser updateShelter(@PathVariable Long shelterId, @Valid @RequestBody Map<String, Object> updates) {
+        log.info("Http request / PATCH / dog-adopt / admin / update / shelterId");
+        return shelterService.updateShelter(shelterId, updates);
     }
 
 

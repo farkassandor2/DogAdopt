@@ -24,10 +24,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @Transactional
@@ -99,6 +103,27 @@ public class ShelterServiceImpl implements ShelterService{
     public Shelter getShelter(Long shelterId) {
         return shelterRepository.findById(shelterId)
                 .orElseThrow(() -> new ShelterNotFoundException("Shelter not found with ID: " + shelterId));
+    }
+
+    @Override
+    public ShelterInfoForUser updateShelter(Long shelterId, Map<String, Object> updates) {
+        Shelter shelter = getShelter(shelterId);
+
+        updates.forEach((key, value) -> {
+            switch(key) {
+                case "name":
+                    shelter.setName((String) value);
+                    break;
+                case "email":
+                    shelter.setEmail((String) value);
+                    break;
+                default:
+                    throw new ResponseStatusException(BAD_REQUEST, "Unknown field: " + key);
+            }
+        });
+        shelterRepository.save(shelter);
+        ShelterInfoForUser info = modelMapper.map(shelter, ShelterInfoForUser.class);
+        return info;
     }
 
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {

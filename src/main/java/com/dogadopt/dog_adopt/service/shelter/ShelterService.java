@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ShelterService {
 
@@ -19,4 +20,6 @@ public interface ShelterService {
     List<ShelterDTOForDropDownMenu> getSheltersListForDropDown();
 
     Shelter getShelter(@NotNull Long shelterId);
+
+    ShelterInfoForUser updateShelter(Long shelterId, @Valid Map<String, Object> updates);
 }
