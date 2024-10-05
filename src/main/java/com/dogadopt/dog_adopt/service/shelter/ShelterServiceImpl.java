@@ -117,12 +117,30 @@ public class ShelterServiceImpl implements ShelterService{
                 case "email":
                     shelter.setEmail((String) value);
                     break;
+                case "phoneNumber":
+                    shelter.setPhoneNumber((String) value);
+                    break;
+                case "description":
+                    shelter.setDescription((String) value);
+                    break;
+                case "websiteUrl":
+                    shelter.setWebsiteUrl((String) value);
+                    break;
                 default:
                     throw new ResponseStatusException(BAD_REQUEST, "Unknown field: " + key);
             }
         });
+
         shelterRepository.save(shelter);
         ShelterInfoForUser info = modelMapper.map(shelter, ShelterInfoForUser.class);
+
+        List<Address> addressListOfActualShelter = addressService.getAddressesForShelter(shelter);
+        List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressListOfActualShelter, AddressInfo.class);
+        info.setAddressInfos(addressInfos);
+
+        Image imageOfActualShelter = imageService.getImagesForShelter(shelter);
+        info.setImageUrl(imageOfActualShelter.getUrl());
+
         return info;
     }
 
