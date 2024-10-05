@@ -5,6 +5,7 @@ import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     @Query("SELECT a " +
            "FROM Address a join a.addressShelters ash " +
-           "WHERE ash.id = ?1")
-    List<Address> getAddressesForShelter(Long id);
+           "WHERE ash.shelter = ?1")
+    List<Address> getAddressesForShelter(Shelter shelter);
 }

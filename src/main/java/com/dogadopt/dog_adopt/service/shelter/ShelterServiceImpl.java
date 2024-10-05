@@ -144,6 +144,18 @@ public class ShelterServiceImpl implements ShelterService{
         return info;
     }
 
+    @Override
+    public List<AddressInfo> addNewAddress(Long shelterId, AddressCreateUpdateCommand command) {
+        Shelter shelter = getShelter(shelterId);
+        Address newAddress = addressService.registerAddress(command);
+
+        setAddressAndShelterToAddressShelter(newAddress, shelter);
+
+        List<Address> addresses = addressService.getAddressesForShelter(shelter);
+
+        return ObjectMapperUtil.mapAll(addresses, AddressInfo.class);
+    }
+
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
         List<Image> images = new ArrayList<>();
 
@@ -165,7 +177,7 @@ public class ShelterServiceImpl implements ShelterService{
         addressShelter.setAddress(address);
         addressShelter.setShelter(shelter);
         addressShelterService.save(addressShelter);
-        shelter.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
-        address.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
+        shelter.getAddressShelters().add(addressShelter);
+        address.getAddressShelters().add(addressShelter);
     }
 }

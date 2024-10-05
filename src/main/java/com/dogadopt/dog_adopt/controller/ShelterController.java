@@ -1,6 +1,8 @@
 package com.dogadopt.dog_adopt.controller;
 
+import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterDTOForDropDownMenu;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfoForUser;
 import com.dogadopt.dog_adopt.service.shelter.ShelterService;
@@ -50,5 +52,10 @@ public class ShelterController {
         return shelterService.updateShelter(shelterId, updates);
     }
 
-
+    @PutMapping("/admin/update-address/{shelterId}")
+    @ResponseStatus(OK)
+    public List<AddressInfo> addNewAddress(@PathVariable Long shelterId, @Valid @RequestBody AddressCreateUpdateCommand command) {
+        log.info("HTTP request / PUT / dop-adopt  / admin / addresses / update, body {}", command.toString());
+        return shelterService.addNewAddress(shelterId, command);
+    }
 }

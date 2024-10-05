@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.service.addressshelter;
 
+import com.dogadopt.dog_adopt.domain.Address;
 import com.dogadopt.dog_adopt.domain.AddressShelter;
 import com.dogadopt.dog_adopt.repository.AddressShelterRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,12 @@ public class AddressShelterServiceImpl implements AddressShelterService {
 
     @Override
     public void save(AddressShelter addressShelter) {
-        addressShelterRepository.save(addressShelter);
+
+        Address address = addressShelter.getAddress();
+        AddressShelter addressShelterExisting = addressShelterRepository.findByAddress(address);
+
+        if(addressShelterExisting == null) {
+            addressShelterRepository.save(addressShelter);
+        }
     }
 }

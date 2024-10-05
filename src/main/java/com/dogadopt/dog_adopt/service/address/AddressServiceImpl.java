@@ -58,7 +58,12 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public List<Address> getAddressesForShelter(Shelter actualShelter) {
-        return addressRepository.getAddressesForShelter(actualShelter.getId());
+        return addressRepository.getAddressesForShelter(actualShelter);
+    }
+
+    @Override
+    public void save(Address newAddress) {
+        addressRepository.save(newAddress);
     }
 
     private Address getAddressIfExists(AddressCreateUpdateCommand command) {
