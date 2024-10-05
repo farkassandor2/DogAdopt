@@ -74,13 +74,10 @@ public class DogServiceImpl implements DogService{
 
     @Override
     public DogInfoOneDog getOneDogInfo(Long dogId) {
+
         Dog dog = getOneDog(dogId);
-
         DogInfoOneDog info = modelMapper.map(dog, DogInfoOneDog.class);
-
-        List<String> imgUrls = imageService.getAllImagesForOneDog(dog);
-        info.setImageUrls(imgUrls);
-        info.setShelterId(dog.getShelter().getId());
+        setImgUrlsAndShelterIdToDogInfoOneDog(dog, info);
 
         return info;
     }
@@ -110,23 +107,23 @@ public class DogServiceImpl implements DogService{
                     break;
                 case "healthStatus":
                     try {
-                        dog.setHealthStatus(HealthStatus.valueOf(key));
+                        dog.setHealthStatus(HealthStatus.valueOf((String) value));
                     } catch (IllegalArgumentException e) {
-                        throw new ResponseStatusException(BAD_REQUEST, "Invalid breed" + value);
+                        throw new ResponseStatusException(BAD_REQUEST, "Invalid health status: " + ((String) value).toUpperCase());
                     }
                     break;
                 case "status":
                     try {
-                        dog.setStatus(Status.valueOf(key));
+                        dog.setStatus(Status.valueOf((String) value));
                     } catch (IllegalArgumentException e) {
-                        throw new ResponseStatusException(BAD_REQUEST, "Invalid status" + value);
+                        throw new ResponseStatusException(BAD_REQUEST, "Invalid status: " + ((String) value).toUpperCase());
                     }
                     break;
                 case "donationGoal":
                     try {
-                        dog.setDonationGoal(DonationGoal.valueOf(key));
+                        dog.setDonationGoal(DonationGoal.valueOf((String) value));
                     } catch (IllegalArgumentException e) {
-                        throw new ResponseStatusException(BAD_REQUEST, "Invalid donation goal" + value);
+                        throw new ResponseStatusException(BAD_REQUEST, "Invalid donation goal: " + ((String) value).toUpperCase());
                     }
                     break;
                 default:
@@ -134,7 +131,17 @@ public class DogServiceImpl implements DogService{
             }
         });
         dogRepository.save(dog);
-        return modelMapper.map(dog, DogInfoOneDog.class);
+
+        DogInfoOneDog info = modelMapper.map(dog, DogInfoOneDog.class);
+        setImgUrlsAndShelterIdToDogInfoOneDog(dog, info);
+
+        return info;
+    }
+
+    private void setImgUrlsAndShelterIdToDogInfoOneDog(Dog dog, DogInfoOneDog info) {
+        List<String> imgUrls = imageService.getAllImagesForOneDog(dog);
+        info.setImageUrls(imgUrls);
+        info.setShelterId(dog.getShelter().getId());
     }
 
     private void setImgUrlAndShelterIdToDogInfo(List<Dog> dogs, List<DogInfoListOfDogs> dogInfos) {

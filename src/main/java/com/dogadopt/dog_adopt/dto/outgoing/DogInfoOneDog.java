@@ -2,10 +2,7 @@ package com.dogadopt.dog_adopt.dto.outgoing;
 
 import com.dogadopt.dog_adopt.domain.Comment;
 import com.dogadopt.dog_adopt.domain.WalkingReservation;
-import com.dogadopt.dog_adopt.domain.enums.dog.DogBreed;
-import com.dogadopt.dog_adopt.domain.enums.dog.DogSize;
-import com.dogadopt.dog_adopt.domain.enums.dog.DonationGoal;
-import com.dogadopt.dog_adopt.domain.enums.dog.HealthStatus;
+import com.dogadopt.dog_adopt.domain.enums.dog.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +28,8 @@ public class DogInfoOneDog {
     private DogSize dogSize;
 
     private HealthStatus healthStatus;
+
+    private Status status;
 
     private String description;
 

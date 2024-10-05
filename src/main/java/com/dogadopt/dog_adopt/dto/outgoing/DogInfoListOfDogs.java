@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.dto.outgoing;
 
 import com.dogadopt.dog_adopt.domain.enums.dog.DogBreed;
+import com.dogadopt.dog_adopt.domain.enums.dog.Status;
 import lombok.*;
 
 @Getter
@@ -16,6 +17,8 @@ public class DogInfoListOfDogs {
     private Integer age;
 
     private DogBreed breed;
+
+    private Status status;
 
     private String imgUrl;
 
