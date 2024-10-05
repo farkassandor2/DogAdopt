@@ -21,4 +21,6 @@ public interface DogService {
     List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId);
 
     Dog getOneDog(Long id);
+
+    void deleteDog(Long dogId);
 }

@@ -42,6 +42,8 @@ public class Dog {
     @Enumerated(EnumType.STRING)
     private HealthStatus healthStatus;
 
+    private boolean isAdoptable;
+
     @Size(max = 500, message = "Description can have maximum {max} characters.")
     private String description;
 
@@ -76,5 +78,6 @@ public class Dog {
     @PrePersist
     protected void onCreate() {
         this.takenToAdoptionCenter = LocalDateTime.now();
+        this.isAdoptable = true;
     }
 }

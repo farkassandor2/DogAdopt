@@ -93,6 +93,11 @@ public class DogServiceImpl implements DogService{
                 .orElseThrow(() -> new DogNotFoundException("Dog not found with ID: " + dogId));
     }
 
+    @Override
+    public void deleteDog(Long dogId) {
+
+    }
+
     private void setImgUrlAndShelterIdToDogInfo(List<Dog> dogs, List<DogInfoListOfDogs> dogInfos) {
         for (int i = 0; i < dogs.size(); i++) {
             Dog actualDog = dogs.get(i);

@@ -43,9 +43,18 @@ public class DogController {
     }
 
     @RequestMapping("/get-dogs-shelter/{shelterId}")
+    @ResponseStatus(OK)
     public List<DogInfoListOfDogs> getAllDogsFromShelter(@PathVariable Long shelterId) {
         log.info("Http request / GET / dog-adopt / shelters / shelterId / dogs");
         return dogService.getAllDogsFromShelter(shelterId);
+    }
+
+
+    @RequestMapping("/admin/delete/{dogId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteDog(@PathVariable Long dogId) {
+        log.info("Http request / GET / dog-adopt / admin / delete / dogId");
+        dogService.deleteDog(dogId);
     }
 
 
