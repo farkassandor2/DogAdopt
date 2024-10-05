@@ -65,7 +65,7 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<DogInfoListOfDogs> listAllDogs() {
 
-        List<Dog> dogs = dogRepository.findAll();
+        List<Dog> dogs = dogRepository.findAllNotDeceased(Status.DECEASED);
         List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogs, DogInfoListOfDogs.class);
 
         setImgUrlAndShelterIdToDogInfo(dogs, dogInfos);
@@ -84,7 +84,7 @@ public class DogServiceImpl implements DogService{
 
     @Override
     public List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId) {
-        List<Dog> dogsInShelter = dogRepository.getAllDogsFromShelter(shelterId);
+        List<Dog> dogsInShelter = dogRepository.getAllDogsFromShelter(shelterId, Status.DECEASED);
         List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogsInShelter, DogInfoListOfDogs.class);
         setImgUrlAndShelterIdToDogInfo(dogsInShelter, dogInfos);
         return dogInfos;
@@ -92,7 +92,7 @@ public class DogServiceImpl implements DogService{
 
     @Override
     public Dog getOneDog(Long dogId) {
-        return dogRepository.findById(dogId)
+        return (Dog) dogRepository.findByIdNotDeceased(dogId, Status.DECEASED)
                 .orElseThrow(() -> new DogNotFoundException("Dog not found with ID: " + dogId));
     }
 
@@ -164,4 +164,5 @@ public class DogServiceImpl implements DogService{
         dog.setImages(images);
         images.forEach(i -> i.setDog(dog));
     }
+
 }
