@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -42,20 +43,20 @@ public class DogController {
         return dogService.getOneDogInfo(dogId);
     }
 
-    @RequestMapping("/get-dogs-shelter/{shelterId}")
+    @GetMapping("/get-dogs-shelter/{shelterId}")
     @ResponseStatus(OK)
     public List<DogInfoListOfDogs> getAllDogsFromShelter(@PathVariable Long shelterId) {
         log.info("Http request / GET / dog-adopt / shelters / shelterId / dogs");
         return dogService.getAllDogsFromShelter(shelterId);
     }
 
-
-    @RequestMapping("/admin/delete/{dogId}")
-    @ResponseStatus(NO_CONTENT)
-    public void deleteDog(@PathVariable Long dogId) {
-        log.info("Http request / GET / dog-adopt / admin / delete / dogId");
-        dogService.deleteDog(dogId);
+    @PatchMapping("/admin/update/{dogId}")
+    @ResponseStatus(OK)
+    public DogInfoOneDog updateDog(@PathVariable Long dogId, @Valid @RequestBody Map<String, Object> updates) {
+        log.info("Http request / GET / dog-adopt / admin / update / dogId");
+        return dogService.updateDog(dogId, updates);
     }
+
 
 
 }

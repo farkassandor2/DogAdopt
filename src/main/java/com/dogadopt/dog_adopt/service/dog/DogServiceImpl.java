@@ -4,6 +4,9 @@ import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
+import com.dogadopt.dog_adopt.domain.enums.dog.DonationGoal;
+import com.dogadopt.dog_adopt.domain.enums.dog.HealthStatus;
+import com.dogadopt.dog_adopt.domain.enums.dog.Status;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
@@ -17,8 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @Transactional
@@ -94,8 +100,41 @@ public class DogServiceImpl implements DogService{
     }
 
     @Override
-    public void deleteDog(Long dogId) {
+    public DogInfoOneDog updateDog(Long dogId, Map<String, Object> updates) {
+        Dog dog = getOneDog(dogId);
 
+        updates.forEach((key, value) -> {
+            switch (key) {
+                case "name":
+                    dog.setName((String) value);
+                    break;
+                case "healthStatus":
+                    try {
+                        dog.setHealthStatus(HealthStatus.valueOf(key));
+                    } catch (IllegalArgumentException e) {
+                        throw new ResponseStatusException(BAD_REQUEST, "Invalid breed" + value);
+                    }
+                    break;
+                case "status":
+                    try {
+                        dog.setStatus(Status.valueOf(key));
+                    } catch (IllegalArgumentException e) {
+                        throw new ResponseStatusException(BAD_REQUEST, "Invalid status" + value);
+                    }
+                    break;
+                case "donationGoal":
+                    try {
+                        dog.setDonationGoal(DonationGoal.valueOf(key));
+                    } catch (IllegalArgumentException e) {
+                        throw new ResponseStatusException(BAD_REQUEST, "Invalid donation goal" + value);
+                    }
+                    break;
+                default:
+                    throw new ResponseStatusException(BAD_REQUEST, "Unknown field: " + key);
+            }
+        });
+        dogRepository.save(dog);
+        return modelMapper.map(dog, DogInfoOneDog.class);
     }
 
     private void setImgUrlAndShelterIdToDogInfo(List<Dog> dogs, List<DogInfoListOfDogs> dogInfos) {

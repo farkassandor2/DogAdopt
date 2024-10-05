@@ -1,9 +1,6 @@
 package com.dogadopt.dog_adopt.domain;
 
-import com.dogadopt.dog_adopt.domain.enums.dog.DogBreed;
-import com.dogadopt.dog_adopt.domain.enums.dog.DogSize;
-import com.dogadopt.dog_adopt.domain.enums.dog.DonationGoal;
-import com.dogadopt.dog_adopt.domain.enums.dog.HealthStatus;
+import com.dogadopt.dog_adopt.domain.enums.dog.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -42,7 +39,8 @@ public class Dog {
     @Enumerated(EnumType.STRING)
     private HealthStatus healthStatus;
 
-    private boolean isAdoptable;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Size(max = 500, message = "Description can have maximum {max} characters.")
     private String description;
@@ -78,6 +76,7 @@ public class Dog {
     @PrePersist
     protected void onCreate() {
         this.takenToAdoptionCenter = LocalDateTime.now();
-        this.isAdoptable = true;
+        this.donationGoal = DonationGoal.GENERAL;
+        this.status = Status.AVAILABLE;
     }
 }

@@ -8,6 +8,7 @@ import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface DogService {
@@ -22,5 +23,5 @@ public interface DogService {
 
     Dog getOneDog(Long id);
 
-    void deleteDog(Long dogId);
+    DogInfoOneDog updateDog(Long dogId, @Valid Map<String, Object> updates);
 }

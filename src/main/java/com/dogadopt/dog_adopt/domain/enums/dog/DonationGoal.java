@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DonationGoal {
 
+    GENERAL("General Fund", "Általános Gondozás"),
     VETERINARY_CARE("Veterinary Care Fund", "Állatorvosi Gondozási Alap"),
     FOOD_AND_SUPPLIES("Food and Supplies Fund", "Élelmiszer- és Kellék Alap"),
     ADOPTION_EVENTS("Adoption Events Fund", "Örökbefogadási Események Alap"),
