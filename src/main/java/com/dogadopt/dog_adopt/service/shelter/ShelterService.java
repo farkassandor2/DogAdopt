@@ -26,4 +26,6 @@ public interface ShelterService {
     ShelterInfoForUser updateShelter(Long shelterId, @Valid Map<String, Object> updates);
 
     List<AddressInfo> addNewAddress(Long shelterId, @Valid AddressCreateUpdateCommand command);
+
+    void deleteConnectionBetweenShelterAndAddress(Long shelterId, Long addressId);
 }

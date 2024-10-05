@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.domain.Address;
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
+import com.dogadopt.dog_adopt.exception.AddressNotFoundException;
 import com.dogadopt.dog_adopt.exception.ZipInvalidException;
 import com.dogadopt.dog_adopt.repository.AddressRepository;
 import com.dogadopt.dog_adopt.service.zip.ZipcodeService;
@@ -64,6 +65,12 @@ public class AddressServiceImpl implements AddressService{
     @Override
     public void save(Address newAddress) {
         addressRepository.save(newAddress);
+    }
+
+    @Override
+    public Address getAddressById(Long addressId) {
+        return addressRepository.findById(addressId)
+                .orElseThrow(() -> new AddressNotFoundException("Address not found with ID:" + addressId));
     }
 
     private Address getAddressIfExists(AddressCreateUpdateCommand command) {

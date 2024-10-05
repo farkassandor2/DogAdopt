@@ -156,6 +156,13 @@ public class ShelterServiceImpl implements ShelterService{
         return ObjectMapperUtil.mapAll(addresses, AddressInfo.class);
     }
 
+    @Override
+    public void deleteConnectionBetweenShelterAndAddress(Long shelterId, Long addressId) {
+        Shelter shelter = getShelter(shelterId);
+        Address address = addressService.getAddressById(addressId);
+        addressShelterService.deleteConnectionBetweenShelterAndAddress(shelter, address);
+    }
+
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
         List<Image> images = new ArrayList<>();
 

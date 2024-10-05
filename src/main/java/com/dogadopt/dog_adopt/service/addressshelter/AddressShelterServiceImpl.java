@@ -2,6 +2,7 @@ package com.dogadopt.dog_adopt.service.addressshelter;
 
 import com.dogadopt.dog_adopt.domain.Address;
 import com.dogadopt.dog_adopt.domain.AddressShelter;
+import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.repository.AddressShelterRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,10 @@ public class AddressShelterServiceImpl implements AddressShelterService {
         if(addressShelterExisting == null) {
             addressShelterRepository.save(addressShelter);
         }
+    }
+
+    @Override
+    public void deleteConnectionBetweenShelterAndAddress(Shelter shelter, Address address) {
+        addressShelterRepository.deleteConnectionBetweenShelterAndAddress(shelter, address);
     }
 }

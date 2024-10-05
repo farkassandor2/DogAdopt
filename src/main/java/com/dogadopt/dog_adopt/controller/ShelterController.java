@@ -58,4 +58,11 @@ public class ShelterController {
         log.info("HTTP request / PUT / dop-adopt  / admin / addresses / update, body {}", command.toString());
         return shelterService.addNewAddress(shelterId, command);
     }
+
+    @DeleteMapping("/admin/delete-address/{shelterId}/{addressId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteAddress(@PathVariable Long shelterId, @PathVariable Long addressId) {
+        log.info("Http request / DELETE / dog-adopt / admin / delete-address / shelterId / addressId, shelterId {} addressId{}", shelterId, addressId);
+        shelterService.deleteConnectionBetweenShelterAndAddress(shelterId, addressId);
+    }
 }

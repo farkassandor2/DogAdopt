@@ -82,4 +82,11 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleShelterNotFoundException(ShelterNotFoundException ex) {
         return Collections.singletonList(new ErrorResponse("shelterId", ex.getMessage()));
     }
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleAddressNotFoundException(AddressNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("addressId", ex.getMessage()));
+    }
 }

@@ -17,4 +17,6 @@ public interface AddressService {
     List<Address> getAddressesForShelter(Shelter actualShelter);
 
     void save(Address newAddress);
+
+    Address getAddressById(Long addressId);
 }
