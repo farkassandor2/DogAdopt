@@ -46,7 +46,7 @@ public class ImageServiceImpl implements ImageService{
 
                     uploadOptions.put("folder", folder);
 
-                     String newId = createNewId(id, uploadOptions);
+                     String newId = createNewId(id, uploadOptions, imageType);
                      checkIfFirstPicture(newId);
 
                     uploadOptions.put("public_id",newId);
@@ -101,14 +101,31 @@ public class ImageServiceImpl implements ImageService{
         }
     }
 
-    private String createNewId(Long id, Map<String, String> uploadOptions) {
-        String existingId = uploadOptions.getOrDefault("public_id", "0/0");
-        String[] idPerCharacter = existingId.split("/");
-        String firstHalfOfId = String.valueOf(id);
-        String secondHalfOfIdExistingString = idPerCharacter[1];
-        long secondHalfOfIdExistingLong = Long.parseLong(secondHalfOfIdExistingString);
-        long secondHalfOfIdNewLong = secondHalfOfIdExistingLong + 1;
-        String secondHalfOfIdNewString = Long.toString(secondHalfOfIdNewLong);
-        return firstHalfOfId + "/" + secondHalfOfIdNewString;
+    private String createNewId(Long id, Map<String, String> uploadOptions, ImageType imageType) {
+
+        String resultString;
+        int secondHalfOfIdNew = 0;
+
+        if (imageType == ImageType.DOG) {
+            String firstHalfOfId = String.valueOf(id);
+            int numberOfPicsOfDog = imageRepository.getNumberOfPicsUploadedToDog(id);
+
+            if(numberOfPicsOfDog != 0) {
+                secondHalfOfIdNew = numberOfPicsOfDog + 1;
+            } else {
+                String existingId = uploadOptions.getOrDefault("public_id", "0/0");
+                String[] idPerCharacter = existingId.split("/");
+                String secondHalfOfIdString = idPerCharacter[1];
+                secondHalfOfIdNew = Integer.parseInt(secondHalfOfIdString) + 1;
+            }
+
+            String secondHalfOfIdNewString = String.valueOf(secondHalfOfIdNew);
+            resultString = firstHalfOfId + "/" + secondHalfOfIdNewString;
+
+        } else {
+            resultString = id + "/1";
+        }
+
+        return resultString;
     }
 }
