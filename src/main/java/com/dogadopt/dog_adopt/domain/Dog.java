@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class Dog {
     @NonNull
     @Size(max = 50, message = "Dog name can be maximum {max} characters.")
     private String name;
+
+    private LocalDate dateOfBirth;
 
     @NonNull
     private Integer age;
@@ -76,7 +79,7 @@ public class Dog {
     @PrePersist
     protected void onCreate() {
         this.takenToAdoptionCenter = LocalDateTime.now();
-        this.donationGoal = DonationGoal.GENERAL;
+//        this.donationGoal = DonationGoal.GENERAL;
         this.status = Status.AVAILABLE;
     }
 }

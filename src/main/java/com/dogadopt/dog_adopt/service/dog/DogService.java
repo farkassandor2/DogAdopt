@@ -24,4 +24,6 @@ public interface DogService {
     Dog getOneDog(Long id);
 
     DogInfoOneDog updateDog(Long dogId, @Valid Map<String, Object> updates);
+
+    void updateDogAge();
 }

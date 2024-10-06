@@ -17,18 +17,22 @@ import com.dogadopt.dog_adopt.service.image.ImageService;
 import com.dogadopt.dog_adopt.service.shelter.ShelterService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class DogServiceImpl implements DogService{
 
     private static final String DOG_FOLDER = "dogs";
@@ -165,4 +169,25 @@ public class DogServiceImpl implements DogService{
         images.forEach(i -> i.setDog(dog));
     }
 
-}
+    public void updateDogAge() {
+
+        LocalDate now = LocalDate.now();
+        List<Status> excludeStatus = List.of(Status.DECEASED);
+
+        try (Stream<Dog> dogs = dogRepository.streamAllDogs(excludeStatus)){
+            dogs.forEach(dog -> {
+                LocalDate birthDate = dog.getDateOfBirth();
+                if (birthDate == null) {
+                    dog.setAge(dog.getAge() + 1);
+                } else {
+                    if ((birthDate.getYear() == now.getYear() - 1 && birthDate.getMonthValue() < 5)) {
+                        dog.setAge(dog.getAge() + 1);
+                    }
+                }
+                dogRepository.save(dog);
+            });
+        } catch (Exception e) {
+            log.info("Failed to update dog ages for dogs with status: {}. Error: {}", excludeStatus, e.getMessage());
+        }
+        }
+    }
