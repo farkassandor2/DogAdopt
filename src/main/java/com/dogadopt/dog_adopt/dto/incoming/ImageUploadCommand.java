@@ -14,5 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 public class ImageUploadCommand {
 
-    private List<MultipartFile> multipartFiles;
+    private List<MultipartFile> images;
 }

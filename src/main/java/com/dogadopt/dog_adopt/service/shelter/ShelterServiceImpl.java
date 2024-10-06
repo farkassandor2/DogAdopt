@@ -174,7 +174,7 @@ public class ShelterServiceImpl implements ShelterService{
             imageService.deleteImage(shelter, imgId);
         }
 
-        List<MultipartFile> multipartFiles = command.getMultipartFiles();
+        List<MultipartFile> multipartFiles = command.getImages();
         setImageToShelter(multipartFiles, shelter);
     }
 

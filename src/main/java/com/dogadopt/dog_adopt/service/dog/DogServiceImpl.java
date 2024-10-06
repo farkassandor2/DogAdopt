@@ -201,5 +201,13 @@ public class DogServiceImpl implements DogService{
     @Override
     public void uploadPictureForDog(Long dogId, ImageUploadCommand command) {
 
+        Dog dog = getOneDog(dogId);
+
+        List<MultipartFile> multipartFiles = command.getImages();
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            saveImagesOfDog(multipartFiles, dog);
+        }
+
+
     }
 }

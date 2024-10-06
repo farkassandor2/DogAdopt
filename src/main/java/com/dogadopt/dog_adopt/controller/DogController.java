@@ -65,15 +65,11 @@ public class DogController {
 //        return dogService.deletePictureForDog(dogId, pictureId);
 //    }
 
-    @PutMapping("/admin/upload-picture/{dogId}/")
+    @PutMapping("/admin/upload-picture/{dogId}")
     @ResponseStatus(OK)
     public void uploadPictureForDog(@PathVariable Long dogId, @ModelAttribute ImageUploadCommand command) {
         log.info("Http request / PUT / dog-adopt / dogs / admin / upload-picture / dogId, body {}", command.toString());
         dogService.uploadPictureForDog(dogId, command);
     }
-
-
-
-
 
 }
