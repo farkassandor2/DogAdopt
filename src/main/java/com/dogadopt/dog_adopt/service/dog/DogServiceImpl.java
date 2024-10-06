@@ -54,11 +54,17 @@ public class DogServiceImpl implements DogService{
         dog.setShelter(shelter);
 
         List<MultipartFile> multipartFiles = command.getImages();
-        saveImagesOfDog(multipartFiles, dog);
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            saveImagesOfDog(multipartFiles, dog);
+        }
 
-        List<String> imgUrls = dog.getImages().stream()
-                .map(Image::getUrl)
-                .toList();
+        List<String> imgUrls = new ArrayList<>();
+        if (dog.getImages() != null && !dog.getImages().isEmpty()) {
+            imgUrls = dog.getImages().stream()
+                                      .map(Image::getUrl)
+                                      .toList();
+        }
+
 
         DogInfoOneDog info = modelMapper.map(dog, DogInfoOneDog.class);
         info.setImageUrls(imgUrls);
