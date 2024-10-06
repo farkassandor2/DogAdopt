@@ -7,6 +7,7 @@ import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterDTOForDropDownMenu;
@@ -160,15 +161,34 @@ public class ShelterServiceImpl implements ShelterService{
         addressShelterService.deleteConnectionBetweenShelterAndAddress(shelter, address);
     }
 
+    @Override
+    public void changePicture(Long shelterId, ImageUploadCommand command) {
+
+        Shelter shelter = getShelter(shelterId);
+        Long imgId = shelter.getImages().get(0).getId();
+
+        if (imgId != null) {
+            imageService.deleteImage(shelter, imgId);
+        }
+
+        List<MultipartFile> multipartFiles = command.getMultipartFiles();
+        setImageToShelter(multipartFiles, shelter);
+    }
+
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
         List<Image> images = new ArrayList<>();
 
+        images = saveImages(multipartFiles, shelter, images);
+        shelter.setImages(images);
+        images.get(0).setShelter(shelter);
+    }
+
+    private List<Image> saveImages(List<MultipartFile> multipartFiles, Shelter shelter, List<Image> images) {
         if (multipartFiles != null && !multipartFiles.isEmpty()) {
             List<MultipartFile> oneElementMultipartList = Collections.singletonList(multipartFiles.get(0));
             images = imageService.uploadFile(oneElementMultipartList, SHELTER_FOLDER, shelter.getId(), SHELTER_IMAGE);
         }
-        shelter.setImages(images);
-        images.get(0).setShelter(shelter);
+        return images;
     }
 
     private void setAddressInfoAndShelterToShelterInfo(ShelterInfoForUser shelterInfoForUser, AddressInfo addressInfo, Shelter shelter) {

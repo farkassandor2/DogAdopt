@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.controller;
 
 import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterDTOForDropDownMenu;
@@ -27,14 +28,14 @@ public class ShelterController {
     @PostMapping("/admin/register")
     @ResponseStatus(CREATED)
     public ShelterInfoForUser registerShelter(@Valid @ModelAttribute ShelterCreateUpdateCommand command) {
-        log.info("HTTP request / POST / dop-adopt / shelter / admin / register, body {}", command.toString());
+        log.info("HTTP request / POST / dop-adopt / shelters / admin / register, body {}", command.toString());
         return shelterService.registerShelter(command);
     }
 
     @GetMapping("/all-shelters")
     @ResponseStatus(OK)
     public List<ShelterInfoForUser> listAllSheltersForUserRequest() {
-        log.info("HTTP request / GET / dop-adopt / shelter / all-shelters");
+        log.info("HTTP request / GET / dop-adopt / shelters / all-shelters");
         return shelterService.listAllShelters();
     }
 
@@ -48,21 +49,29 @@ public class ShelterController {
     @PatchMapping("/admin/update/{shelterId}")
     @ResponseStatus(OK)
     public ShelterInfoForUser updateShelter(@PathVariable Long shelterId, @Valid @RequestBody Map<String, Object> updates) {
-        log.info("Http request / PATCH / dog-adopt / admin / update / shelterId");
+        log.info("Http request / PATCH / dog-adopt / shelters / admin / update / shelterId");
         return shelterService.updateShelter(shelterId, updates);
     }
 
     @PutMapping("/admin/update-address/{shelterId}")
     @ResponseStatus(OK)
     public List<AddressInfo> addNewAddress(@PathVariable Long shelterId, @Valid @RequestBody AddressCreateUpdateCommand command) {
-        log.info("HTTP request / PUT / dop-adopt  / admin / addresses / update, body {}", command.toString());
+        log.info("HTTP request / PUT / dop-adopt  / shelters / admin / addresses / update, body {}", command.toString());
         return shelterService.addNewAddress(shelterId, command);
     }
 
     @DeleteMapping("/admin/delete-address/{shelterId}/{addressId}")
     @ResponseStatus(NO_CONTENT)
     public void deleteAddress(@PathVariable Long shelterId, @PathVariable Long addressId) {
-        log.info("Http request / DELETE / dog-adopt / admin / delete-address / shelterId / addressId, shelterId {} addressId{}", shelterId, addressId);
+        log.info("Http request / DELETE / dog-adopt / shelters / admin / delete-address / shelterId / addressId, shelterId {} addressId{}", shelterId, addressId);
         shelterService.deleteConnectionBetweenShelterAndAddress(shelterId, addressId);
     }
+
+    @PutMapping("/admin/change-picture/{shelterId}")
+    @ResponseStatus(OK)
+    public void changePicture(@PathVariable Long shelterId, @ModelAttribute ImageUploadCommand command) {
+        log.info("Http request / PUT / dog-adopt / shelters / admin / change-picture / shelterId");
+        shelterService.changePicture(shelterId, command);
+    }
+
 }

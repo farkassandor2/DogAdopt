@@ -5,6 +5,7 @@ import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +35,10 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
            "FROM Image i " +
            "WHERE i.dog = ?1")
     List<String> getAllImagesForOneDog(Dog dog);
+
+    @Modifying
+    @Query("DELETE FROM Image i " +
+           "WHERE i.shelter = ?1 " +
+           "AND i.id = ?2")
+    void deleteImage(Shelter shelter, Long imgId);
 }

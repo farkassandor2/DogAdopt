@@ -85,6 +85,11 @@ public class ImageServiceImpl implements ImageService{
         return imageRepository.getAllImagesForOneDog(dog);
     }
 
+    @Override
+    public void deleteImage(Shelter shelter, Long imgId) {
+        imageRepository.deleteImage(shelter, imgId);
+    }
+
     private void checkIfFirstPicture(String newId) {
         isFirstPicture = false;
         String[] idPerCharacter = newId.split("/");

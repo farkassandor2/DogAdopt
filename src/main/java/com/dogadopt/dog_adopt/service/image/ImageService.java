@@ -21,4 +21,6 @@ public interface ImageService {
     Image getFirstImageOfDog(Dog actualDog);
 
     List<String> getAllImagesForOneDog(Dog dog);
+
+    void deleteImage(Shelter shelter, Long imgId);
 }

@@ -2,6 +2,7 @@ package com.dogadopt.dog_adopt.service.shelter;
 
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
@@ -28,4 +29,6 @@ public interface ShelterService {
     List<AddressInfo> addNewAddress(Long shelterId, @Valid AddressCreateUpdateCommand command);
 
     void deleteConnectionBetweenShelterAndAddress(Long shelterId, Long addressId);
+
+    void changePicture(Long shelterId, ImageUploadCommand command);
 }
