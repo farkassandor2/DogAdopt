@@ -62,8 +62,11 @@ public class Shelter {
     @PrePersist
     protected void onCreate() {
         this.registeredOnWebsite = LocalDateTime.now();
-        this.countryTelephoneCode = addressShelters.get(0).getAddress()
-                .getCountry()
-                .getTelephoneCountryCode();
+        if (addressShelters != null) {
+            this.countryTelephoneCode = addressShelters.get(0).getAddress()
+                                                       .getCountry()
+                                                       .getTelephoneCountryCode();
+        }
+
     }
 }

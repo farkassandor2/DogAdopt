@@ -9,6 +9,7 @@ import com.dogadopt.dog_adopt.domain.enums.dog.HealthStatus;
 import com.dogadopt.dog_adopt.domain.enums.dog.Status;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.exception.DogNotFoundException;
@@ -190,4 +191,9 @@ public class DogServiceImpl implements DogService{
             log.info("Failed to update dog ages for dogs with status: {}. Error: {}", excludeStatus, e.getMessage());
         }
         }
+
+    @Override
+    public void uploadPictureForDog(Long dogId, ImageUploadCommand command) {
+
     }
+}

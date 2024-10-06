@@ -52,10 +52,11 @@ public class ShelterServiceImpl implements ShelterService{
         Shelter shelter = modelMapper.map(command, Shelter.class);
 
         AddressInfo addressInfo = command.getAddressInfo();
-        AddressCreateUpdateCommand addressCommand = modelMapper.map(addressInfo, AddressCreateUpdateCommand.class);
-        Address address = addressService.registerAddress(addressCommand);
-
-        setAddressAndShelterToAddressShelter(address, shelter);
+        if (addressInfo != null) {
+            AddressCreateUpdateCommand addressCommand = modelMapper.map(addressInfo, AddressCreateUpdateCommand.class);
+            Address address = addressService.registerAddress(addressCommand);
+            setAddressAndShelterToAddressShelter(address, shelter);
+        }
 
         try {
             shelterRepository.save(shelter);
@@ -64,7 +65,9 @@ public class ShelterServiceImpl implements ShelterService{
         }
 
         List<MultipartFile> multipartFiles = command.getImages();
-        setImageToShelter(multipartFiles, shelter);
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
+            setImageToShelter(multipartFiles, shelter);
+        }
 
         ShelterInfoForUser shelterInfoForUser = modelMapper.map(shelter, ShelterInfoForUser.class);
         setAddressInfoAndShelterToShelterInfo(shelterInfoForUser, addressInfo, shelter);
@@ -192,8 +195,14 @@ public class ShelterServiceImpl implements ShelterService{
     }
 
     private void setAddressInfoAndShelterToShelterInfo(ShelterInfoForUser shelterInfoForUser, AddressInfo addressInfo, Shelter shelter) {
-        shelterInfoForUser.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
-        shelterInfoForUser.setImageUrl(shelter.getImages().get(0).getUrl());
+
+        if (addressInfo != null) {
+            shelterInfoForUser.setAddressInfos(new ArrayList<>(List.of(addressInfo)));
+        }
+
+        if (shelter.getImages() != null) {
+            shelterInfoForUser.setImageUrl(shelter.getImages().get(0).getUrl());
+        }
     }
 
     private void setAddressAndShelterToAddressShelter(Address address, Shelter shelter) {
