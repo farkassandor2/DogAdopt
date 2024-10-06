@@ -46,4 +46,10 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
            "FROM Image i " +
            "WHERE i.dog.id = ?1")
     int getNumberOfPicsUploadedToDog(Long dogId);
+
+    @Modifying
+    @Query("DELETE FROM Image i " +
+           "WHERE i.dog.id = ?1 " +
+           "AND i.id = ?2")
+    void deletePictureForDog(Long dogId, Long pictureId);
 }

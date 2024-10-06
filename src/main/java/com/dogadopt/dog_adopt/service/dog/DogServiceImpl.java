@@ -207,7 +207,10 @@ public class DogServiceImpl implements DogService{
         if (multipartFiles != null && !multipartFiles.isEmpty()) {
             saveImagesOfDog(multipartFiles, dog);
         }
+    }
 
-
+    @Override
+    public void deletePictureForDog(Long dogId, Long pictureId) {
+        imageService.deletePictureForDog(dogId, pictureId);
     }
 }

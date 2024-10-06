@@ -58,12 +58,12 @@ public class DogController {
         return dogService.updateDog(dogId, updates);
     }
 
-//    @DeleteMapping("/admin/delete-picture/{dogId}/{pictureId}")
-//    @ResponseStatus(NO_CONTENT)
-//    public void deletePictureForDog(@PathVariable Long dogId, @PathVariable Long pictureId) {
-//        log.info("Http request / DELETE / dog-adopt / dogs / admin / delete-picture / dogId / pictureId");
-//        return dogService.deletePictureForDog(dogId, pictureId);
-//    }
+    @DeleteMapping("/admin/delete-picture/{dogId}/{pictureId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deletePictureForDog(@PathVariable Long dogId, @PathVariable Long pictureId) {
+        log.info("Http request / DELETE / dog-adopt / dogs / admin / delete-picture / dogId / pictureId");
+        dogService.deletePictureForDog(dogId, pictureId);
+    }
 
     @PutMapping("/admin/upload-picture/{dogId}")
     @ResponseStatus(OK)

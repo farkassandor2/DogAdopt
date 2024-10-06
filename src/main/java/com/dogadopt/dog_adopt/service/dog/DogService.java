@@ -29,4 +29,6 @@ public interface DogService {
     void updateDogAge();
 
     void uploadPictureForDog(Long dogId, ImageUploadCommand command);
+
+    void deletePictureForDog(Long dogId, Long pictureId);
 }

@@ -89,4 +89,11 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleAddressNotFoundException(AddressNotFoundException ex) {
         return Collections.singletonList(new ErrorResponse("addressId", ex.getMessage()));
     }
+
+    @ExceptionHandler(ImageNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleImageNotFoundException(ImageNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("imageId", ex.getMessage()));
+    }
 }

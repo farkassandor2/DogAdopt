@@ -1,11 +1,13 @@
 package com.dogadopt.dog_adopt.service.image;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.exception.CloudinaryException;
+import com.dogadopt.dog_adopt.exception.ImageNotFoundException;
 import com.dogadopt.dog_adopt.repository.ImageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -85,10 +84,53 @@ public class ImageServiceImpl implements ImageService{
         return imageRepository.getAllImagesForOneDog(dog);
     }
 
+
+    //////////////////////////
     @Override
     public void deleteImage(Shelter shelter, Long imgId) {
         imageRepository.deleteImage(shelter, imgId);
     }
+
+    @Override
+    public void deletePictureForDog(Long dogId, Long pictureId) {
+        Image image = imageRepository.findById(pictureId)
+                                     .orElseThrow(() -> new ImageNotFoundException("Image not found with ID" + pictureId));
+
+        String url = image.getUrl();
+        String publicId = extractPublicId(url);
+
+    try {
+        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+            imageRepository.deletePictureForDog(dogId, pictureId);
+
+    }
+
+    private String extractPublicId(String url) {
+        // Example URL: https://res.cloudinary.com/dog-adopt/image/upload/v1728230649/dogs/1/3.jpg
+        String urlWithoutFileExtension = removeExtension(url);
+
+        String[] parts = urlWithoutFileExtension.split("/");
+        String folder = parts[parts.length - 3]; // "dogs"
+        int dogId = Integer.parseInt(parts[parts.length - 2]); // "1"
+        int pictureId = Integer.parseInt(parts[parts.length-1]);
+
+        return String.join("/", Arrays.copyOfRange(parts, parts.length - 3, parts.length - 1));
+    }
+
+    public String removeExtension(String url) {
+        int lastDotIndex = url.lastIndexOf('.');
+
+        if (lastDotIndex == -1) {
+            return url;
+        }
+        return url.substring(0, lastDotIndex);
+    }
+
+    /////////////////
+
 
     private void checkIfFirstPicture(String newId) {
         isFirstPicture = false;
