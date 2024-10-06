@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -184,7 +181,19 @@ public class ShelterServiceImpl implements ShelterService{
         addressShelter.setAddress(address);
         addressShelter.setShelter(shelter);
         addressShelterService.save(addressShelter);
-        shelter.getAddressShelters().add(addressShelter);
-        address.getAddressShelters().add(addressShelter);
+//        shelter.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
+//        address.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
+
+        if (shelter.getAddressShelters() != null) {
+            shelter.getAddressShelters().add(addressShelter);
+        } else {
+            shelter.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
+        }
+
+        if (address.getAddressShelters() != null) {
+            address.getAddressShelters().add(addressShelter);
+        } else {
+            address.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
+        }
     }
 }

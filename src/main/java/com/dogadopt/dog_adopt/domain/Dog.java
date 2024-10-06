@@ -79,7 +79,7 @@ public class Dog {
     @PrePersist
     protected void onCreate() {
         this.takenToAdoptionCenter = LocalDateTime.now();
-//        this.donationGoal = DonationGoal.GENERAL;
+        this.donationGoal = DonationGoal.GENERAL;
         this.status = Status.AVAILABLE;
     }
 }

@@ -17,13 +17,7 @@ public class AddressShelterServiceImpl implements AddressShelterService {
 
     @Override
     public void save(AddressShelter addressShelter) {
-
-        Address address = addressShelter.getAddress();
-        AddressShelter addressShelterExisting = addressShelterRepository.findByAddress(address);
-
-        if(addressShelterExisting == null) {
-            addressShelterRepository.save(addressShelter);
-        }
+        addressShelterRepository.save(addressShelter);
     }
 
     @Override
