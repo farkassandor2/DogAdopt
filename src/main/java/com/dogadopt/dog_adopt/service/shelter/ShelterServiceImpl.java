@@ -181,8 +181,6 @@ public class ShelterServiceImpl implements ShelterService{
         addressShelter.setAddress(address);
         addressShelter.setShelter(shelter);
         addressShelterService.save(addressShelter);
-//        shelter.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
-//        address.setAddressShelters(new ArrayList<>(List.of(addressShelter)));
 
         if (shelter.getAddressShelters() != null) {
             shelter.getAddressShelters().add(addressShelter);
