@@ -168,7 +168,13 @@ public class ShelterServiceImpl implements ShelterService{
     public void changePicture(Long shelterId, ImageUploadCommand command) {
 
         Shelter shelter = getShelter(shelterId);
-        Long imgId = shelter.getImages().get(0).getId();
+        Long imgId = null;
+
+        try {
+            imgId = shelter.getImages().get(0).getId();
+        } catch (IndexOutOfBoundsException e) {
+            log.info("No image to change.");
+        }
 
         if (imgId != null) {
             imageService.deleteImage(imgId, SHELTER_FOLDER);
