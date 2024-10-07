@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.domain.enums.user.NewsLetterSubscriptionType;
 import com.dogadopt.dog_adopt.domain.enums.user.UserLevel;
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import com.dogadopt.dog_adopt.domain.enums.user.UserRole;
+import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -67,6 +68,9 @@ public class AppUser {
 
     @OneToMany(mappedBy = "user")
     private List<WalkingReservation> walkingReservations;
+
+    @OneToMany(mappedBy = "user")
+    private List<ConfirmationToken> confirmationTokens;
 
     @PrePersist
     protected void onCreate() {
