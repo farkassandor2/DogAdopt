@@ -7,9 +7,12 @@ import com.dogadopt.dog_adopt.domain.enums.user.UserRole;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -18,11 +21,15 @@ import java.util.List;
 @Entity
 @Table(name = "user", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")})
-public class AppUser {
+public class AppUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String firstName;
+
+    private String lastName;
 
     @NonNull
     private String email;
@@ -39,11 +46,61 @@ public class AppUser {
     @OneToMany(mappedBy = "user")
     private List<Image> images;
 
-    @Enumerated(EnumType.STRING)
-    private UserLevel userLevel;
+    @NonNull
+    private String password;
+
+    private boolean enabled = false;
+
+    private boolean accountNonExpired = true;
+
+    private boolean accountNonLocked = false;
+
+    private boolean credentialsNonExpired = true;
 
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "role")
+    private List<UserRole> roles = new ArrayList<>(List.of(UserRole.REGISTERED_USER));
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays
+                .stream(this
+                                .getRoles()
+                                .stream()
+                                .map(Enum::name)
+                                .toArray(String[]::new))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private UserLevel userLevel;
 
     private LocalDateTime createdAt;
 
@@ -77,7 +134,21 @@ public class AppUser {
         this.countryTelephoneCode = country
                 .getTelephoneCountryCode();
         this.userLevel = UserLevel.PUPPY_IN_THE_PACK;
-        this.userRole = UserRole.REGISTERED_USER;
         this.createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUser user = (AppUser) o;
+        return Objects.equals(email, user.email)
+               && Objects.equals(password, user.password)
+               && userLevel.equals(user.userLevel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password, userLevel);
     }
 }
