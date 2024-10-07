@@ -210,7 +210,7 @@ public class DogServiceImpl implements DogService{
     }
 
     @Override
-    public void deletePictureForDog(Long dogId, Long pictureId) {
-        imageService.deletePictureForDog(dogId, pictureId);
+    public void deletePictureForDog(Long pictureId) {
+        imageService.deleteImage(pictureId, DOG_FOLDER);
     }
 }

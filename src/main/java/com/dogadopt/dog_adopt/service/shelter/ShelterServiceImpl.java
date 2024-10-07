@@ -171,7 +171,7 @@ public class ShelterServiceImpl implements ShelterService{
         Long imgId = shelter.getImages().get(0).getId();
 
         if (imgId != null) {
-            imageService.deleteImage(shelter, imgId);
+            imageService.deleteImage(imgId, SHELTER_FOLDER);
         }
 
         List<MultipartFile> multipartFiles = command.getImages();

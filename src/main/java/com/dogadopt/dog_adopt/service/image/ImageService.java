@@ -22,7 +22,5 @@ public interface ImageService {
 
     List<String> getAllImagesForOneDog(Dog dog);
 
-    void deleteImage(Shelter shelter, Long imgId);
-
-    void deletePictureForDog(Long dogId, Long pictureId);
+    void deleteImage(Long pictureId, String folder);
 }

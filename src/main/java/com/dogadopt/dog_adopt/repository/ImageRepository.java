@@ -49,7 +49,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     @Modifying
     @Query("DELETE FROM Image i " +
-           "WHERE i.dog.id = ?1 " +
-           "AND i.id = ?2")
-    void deletePictureForDog(Long dogId, Long pictureId);
+           "WHERE i.id = ?1")
+    void deletePicture(Long pictureId);
+
 }

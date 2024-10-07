@@ -30,5 +30,5 @@ public interface DogService {
 
     void uploadPictureForDog(Long dogId, ImageUploadCommand command);
 
-    void deletePictureForDog(Long dogId, Long pictureId);
+    void deletePictureForDog(Long pictureId);
 }

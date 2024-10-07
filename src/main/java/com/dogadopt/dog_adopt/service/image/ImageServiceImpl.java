@@ -1,7 +1,6 @@
 package com.dogadopt.dog_adopt.service.image;
 
 import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
@@ -23,6 +22,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService{
 
+    private static final String PUBLIC_ID = "public_id";
+    private static final String FOLDER = "folder";
+
     boolean isFirstPicture = false;
 
     private final Cloudinary cloudinary;
@@ -43,12 +45,12 @@ public class ImageServiceImpl implements ImageService{
             if (file != null && !file.isEmpty()) {
                 try {
 
-                    uploadOptions.put("folder", folder);
+                    uploadOptions.put(FOLDER, folder);
 
                      String newId = createNewId(id, uploadOptions, imageType);
                      checkIfFirstPicture(newId);
 
-                    uploadOptions.put("public_id",newId);
+                    uploadOptions.put(PUBLIC_ID,newId);
 
                     uploadResult.set(cloudinary.uploader().upload(file.getBytes(), uploadOptions));
 
@@ -86,26 +88,26 @@ public class ImageServiceImpl implements ImageService{
 
 
     //////////////////////////
-    @Override
-    public void deleteImage(Shelter shelter, Long imgId) {
-        imageRepository.deleteImage(shelter, imgId);
-    }
+
 
     @Override
-    public void deletePictureForDog(Long dogId, Long pictureId) {
+    public void deleteImage(Long pictureId, String folder) {
         Image image = imageRepository.findById(pictureId)
                                      .orElseThrow(() -> new ImageNotFoundException("Image not found with ID" + pictureId));
 
         String url = image.getUrl();
-        String publicId = extractPublicId(url);
+        String publicId = folder.concat("/").concat(extractPublicId(url));
+
+        Map<String, String> deleteOptions = new HashMap<>();
+        deleteOptions.put(FOLDER, folder);
+        deleteOptions.put(PUBLIC_ID, publicId);
 
     try {
-        cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        cloudinary.uploader().destroy(publicId, deleteOptions);
     } catch (Exception e) {
-        e.printStackTrace();
+        throw new CloudinaryException("Error deleting file");
     }
-            imageRepository.deletePictureForDog(dogId, pictureId);
-
+    imageRepository.deletePicture(pictureId);
     }
 
     private String extractPublicId(String url) {
@@ -113,11 +115,10 @@ public class ImageServiceImpl implements ImageService{
         String urlWithoutFileExtension = removeExtension(url);
 
         String[] parts = urlWithoutFileExtension.split("/");
-        String folder = parts[parts.length - 3]; // "dogs"
-        int dogId = Integer.parseInt(parts[parts.length - 2]); // "1"
+        int dogId = Integer.parseInt(parts[parts.length - 2]);
         int pictureId = Integer.parseInt(parts[parts.length-1]);
 
-        return String.join("/", Arrays.copyOfRange(parts, parts.length - 3, parts.length - 1));
+        return  String.valueOf(dogId).concat("/").concat(String.valueOf(pictureId));
     }
 
     public String removeExtension(String url) {
@@ -155,7 +156,7 @@ public class ImageServiceImpl implements ImageService{
             if(numberOfPicsOfDog != 0) {
                 secondHalfOfIdNew = numberOfPicsOfDog + 1;
             } else {
-                String existingId = uploadOptions.getOrDefault("public_id", "0/0");
+                String existingId = uploadOptions.getOrDefault(PUBLIC_ID, "0/0");
                 String[] idPerCharacter = existingId.split("/");
                 String secondHalfOfIdString = idPerCharacter[1];
                 secondHalfOfIdNew = Integer.parseInt(secondHalfOfIdString) + 1;
