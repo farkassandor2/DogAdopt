@@ -85,7 +85,9 @@ public class ShelterServiceImpl implements ShelterService{
             Shelter actualShelter = shelters.get(i);
 
             Image imageOfActualShelter = imageService.getImagesForShelter(actualShelter);
-            shelterInfoForUsers.get(i).setImageUrl(imageOfActualShelter.getImgUrl());
+            if (imageOfActualShelter != null) {
+                shelterInfoForUsers.get(i).setImageUrl(imageOfActualShelter.getImgUrl());
+            }
 
             List<Address> addressListOfActualShelter = addressService.getAddressesForShelter(actualShelter);
             List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressListOfActualShelter, AddressInfo.class);
