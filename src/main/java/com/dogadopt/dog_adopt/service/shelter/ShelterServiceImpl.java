@@ -10,6 +10,7 @@ import com.dogadopt.dog_adopt.dto.incoming.AddressCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ShelterCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.ImageInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterDTOForDropDownMenu;
 import com.dogadopt.dog_adopt.dto.outgoing.ShelterInfoForUser;
 import com.dogadopt.dog_adopt.exception.ShelterAlreadyRegisteredException;
@@ -86,7 +87,9 @@ public class ShelterServiceImpl implements ShelterService{
 
             Image imageOfActualShelter = imageService.getImagesForShelter(actualShelter);
             if (imageOfActualShelter != null) {
-                shelterInfoForUsers.get(i).setImageUrl(imageOfActualShelter.getImgUrl());
+                shelterInfoForUsers.get(i).setImageInfo(
+                        new ImageInfo(imageOfActualShelter.getId(),
+                                      imageOfActualShelter.getImgUrl()));
             }
 
             List<Address> addressListOfActualShelter = addressService.getAddressesForShelter(actualShelter);
@@ -142,7 +145,10 @@ public class ShelterServiceImpl implements ShelterService{
         info.setAddressInfos(addressInfos);
 
         Image imageOfActualShelter = imageService.getImagesForShelter(shelter);
-        info.setImageUrl(imageOfActualShelter.getImgUrl());
+
+        if (imageOfActualShelter != null) {
+            info.setImageInfo(new ImageInfo(imageOfActualShelter.getId(), imageOfActualShelter.getImgUrl()));
+        }
 
         return info;
     }
@@ -196,7 +202,9 @@ public class ShelterServiceImpl implements ShelterService{
 
         images = saveImages(multipartFiles, shelter, images);
         shelter.setImages(images);
-        images.get(0).setShelter(shelter);
+        if (images != null && !images.isEmpty()) {
+            images.get(0).setShelter(shelter);
+        }
     }
 
     private List<Image> saveImages(List<MultipartFile> multipartFiles, Shelter shelter, List<Image> images) {
@@ -214,7 +222,7 @@ public class ShelterServiceImpl implements ShelterService{
         }
 
         if (shelter.getImages() != null) {
-            shelterInfoForUser.setImageUrl(shelter.getImages().get(0).getImgUrl());
+            shelterInfoForUser.setImageInfo(new ImageInfo(shelter.getId(), shelter.getImages().get(0).getImgUrl()));
         }
     }
 
