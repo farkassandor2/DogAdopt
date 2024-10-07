@@ -74,4 +74,11 @@ public class ShelterController {
         shelterService.changePicture(shelterId, command);
     }
 
+    @DeleteMapping("/admin/delete-picture/{pictureId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deletePictureForShelter(@PathVariable Long pictureId) {
+        log.info("Http request / DELETE / dog-adopt / shelters / admin / delete-picture / pictureId");
+        shelterService.deletePictureForShelter(pictureId);
+    }
+
 }

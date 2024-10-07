@@ -31,4 +31,6 @@ public interface ShelterService {
     void deleteConnectionBetweenShelterAndAddress(Long shelterId, Long addressId);
 
     void changePicture(Long shelterId, ImageUploadCommand command);
+
+    void deletePictureForShelter(Long pictureId);
 }

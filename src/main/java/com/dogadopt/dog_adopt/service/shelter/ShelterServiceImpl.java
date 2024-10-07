@@ -184,6 +184,11 @@ public class ShelterServiceImpl implements ShelterService{
         setImageToShelter(multipartFiles, shelter);
     }
 
+    @Override
+    public void deletePictureForShelter(Long pictureId) {
+        imageService.deleteImage(pictureId, SHELTER_FOLDER);
+    }
+
     private void setImageToShelter(List<MultipartFile> multipartFiles, Shelter shelter) {
         List<Image> images = new ArrayList<>();
 
