@@ -82,20 +82,16 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public List<String> getAllImagesForOneDog(Dog dog) {
+    public List<Image> getAllImagesForOneDog(Dog dog) {
         return imageRepository.getAllImagesForOneDog(dog);
     }
-
-
-    //////////////////////////
-
 
     @Override
     public void deleteImage(Long pictureId, String folder) {
         Image image = imageRepository.findById(pictureId)
                                      .orElseThrow(() -> new ImageNotFoundException("Image not found with ID" + pictureId));
 
-        String url = image.getUrl();
+        String url = image.getImgUrl();
         String publicId = folder.concat("/").concat(extractPublicId(url));
 
         Map<String, String> deleteOptions = new HashMap<>();
@@ -129,9 +125,6 @@ public class ImageServiceImpl implements ImageService{
         }
         return url.substring(0, lastDotIndex);
     }
-
-    /////////////////
-
 
     private void checkIfFirstPicture(String newId) {
         isFirstPicture = false;

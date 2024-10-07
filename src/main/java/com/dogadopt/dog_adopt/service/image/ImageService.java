@@ -20,7 +20,7 @@ public interface ImageService {
 
     Image getFirstImageOfDog(Dog actualDog);
 
-    List<String> getAllImagesForOneDog(Dog dog);
+    List<Image> getAllImagesForOneDog(Dog dog);
 
     void deleteImage(Long pictureId, String folder);
 }

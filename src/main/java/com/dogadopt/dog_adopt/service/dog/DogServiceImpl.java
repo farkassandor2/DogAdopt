@@ -12,6 +12,7 @@ import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
+import com.dogadopt.dog_adopt.dto.outgoing.ImageInfo;
 import com.dogadopt.dog_adopt.exception.DogNotFoundException;
 import com.dogadopt.dog_adopt.repository.DogRepository;
 import com.dogadopt.dog_adopt.service.image.ImageService;
@@ -58,17 +59,8 @@ public class DogServiceImpl implements DogService{
             saveImagesOfDog(multipartFiles, dog);
         }
 
-        List<String> imgUrls = new ArrayList<>();
-        if (dog.getImages() != null && !dog.getImages().isEmpty()) {
-            imgUrls = dog.getImages().stream()
-                                      .map(Image::getUrl)
-                                      .toList();
-        }
-
-
         DogInfoOneDog info = modelMapper.map(dog, DogInfoOneDog.class);
-        info.setImageUrls(imgUrls);
-        info.setShelterId(command.getShelterId());
+        setImgUrlsAndShelterIdToDogInfoOneDog(dog, info);
 
         return info;
     }
@@ -79,7 +71,7 @@ public class DogServiceImpl implements DogService{
         List<Dog> dogs = dogRepository.findAllNotDeceased(Status.DECEASED);
         List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogs, DogInfoListOfDogs.class);
 
-        setImgUrlAndShelterIdToDogInfo(dogs, dogInfos);
+        setImgUrlAndShelterIdToDogInfoListOfDogs(dogs, dogInfos);
         return dogInfos;
     }
 
@@ -97,7 +89,7 @@ public class DogServiceImpl implements DogService{
     public List<DogInfoListOfDogs> getAllDogsFromShelter(Long shelterId) {
         List<Dog> dogsInShelter = dogRepository.getAllDogsFromShelter(shelterId, Status.DECEASED);
         List<DogInfoListOfDogs> dogInfos = ObjectMapperUtil.mapAll(dogsInShelter, DogInfoListOfDogs.class);
-        setImgUrlAndShelterIdToDogInfo(dogsInShelter, dogInfos);
+        setImgUrlAndShelterIdToDogInfoListOfDogs(dogsInShelter, dogInfos);
         return dogInfos;
     }
 
@@ -150,16 +142,20 @@ public class DogServiceImpl implements DogService{
     }
 
     private void setImgUrlsAndShelterIdToDogInfoOneDog(Dog dog, DogInfoOneDog info) {
-        List<String> imgUrls = imageService.getAllImagesForOneDog(dog);
-        info.setImageUrls(imgUrls);
+        List<Image> images = imageService.getAllImagesForOneDog(dog);
+        List<ImageInfo> imageInfos = ObjectMapperUtil.mapAll(images, ImageInfo.class);
+        info.setImageInfos(imageInfos);
         info.setShelterId(dog.getShelter().getId());
     }
 
-    private void setImgUrlAndShelterIdToDogInfo(List<Dog> dogs, List<DogInfoListOfDogs> dogInfos) {
+    private void setImgUrlAndShelterIdToDogInfoListOfDogs(List<Dog> dogs, List<DogInfoListOfDogs> dogInfos) {
         for (int i = 0; i < dogs.size(); i++) {
             Dog actualDog = dogs.get(i);
+
             Image imageOfActualDog = imageService.getFirstImageOfDog(actualDog);
-            dogInfos.get(i).setImgUrl(imageOfActualDog.getUrl());
+            ImageInfo imageInfo = modelMapper.map(imageOfActualDog, ImageInfo.class);
+
+            dogInfos.get(i).setImageInfo(imageInfo);
             dogInfos.get(i).setShelterId(dogs.get(i).getShelter().getId());
         }
     }

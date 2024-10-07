@@ -31,10 +31,10 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
            "AND i.isFirstPicture = true ")
     Image getFirstImageOfDog(Dog actualDog);
 
-    @Query("SELECT i.url " +
+    @Query("SELECT i " +
            "FROM Image i " +
            "WHERE i.dog = ?1")
-    List<String> getAllImagesForOneDog(Dog dog);
+    List<Image> getAllImagesForOneDog(Dog dog);
 
     @Modifying
     @Query("DELETE FROM Image i " +

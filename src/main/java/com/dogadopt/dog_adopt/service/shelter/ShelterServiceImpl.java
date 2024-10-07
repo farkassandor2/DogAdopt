@@ -85,7 +85,7 @@ public class ShelterServiceImpl implements ShelterService{
             Shelter actualShelter = shelters.get(i);
 
             Image imageOfActualShelter = imageService.getImagesForShelter(actualShelter);
-            shelterInfoForUsers.get(i).setImageUrl(imageOfActualShelter.getUrl());
+            shelterInfoForUsers.get(i).setImageUrl(imageOfActualShelter.getImgUrl());
 
             List<Address> addressListOfActualShelter = addressService.getAddressesForShelter(actualShelter);
             List<AddressInfo> addressInfos = ObjectMapperUtil.mapAll(addressListOfActualShelter, AddressInfo.class);
@@ -140,7 +140,7 @@ public class ShelterServiceImpl implements ShelterService{
         info.setAddressInfos(addressInfos);
 
         Image imageOfActualShelter = imageService.getImagesForShelter(shelter);
-        info.setImageUrl(imageOfActualShelter.getUrl());
+        info.setImageUrl(imageOfActualShelter.getImgUrl());
 
         return info;
     }
@@ -212,7 +212,7 @@ public class ShelterServiceImpl implements ShelterService{
         }
 
         if (shelter.getImages() != null) {
-            shelterInfoForUser.setImageUrl(shelter.getImages().get(0).getUrl());
+            shelterInfoForUser.setImageUrl(shelter.getImages().get(0).getImgUrl());
         }
     }
 

@@ -20,7 +20,8 @@ public class DogInfoListOfDogs {
 
     private Status status;
 
-    private String imgUrl;
+//    private String imgUrl;
+    private ImageInfo imageInfo;
 
     private Long shelterId;
 

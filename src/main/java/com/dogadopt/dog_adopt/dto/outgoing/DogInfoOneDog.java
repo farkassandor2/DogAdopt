@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.dto.outgoing;
 
 import com.dogadopt.dog_adopt.domain.Comment;
+import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.WalkingReservation;
 import com.dogadopt.dog_adopt.domain.enums.dog.*;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,9 @@ public class DogInfoOneDog {
 
     private String description;
 
-    private List<String> imageUrls;
+//    private List<String> imgUrls;
+
+    private List<ImageInfo> imageInfos; // CHANGE!!!!!!
 
     private Long shelterId;
 

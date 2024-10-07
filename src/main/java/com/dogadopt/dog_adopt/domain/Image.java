@@ -20,7 +20,7 @@ public class Image {
 
     private String name;
 
-    private String url;
+    private String imgUrl;
 
     @NonNull
     @Enumerated(EnumType.STRING)
@@ -43,7 +43,7 @@ public class Image {
     private Shelter shelter;
 
     public Image(String imageUrl, ImageType imageType, String name, boolean isFirstPicture) {
-        this.url = imageUrl;
+        this.imgUrl = imageUrl;
         this.imageType = imageType;
         this.createdAt = LocalDateTime.now();
         this.name = name;
