@@ -96,4 +96,18 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleImageNotFoundException(ImageNotFoundException ex) {
         return Collections.singletonList(new ErrorResponse("imageId", ex.getMessage()));
     }
+
+    @ExceptionHandler(CustomerAlreadyExistsException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleCustomerAlreadyExistsException(CustomerAlreadyExistsException ex) {
+        return Collections.singletonList(new ErrorResponse("email", ex.getMessage()));
+    }
+
+    @ExceptionHandler(WrongCountryNameException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleWrongCountryNameException(WrongCountryNameException ex) {
+        return Collections.singletonList(new ErrorResponse("countryName", ex.getMessage()));
+    }
 }

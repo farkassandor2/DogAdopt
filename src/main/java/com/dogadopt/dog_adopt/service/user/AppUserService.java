@@ -7,4 +7,6 @@ import jakarta.validation.Valid;
 public interface AppUserService {
 
     String updateUser(@Valid AppUserUpdateCommand command);
+
+    String registerCustomer(AppUserCreateCommand command);
 }
