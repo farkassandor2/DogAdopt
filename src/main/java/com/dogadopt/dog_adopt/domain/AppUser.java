@@ -6,6 +6,7 @@ import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import com.dogadopt.dog_adopt.domain.enums.user.UserRole;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,11 +33,11 @@ public class AppUser implements UserDetails {
     private String lastName;
 
     @NonNull
+    @Email
     private String email;
 
     private String countryTelephoneCode;
 
-    @NonNull
     private String phoneNumber;
 
     @NonNull
