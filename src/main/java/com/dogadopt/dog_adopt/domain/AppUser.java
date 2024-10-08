@@ -5,6 +5,7 @@ import com.dogadopt.dog_adopt.domain.enums.user.UserLevel;
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import com.dogadopt.dog_adopt.domain.enums.user.UserRole;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
+import com.dogadopt.dog_adopt.validation.password.Password;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -48,6 +49,7 @@ public class AppUser implements UserDetails {
     private List<Image> images;
 
     @NonNull
+    @Password
     private String password;
 
     private boolean enabled = false;
@@ -136,6 +138,7 @@ public class AppUser implements UserDetails {
                 .getTelephoneCountryCode();
         this.userLevel = UserLevel.PUPPY_IN_THE_PACK;
         this.createdAt = LocalDateTime.now();
+        this.newsLetterSubscriptionType = NewsLetterSubscriptionType.SUBSCRIBED;
     }
 
     @Override
