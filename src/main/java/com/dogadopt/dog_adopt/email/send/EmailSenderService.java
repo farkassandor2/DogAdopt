@@ -1,4 +1,4 @@
-package com.dogadopt.dog_adopt.email;
+package com.dogadopt.dog_adopt.email.send;
 
 public interface EmailSenderService {
 

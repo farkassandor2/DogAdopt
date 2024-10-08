@@ -1,7 +1,8 @@
 package com.dogadopt.dog_adopt.registration.service;
 
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
-import com.dogadopt.dog_adopt.email.EmailSenderService;
+import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
+import com.dogadopt.dog_adopt.email.send.EmailSenderService;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
     private final AppUserService appUserService;
     private final EmailSenderService emailSenderService;
+    private final EmailTemplateService emailTemplateService;
     private final ConfirmationTokenService confirmationTokenService;
 
     @Override
@@ -30,10 +32,12 @@ public class RegistrationServiceImpl implements RegistrationService{
 
         String link = "http://localhost:8080/dog-adopt/registration/confirm?token=" + token;
 
+        String emailContent = emailTemplateService
+                .buildConfirmationEmail(command.getEmail(), link, text1, text2, text3);
+
         emailSenderService.send(
                 command.getEmail(),
-"THIS LINE NEEDS TO BE CHANGED",
-//                buildEmail(link, text1, text2, text3),
+                emailContent,
                 "Confirm your email");
 
         return token;

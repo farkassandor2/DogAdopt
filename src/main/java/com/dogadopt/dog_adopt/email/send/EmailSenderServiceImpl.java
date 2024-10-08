@@ -1,4 +1,4 @@
-package com.dogadopt.dog_adopt.email;
+package com.dogadopt.dog_adopt.email.send;
 
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.mail.MessagingException;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @EnableScheduling
 @Slf4j
-public class EmailSenderServiceImpl implements EmailSenderService{
+public class EmailSenderServiceImpl implements EmailSenderService {
 
     private final JavaMailSender mailSender;
     private final AppUserService appUserService;
