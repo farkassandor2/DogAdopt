@@ -8,4 +8,6 @@ import java.util.Map;
 public interface RegistrationService {
 
     Map<String, String> registerUser(@Valid AppUserCreateCommand command);
+
+    void confirmToken(String token);
 }

@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.registration.token;
 
 import com.dogadopt.dog_adopt.domain.AppUser;
+import com.dogadopt.dog_adopt.exception.TokenNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,16 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService{
 
         confirmationTokenRepository.save(confirmationToken);
         return confirmationToken;
+    }
+
+    @Override
+    public ConfirmationToken getTokenByString(String token) {
+        return confirmationTokenRepository
+                .getTokenByString(token)
+                .orElseThrow(() -> new TokenNotFoundException(token));
+    }
+
+    public void setConfirmedAtToNow(ConfirmationToken confirmationToken) {
+        confirmationTokenRepository.setConfirmedAtToNow(confirmationToken.getToken(), LocalDateTime.now());
     }
 }

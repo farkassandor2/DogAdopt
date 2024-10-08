@@ -9,6 +9,7 @@ import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.repository.AppUserRepository;
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
@@ -46,6 +47,11 @@ public class AppUserServiceImpl implements AppUserService {
             throw new WrongCountryNameException(command.getCountry().getName());
         }
         return confirmationToken.getToken();
+    }
+
+    @Override
+    public void enableCustomer(@NonNull String email) {
+        appUserRepository.enableUser(email);
     }
 
     @Override

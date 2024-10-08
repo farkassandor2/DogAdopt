@@ -28,9 +28,8 @@ public class RegistrationController {
         return registrationService.registerUser(command);
     }
 
-//    @GetMapping("/confirm")
-//    public RedirectView confirm(@RequestParam("token") String token) {
-//        registrationService.confirmToken(token);
-//        return new RedirectView("/custom-login");
-//    }
+    @GetMapping("/confirm")
+    public void confirm(@RequestParam("token") String token) {
+        registrationService.confirmToken(token);
+    }
 }

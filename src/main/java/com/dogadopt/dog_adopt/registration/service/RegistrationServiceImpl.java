@@ -3,6 +3,9 @@ package com.dogadopt.dog_adopt.registration.service;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
 import com.dogadopt.dog_adopt.email.send.EmailSenderService;
+import com.dogadopt.dog_adopt.exception.TokenHasAlreadyBeenConfirmed;
+import com.dogadopt.dog_adopt.exception.TokesHasAlreadyExpired;
+import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.transaction.Transactional;
@@ -10,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,5 +55,25 @@ public class RegistrationServiceImpl implements RegistrationService{
         reply.put("message", "Registration successful. Please check your email to confirm.");
 
         return reply;
+    }
+
+    @Override
+    public void confirmToken(String token) {
+        ConfirmationToken confirmationToken = confirmationTokenService
+                .getTokenByString(token);
+
+        if (confirmationToken.getConfirmedAt() != null) {
+            throw new TokenHasAlreadyBeenConfirmed(token);
+        }
+
+        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new TokesHasAlreadyExpired(token);
+        }
+
+        confirmationTokenService.setConfirmedAtToNow(confirmationToken);
+
+        appUserService.enableCustomer(confirmationToken
+                                               .getUser()
+                                               .getEmail());
     }
 }

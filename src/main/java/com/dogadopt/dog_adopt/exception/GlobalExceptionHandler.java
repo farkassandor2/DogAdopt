@@ -109,4 +109,25 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleWrongCountryNameException(WrongCountryNameException ex) {
         return Collections.singletonList(new ErrorResponse("countryName", ex.getMessage()));
     }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleTokenNotFoundException(TokenNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("token", ex.getMessage()));
+    }
+
+    @ExceptionHandler(TokenHasAlreadyBeenConfirmed.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleTokenHasAlreadyBeenConfirmed(TokenHasAlreadyBeenConfirmed ex) {
+        return Collections.singletonList(new ErrorResponse("token", ex.getMessage()));
+    }
+
+    @ExceptionHandler(TokesHasAlreadyExpired.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleTokesHasAlreadyExpired(TokesHasAlreadyExpired ex) {
+        return Collections.singletonList(new ErrorResponse("token", ex.getMessage()));
+    }
 }
