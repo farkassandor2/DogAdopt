@@ -9,5 +9,5 @@ public interface RegistrationService {
 
     Map<String, String> registerUser(@Valid AppUserCreateCommand command);
 
-    void confirmToken(String token);
+    Map<String, String> confirmToken(String token);
 }

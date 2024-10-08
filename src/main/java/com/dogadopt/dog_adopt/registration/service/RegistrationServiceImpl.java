@@ -58,7 +58,7 @@ public class RegistrationServiceImpl implements RegistrationService{
     }
 
     @Override
-    public void confirmToken(String token) {
+    public Map<String, String> confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getTokenByString(token);
 
@@ -75,5 +75,9 @@ public class RegistrationServiceImpl implements RegistrationService{
         appUserService.enableCustomer(confirmationToken
                                                .getUser()
                                                .getEmail());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Token confirmed successfully. You can now log in.");
+        return response;
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/registration")
@@ -29,7 +29,9 @@ public class RegistrationController {
     }
 
     @GetMapping("/confirm")
-    public void confirm(@RequestParam("token") String token) {
-        registrationService.confirmToken(token);
+    @ResponseStatus(OK)
+    public Map<String, String> confirm(@RequestParam("token") String token) {
+        log.info("Http request, GET / dog-adopt / registration / confirm , body: {}", token);
+        return registrationService.confirmToken(token);
     }
 }
