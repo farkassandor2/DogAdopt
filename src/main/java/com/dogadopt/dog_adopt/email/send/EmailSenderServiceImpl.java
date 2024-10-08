@@ -24,6 +24,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Override
     @Async
     public void send(String to, String email, String subject) {
+
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =

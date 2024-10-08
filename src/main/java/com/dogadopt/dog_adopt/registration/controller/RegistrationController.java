@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -21,8 +23,14 @@ public class RegistrationController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public String registerUser(@Valid @RequestBody AppUserCreateCommand command) {
+    public Map<String, String> registerUser(@Valid @RequestBody AppUserCreateCommand command) {
         log.info("Http request, POST / dog-adopt / registration , body: {}", command.toString());
         return registrationService.registerUser(command);
     }
+
+//    @GetMapping("/confirm")
+//    public RedirectView confirm(@RequestParam("token") String token) {
+//        registrationService.confirmToken(token);
+//        return new RedirectView("/custom-login");
+//    }
 }

@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -22,8 +25,9 @@ public class RegistrationServiceImpl implements RegistrationService{
     private final ConfirmationTokenService confirmationTokenService;
 
     @Override
-    public String registerUser(AppUserCreateCommand command) {
+    public Map<String, String> registerUser(AppUserCreateCommand command) {
 
+        Map<String, String> reply = new HashMap<>();
         String token = appUserService.registerCustomer(command);
 
         String text1 = "Thank you for registering. Please click on the below link to activate your account:";
@@ -35,11 +39,17 @@ public class RegistrationServiceImpl implements RegistrationService{
         String emailContent = emailTemplateService
                 .buildConfirmationEmail(command.getEmail(), link, text1, text2, text3);
 
-        emailSenderService.send(
-                command.getEmail(),
-                emailContent,
-                "Confirm your email");
+        try {
+            emailSenderService.send(
+                    command.getEmail(),
+                    emailContent,
+                    "Confirm your email");
+        } catch (Exception e) {
+            reply.put("message", "Failed to send email to" + command.getEmail());
+        }
 
-        return token;
+        reply.put("message", "Registration successful. Please check your email to confirm.");
+
+        return reply;
     }
 }

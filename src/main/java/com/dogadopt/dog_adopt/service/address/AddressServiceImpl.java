@@ -7,7 +7,7 @@ import com.dogadopt.dog_adopt.dto.outgoing.AddressInfo;
 import com.dogadopt.dog_adopt.exception.AddressNotFoundException;
 import com.dogadopt.dog_adopt.exception.ZipInvalidException;
 import com.dogadopt.dog_adopt.repository.AddressRepository;
-import com.dogadopt.dog_adopt.service.zip.ZipcodeService;
+import com.dogadopt.dog_adopt.validation.zip.ZipcodeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

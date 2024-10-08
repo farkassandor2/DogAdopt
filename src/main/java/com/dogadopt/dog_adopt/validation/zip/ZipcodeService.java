@@ -1,4 +1,4 @@
-package com.dogadopt.dog_adopt.service.zip;
+package com.dogadopt.dog_adopt.validation.zip;
 
 import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import jakarta.validation.constraints.NotNull;
