@@ -1,6 +1,6 @@
 package com.dogadopt.dog_adopt.registration.service;
 
-import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.transaction.Transactional;
@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService{
     private final ConfirmationTokenService confirmationTokenService;
 
     @Override
-    public String registerUser(AppUserCreateUpdateCommand command) {
+    public String registerUser(AppUserCreateCommand command) {
         return "";
     }
 }

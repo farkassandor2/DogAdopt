@@ -1,6 +1,6 @@
 package com.dogadopt.dog_adopt.registration.controller;
 
-import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.registration.service.RegistrationService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ public class RegistrationController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public String registerUser(@Valid @RequestBody AppUserCreateUpdateCommand command) {
+    public String registerUser(@Valid @RequestBody AppUserCreateCommand command) {
         log.info("Http request, POST / dog-adopt / registration , body: {}", command.toString());
         return registrationService.registerUser(command);
     }

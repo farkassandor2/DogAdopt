@@ -1,6 +1,6 @@
 package com.dogadopt.dog_adopt.service.user;
 
-import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateUpdateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.repository.AppUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class AppUserServiceImpl implements AppUserService {
     private final ModelMapper modelMapper;
 
     @Override
-    public String updateUser(AppUserCreateUpdateCommand command) {
+    public String updateUser(AppUserUpdateCommand command) {
         return "";
     }
 }
