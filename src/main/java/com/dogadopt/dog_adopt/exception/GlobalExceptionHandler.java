@@ -3,7 +3,6 @@ package com.dogadopt.dog_adopt.exception;
 import com.dogadopt.dog_adopt.exception.error.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -97,10 +96,10 @@ public class GlobalExceptionHandler {
         return Collections.singletonList(new ErrorResponse("imageId", ex.getMessage()));
     }
 
-    @ExceptionHandler(CustomerAlreadyExistsException.class)
+    @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
-    public List<ErrorResponse> handleCustomerAlreadyExistsException(CustomerAlreadyExistsException ex) {
+    public List<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
         return Collections.singletonList(new ErrorResponse("email", ex.getMessage()));
     }
 

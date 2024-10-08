@@ -49,7 +49,6 @@ public class AppUser implements UserDetails {
     private List<Image> images;
 
     @NonNull
-    @Password
     private String password;
 
     private boolean enabled = false;

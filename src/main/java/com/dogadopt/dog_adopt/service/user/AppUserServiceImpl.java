@@ -3,7 +3,7 @@ package com.dogadopt.dog_adopt.service.user;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
-import com.dogadopt.dog_adopt.exception.CustomerAlreadyExistsException;
+import com.dogadopt.dog_adopt.exception.UserAlreadyExistsException;
 import com.dogadopt.dog_adopt.exception.WrongCountryNameException;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
@@ -41,7 +41,7 @@ public class AppUserServiceImpl implements AppUserService {
             confirmationToken = confirmationTokenService.generateToken(user);
 
         } catch (DataIntegrityViolationException e) {
-            throw new CustomerAlreadyExistsException(command.getEmail());
+            throw new UserAlreadyExistsException(command.getEmail());
         } catch (MappingException e) {
             throw new WrongCountryNameException(command.getCountry().getName());
         }

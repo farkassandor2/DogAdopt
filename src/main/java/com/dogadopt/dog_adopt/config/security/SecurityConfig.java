@@ -44,7 +44,7 @@ public class SecurityConfig {
                     logout.logoutSuccessUrl("/login");
                 })
                 .authorizeHttpRequests(requests -> requests
-                                               .requestMatchers("/dog-adopt/**").permitAll()
+                                               .requestMatchers("/**").permitAll()
 
                                                .anyRequest().authenticated()
                                       )
