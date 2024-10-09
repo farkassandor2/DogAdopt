@@ -2,6 +2,8 @@ package com.dogadopt.dog_adopt.registration.service;
 
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.PasswordResetCommand;
+import com.dogadopt.dog_adopt.dto.incoming.PasswordResetRequest;
 import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
 import com.dogadopt.dog_adopt.email.send.EmailSenderService;
 import com.dogadopt.dog_adopt.exception.TokenHasAlreadyBeenConfirmed;
@@ -24,7 +26,7 @@ import java.util.Map;
 @Slf4j
 public class RegistrationServiceImpl implements RegistrationService{
 
-    private final static String MESSAGE = "message";
+    private static final String MESSAGE = "message";
 
     private final AppUserService appUserService;
     private final EmailSenderService emailSenderService;
@@ -85,8 +87,9 @@ public class RegistrationServiceImpl implements RegistrationService{
     }
 
     @Override
-    public Map<String, String> requestResetPassword(String emailAddress) {
+    public Map<String, String> requestResetPassword(PasswordResetRequest command) {
 
+        String emailAddress = command.getEmail();
         Map<String, String> reply = new HashMap<>();
 
         String text1 = "Please click on the below link to change your password:";
@@ -96,14 +99,14 @@ public class RegistrationServiceImpl implements RegistrationService{
         if (emailAddress != null && !emailAddress.isEmpty()) {
             AppUser user = appUserService.getUserByEmail(emailAddress);
             ConfirmationToken token = confirmationTokenService.generateToken(user);
-            String link = "http://localhost:4200/password/reset?email=" + token.getToken();
+            String link = "http://localhost:4200/password/reset?token=" + token.getToken();
 
             emailSenderService.send(
                     emailAddress,
                     emailTemplateService.buildConfirmationEmail(emailAddress, link, text1, text2, text3),
                     "Change your password");
 
-            reply.put("message", "Please check your email to reset your password");
+            reply.put(MESSAGE, "Please check your email to reset your password");
         } else {
             reply.put(MESSAGE, "Please enter a valid e-mail address");
         }
@@ -111,7 +114,21 @@ public class RegistrationServiceImpl implements RegistrationService{
     }
 
     @Override
-    public Map<String, String> resetPassword(String email) {
-        return Map.of();
+    public Map<String, String> resetPassword(PasswordResetCommand command) {
+
+        Map<String, String> reply = new HashMap<>();
+        String password = command.getPassword();
+
+        if (password != null && !password.isEmpty()) {
+            String encodedPassword = appUserService.encodePassword(password);
+            String token = command.getToken();
+            AppUser user = appUserService.getUserByToken(token);
+            appUserService.setPasswordToUser(user, encodedPassword);
+            reply = confirmToken(token);
+        } else {
+            reply.put(MESSAGE, "Problem saving new password. Please try again!");
+        }
+
+        return reply;
     }
 }

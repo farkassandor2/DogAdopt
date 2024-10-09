@@ -28,4 +28,10 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
            "FROM AppUser au " +
            "WHERE au.email = ?1")
     AppUser getUserByEmail(String emailAddress);
+
+    @Query("SELECT au " +
+           "FROM AppUser au " +
+           "JOIN au.confirmationTokens ct " +
+           "WHERE ct.token = ?1")
+    AppUser getUserByToken(String token);
 }

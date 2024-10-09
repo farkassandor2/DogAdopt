@@ -23,7 +23,7 @@ public class CommentController {
     public CommentInfo makeNewComment(@PathVariable Long userId,
                                       @PathVariable Long dogId,
                                       @Valid @RequestBody CommentCreateUpdateCommand command) {
-        log.info("Http request / POST / dog-adopt / userId/ dogId, body: {}", command.toString());
+        log.info("Http request / POST / api / userId/ dogId, body: {}", command.toString());
         return commentService.makeNewComment(userId, dogId, command);
     }
 }

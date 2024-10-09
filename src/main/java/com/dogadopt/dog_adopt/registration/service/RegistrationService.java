@@ -1,6 +1,8 @@
 package com.dogadopt.dog_adopt.registration.service;
 
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
+import com.dogadopt.dog_adopt.dto.incoming.PasswordResetCommand;
+import com.dogadopt.dog_adopt.dto.incoming.PasswordResetRequest;
 import jakarta.validation.Valid;
 
 import java.util.Map;
@@ -11,7 +13,7 @@ public interface RegistrationService {
 
     Map<String, String> confirmToken(String token);
 
-    Map<String, String> requestResetPassword(String email);
+    Map<String, String> requestResetPassword(PasswordResetRequest command);
 
-    Map<String, String> resetPassword(String email);
+    Map<String, String> resetPassword(PasswordResetCommand command);
 }

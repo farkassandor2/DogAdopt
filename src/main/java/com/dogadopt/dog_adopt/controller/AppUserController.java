@@ -20,7 +20,7 @@ public class AppUserController {
     @PostMapping("/update")
     @ResponseStatus(OK)
     public String updateUser(@Valid @RequestBody AppUserUpdateCommand command) {
-        log.info("Http request, POST / dog-adopt / users / update , body: {}", command.toString());
+        log.info("Http request, POST / api / users / update , body: {}", command.toString());
         return appUserService.updateUser(command);
     }
 }

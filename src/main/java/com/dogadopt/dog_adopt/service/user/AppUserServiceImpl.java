@@ -9,7 +9,9 @@ import com.dogadopt.dog_adopt.exception.WrongCountryNameException;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.repository.AppUserRepository;
+import com.dogadopt.dog_adopt.validation.password.Password;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.MappingException;
@@ -38,7 +40,8 @@ public class AppUserServiceImpl implements AppUserService {
             user = modelMapper.map(command, AppUser.class);
             appUserRepository.save(user);
 
-            user.setPassword(bCryptPasswordEncoder.encode(command.getPassword()));
+            String encodedPassword = encodePassword(command.getPassword());
+            setPasswordToUser(user, encodedPassword);
 
             confirmationToken = confirmationTokenService.generateToken(user);
 
@@ -48,6 +51,14 @@ public class AppUserServiceImpl implements AppUserService {
             throw new WrongCountryNameException(command.getCountry().getName());
         }
         return confirmationToken.getToken();
+    }
+
+    public void setPasswordToUser(AppUser user, String encodedPassword) {
+        user.setPassword(encodedPassword);
+    }
+
+    public String encodePassword(@NotNull String password) {
+        return bCryptPasswordEncoder.encode(password);
     }
 
     @Override
@@ -67,5 +78,11 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public String updateUser(AppUserUpdateCommand command) {
         return "";
+    }
+
+
+    @Override
+    public AppUser getUserByToken(String token) {
+        return appUserRepository.getUserByToken(token);
     }
 }

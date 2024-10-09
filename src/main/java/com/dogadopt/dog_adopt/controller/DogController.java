@@ -26,49 +26,49 @@ public class DogController {
     @PostMapping("/admin/register")
     @ResponseStatus(CREATED)
     public DogInfoOneDog registerDog(@Valid @ModelAttribute DogCreateUpdateCommand command) {
-        log.info("Http request / POST / dog-adopt / dogs / admin / register, body: {}", command.toString());
+        log.info("Http request / POST / api / dogs / admin / register, body: {}", command.toString());
         return dogService.registerDog(command);
     }
 
     @GetMapping("/all-dogs")
     @ResponseStatus(OK)
     public List<DogInfoListOfDogs> listAllDogs() {
-        log.info("Http request / GET / dog-adopt /dogs / all-dogs");
+        log.info("Http request / GET / api /dogs / all-dogs");
         return dogService.listAllDogs();
     }
 
     @GetMapping("/{dogId}")
     @ResponseStatus(OK)
     public DogInfoOneDog getOneDog(@PathVariable Long dogId) {
-        log.info("Http request / GET / dog-adopt / dogs / dogId");
+        log.info("Http request / GET / api / dogs / dogId");
         return dogService.getOneDogInfo(dogId);
     }
 
     @GetMapping("/get-dogs-shelter/{shelterId}")
     @ResponseStatus(OK)
     public List<DogInfoListOfDogs> getAllDogsFromShelter(@PathVariable Long shelterId) {
-        log.info("Http request / GET / dog-adopt / dogs / get-dogs-shelter / shelterId / dogs");
+        log.info("Http request / GET / api / dogs / get-dogs-shelter / shelterId / dogs");
         return dogService.getAllDogsFromShelter(shelterId);
     }
 
     @PatchMapping("/admin/update/{dogId}")
     @ResponseStatus(OK)
     public DogInfoOneDog updateDog(@PathVariable Long dogId, @Valid @RequestBody Map<String, Object> updates) {
-        log.info("Http request / PATCH / dog-adopt / dogs / admin / update / dogId");
+        log.info("Http request / PATCH / api / dogs / admin / update / dogId");
         return dogService.updateDog(dogId, updates);
     }
 
     @DeleteMapping("/admin/delete-picture/{pictureId}")
     @ResponseStatus(NO_CONTENT)
     public void deletePictureForDog(@PathVariable Long pictureId) {
-        log.info("Http request / DELETE / dog-adopt / dogs / admin / delete-picture / pictureId");
+        log.info("Http request / DELETE / api / dogs / admin / delete-picture / pictureId");
         dogService.deletePictureForDog(pictureId);
     }
 
     @PutMapping("/admin/upload-picture/{dogId}")
     @ResponseStatus(OK)
     public void uploadPictureForDog(@PathVariable Long dogId, @ModelAttribute ImageUploadCommand command) {
-        log.info("Http request / PUT / dog-adopt / dogs / admin / upload-picture / dogId, body {}", command.toString());
+        log.info("Http request / PUT / api / dogs / admin / upload-picture / dogId, body {}", command.toString());
         dogService.uploadPictureForDog(dogId, command);
     }
 

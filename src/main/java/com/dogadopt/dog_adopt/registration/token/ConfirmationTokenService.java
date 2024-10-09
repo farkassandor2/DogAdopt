@@ -9,4 +9,5 @@ public interface ConfirmationTokenService {
     ConfirmationToken getTokenByString(String token);
 
     void setConfirmedAtToNow(ConfirmationToken confirmationToken);
+
 }
