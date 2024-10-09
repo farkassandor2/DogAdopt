@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.registration.service;
 
+import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
 import com.dogadopt.dog_adopt.email.send.EmailSenderService;
@@ -79,5 +80,35 @@ public class RegistrationServiceImpl implements RegistrationService{
         Map<String, String> response = new HashMap<>();
         response.put("message", "Token confirmed successfully. You can now log in.");
         return response;
+    }
+
+    @Override
+    public Map<String, String> requestResetPassword(String emailAddress) {
+
+        Map<String, String> reply = new HashMap<>();
+
+        String text1 = "Please click on the below link to change your password:";
+        String text2 = "Change Password Now";
+        String text3 = "";
+
+        if (emailAddress != null && !emailAddress.isEmpty()) {
+            appUserService.getUserByEmail(emailAddress);
+            String link = "http://localhost:8080/dog-adopt/password/reset?email=" + emailAddress;
+
+            emailSenderService.send(
+                    emailAddress,
+                    emailTemplateService.buildConfirmationEmail(emailAddress, link, text1, text2, text3),
+                    "Change your password");
+
+            reply.put("message", "Please check your email to reset your password");
+        } else {
+            reply.put("message", "Please enter a valid e-mail address");
+        }
+        return reply;
+    }
+
+    @Override
+    public Map<String, String> resetPassword(String email) {
+        return Map.of();
     }
 }

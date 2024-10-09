@@ -23,4 +23,9 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
            "au.accountNonLocked = TRUE " +
            "WHERE au.email = ?1")
     void enableUser(@NonNull String email);
+
+    @Query("SELECT au " +
+           "FROM AppUser au " +
+           "WHERE au.email = ?1")
+    AppUser getUserByEmail(String emailAddress);
 }

@@ -34,4 +34,18 @@ public class RegistrationController {
         log.info("Http request, GET / dog-adopt / registration / confirm , body: {}", token);
         return registrationService.confirmToken(token);
     }
+
+    @PostMapping("/password/new")
+    @ResponseStatus(OK)
+    public Map<String, String> requestResetPassword(@Valid @RequestBody Map<String, String> email) {
+        log.info("Http request, POST / dog-adopt / registration / password / new, email: {}", email);
+        return registrationService.requestResetPassword(email.get("email"));
+    }
+
+    @PostMapping("/password/reset")
+    @ResponseStatus(OK)
+    public Map<String, String> resetPassword(@RequestBody String emailAddress) {
+        log.info("Http request, POST / dog-adopt / registration / password / reset, email: {}", emailAddress);
+        return registrationService.resetPassword(emailAddress);
+    }
 }

@@ -10,4 +10,8 @@ public interface RegistrationService {
     Map<String, String> registerUser(@Valid AppUserCreateCommand command);
 
     Map<String, String> confirmToken(String token);
+
+    Map<String, String> requestResetPassword(String email);
+
+    Map<String, String> resetPassword(String email);
 }

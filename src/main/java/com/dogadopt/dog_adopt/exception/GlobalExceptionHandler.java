@@ -130,4 +130,11 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleTokesHasAlreadyExpired(TokesHasAlreadyExpired ex) {
         return Collections.singletonList(new ErrorResponse("token", ex.getMessage()));
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("email", ex.getMessage()));
+    }
 }

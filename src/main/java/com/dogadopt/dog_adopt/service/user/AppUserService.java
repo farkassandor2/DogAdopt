@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.service.user;
 
+import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import jakarta.validation.Valid;
@@ -13,4 +14,6 @@ public interface AppUserService {
     String registerCustomer(AppUserCreateCommand command);
 
     void enableCustomer(@NonNull @Email String email);
+
+    AppUser getUserByEmail(String emailAddress);
 }

@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.exception.UserAlreadyExistsException;
+import com.dogadopt.dog_adopt.exception.UserNotFoundException;
 import com.dogadopt.dog_adopt.exception.WrongCountryNameException;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
@@ -52,6 +53,15 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void enableCustomer(@NonNull String email) {
         appUserRepository.enableUser(email);
+    }
+
+    @Override
+    public AppUser getUserByEmail(String emailAddress) {
+        AppUser user = appUserRepository.getUserByEmail(emailAddress);
+        if (user == null) {
+            throw new UserNotFoundException(emailAddress);
+        }
+        return user;
     }
 
     @Override
