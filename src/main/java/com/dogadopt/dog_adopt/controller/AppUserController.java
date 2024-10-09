@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @Slf4j
 @RequiredArgsConstructor
 public class AppUserController {

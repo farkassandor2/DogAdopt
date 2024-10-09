@@ -24,6 +24,8 @@ import java.util.Map;
 @Slf4j
 public class RegistrationServiceImpl implements RegistrationService{
 
+    private final static String MESSAGE = "message";
+
     private final AppUserService appUserService;
     private final EmailSenderService emailSenderService;
     private final EmailTemplateService emailTemplateService;
@@ -39,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         String text2 = "Activate Now";
         String text3 = "Link will expire in 60 minutes.";
 
-        String link = "http://localhost:8080/dog-adopt/registration/confirm?token=" + token;
+        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
 
         String emailContent = emailTemplateService
                 .buildConfirmationEmail(command.getEmail(), link, text1, text2, text3);
@@ -50,10 +52,10 @@ public class RegistrationServiceImpl implements RegistrationService{
                     emailContent,
                     "Confirm your email");
         } catch (Exception e) {
-            reply.put("message", "Failed to send email to" + command.getEmail());
+            reply.put(MESSAGE, "Failed to send email to" + command.getEmail());
         }
 
-        reply.put("message", "Registration successful. Please check your email to confirm.");
+        reply.put(MESSAGE, "Registration successful. Please check your email to confirm.");
 
         return reply;
     }
@@ -78,7 +80,7 @@ public class RegistrationServiceImpl implements RegistrationService{
                                                .getEmail());
 
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Token confirmed successfully. You can now log in.");
+        response.put(MESSAGE, "Token confirmed successfully. You can now log in.");
         return response;
     }
 
@@ -92,8 +94,9 @@ public class RegistrationServiceImpl implements RegistrationService{
         String text3 = "";
 
         if (emailAddress != null && !emailAddress.isEmpty()) {
-            appUserService.getUserByEmail(emailAddress);
-            String link = "http://localhost:8080/dog-adopt/password/reset?email=" + emailAddress;
+            AppUser user = appUserService.getUserByEmail(emailAddress);
+            ConfirmationToken token = confirmationTokenService.generateToken(user);
+            String link = "http://localhost:4200/password/reset?email=" + token.getToken();
 
             emailSenderService.send(
                     emailAddress,
@@ -102,7 +105,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
             reply.put("message", "Please check your email to reset your password");
         } else {
-            reply.put("message", "Please enter a valid e-mail address");
+            reply.put(MESSAGE, "Please enter a valid e-mail address");
         }
         return reply;
     }

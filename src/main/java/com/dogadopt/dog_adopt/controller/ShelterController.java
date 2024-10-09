@@ -18,7 +18,7 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/shelters")
+@RequestMapping("/api/shelters")
 @RequiredArgsConstructor
 @Slf4j
 public class ShelterController {

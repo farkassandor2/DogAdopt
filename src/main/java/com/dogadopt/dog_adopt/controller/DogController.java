@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/dogs")
+@RequestMapping("/api/dogs")
 @Slf4j
 @RequiredArgsConstructor
 public class DogController {

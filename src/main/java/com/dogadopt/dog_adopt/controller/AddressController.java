@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/admin/addresses")
+@RequestMapping("/api/admin/addresses")
 @Slf4j
 @RequiredArgsConstructor
 public class AddressController {

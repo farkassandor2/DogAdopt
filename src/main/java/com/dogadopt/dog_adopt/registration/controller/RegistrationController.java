@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/registration")
+@RequestMapping("/api/registration")
 @Slf4j
 @RequiredArgsConstructor
 public class RegistrationController {
@@ -37,15 +37,15 @@ public class RegistrationController {
 
     @PostMapping("/password/new")
     @ResponseStatus(OK)
-    public Map<String, String> requestResetPassword(@Valid @RequestBody Map<String, String> email) {
-        log.info("Http request, POST / dog-adopt / registration / password / new, email: {}", email);
-        return registrationService.requestResetPassword(email.get("email"));
+    public Map<String, String> requestResetPassword(@Valid @RequestBody Map<String, String> emailMap) {
+        log.info("Http request, POST / dog-adopt / registration / password / new, email: {}", emailMap);
+        return registrationService.requestResetPassword(emailMap.get("email"));
     }
 
     @PostMapping("/password/reset")
     @ResponseStatus(OK)
-    public Map<String, String> resetPassword(@RequestBody String emailAddress) {
-        log.info("Http request, POST / dog-adopt / registration / password / reset, email: {}", emailAddress);
-        return registrationService.resetPassword(emailAddress);
+    public Map<String, String> resetPassword(@Valid @RequestBody Map<String, String> newPasswordMap) {
+        log.info("Http request, POST / dog-adopt / registration / password / reset, newPassword: {}", newPasswordMap);
+        return registrationService.resetPassword(newPasswordMap.get("password"));
     }
 }
