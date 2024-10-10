@@ -17,7 +17,13 @@ public class CommentInfo {
 
     private Long idUser;
 
+    private String userFirstName;
+
+    private String userLastName;
+
     private Long idDog;
+
+    private String dogName;
 
     private String commentText;
 

@@ -18,7 +18,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{userId}/{dogId}") //KEL A USER ID VAGY AZT KI TUDOM VENNI A LOGGED IN USERBŐL????
+    @PostMapping("/{userId}/{dogId}")
     @ResponseStatus(CREATED)
     public CommentInfo makeNewComment(@PathVariable Long userId,
                                       @PathVariable Long dogId,

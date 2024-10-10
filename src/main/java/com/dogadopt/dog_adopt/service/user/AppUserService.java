@@ -31,4 +31,6 @@ public interface AppUserService {
     void deletePictureForUser(Long pictureId);
 
     void deleteUser(Long userId);
+
+    AppUser findActiveUserById(Long userId);
 }

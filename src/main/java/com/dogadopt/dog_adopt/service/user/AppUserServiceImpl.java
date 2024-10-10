@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.service.user;
 
+import com.dogadopt.dog_adopt.config.security.AuthUserService;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
@@ -41,6 +42,7 @@ public class AppUserServiceImpl implements AppUserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final ImageService imageService;
+    private final AuthUserService authUserService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -92,7 +94,8 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUserInfo updateUser(Long userId, AppUserUpdateCommand command) {
 
         AppUser user = findActiveUserById(userId);
-        if (user != null) {
+        AppUser currentUser = (AppUser) authUserService.getUserFromSession();
+        if (user != null && user == currentUser) {
             if (command.getEmail() != null) {
                 user.setEmail(command.getEmail());
             }
@@ -150,7 +153,8 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void deleteUser(Long userId) {
         AppUser user = findActiveUserById(userId);
-        if (user != null) {
+        AppUser currentUser = (AppUser) authUserService.getUserFromSession();
+        if (user != null && user == currentUser) {
             user.setActive(false);
         } else throw new UserNotActiveException(USER_NOT_ACTIVE_MESSAGE + userId);
 
@@ -174,7 +178,7 @@ public class AppUserServiceImpl implements AppUserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id " + userId));
     }
 
-    private AppUser findActiveUserById(Long userId) {
+    public AppUser findActiveUserById(Long userId) {
         AppUser user = findUserById(userId);
         return user.isActive() ? user : null;
     }
