@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.domain.enums.address.Country;
 import com.dogadopt.dog_adopt.validation.password.Password;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,11 +27,12 @@ public class AppUserUpdateCommand {
     @Enumerated(EnumType.STRING)
     private Country country;
 
+    @Size(max = 50, message = "Firstname can have maximum {max} characters.")
     private String firstName;
 
+    @Size(max = 50, message = "Firstname can have maximum {max} characters.")
     private String lastName;
 
     private String phoneNumber;
 
-    private List<MultipartFile> images;
 }

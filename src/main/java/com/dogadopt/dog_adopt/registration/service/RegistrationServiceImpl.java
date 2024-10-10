@@ -97,7 +97,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         String text3 = "";
 
         if (emailAddress != null && !emailAddress.isEmpty()) {
-            AppUser user = appUserService.getUserByEmail(emailAddress);
+            AppUser user = appUserService.findUserByEmail(emailAddress);
             ConfirmationToken token = confirmationTokenService.generateToken(user);
             String link = "http://localhost:4200/password/reset?token=" + token.getToken();
 
@@ -122,7 +122,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         if (password != null && !password.isEmpty()) {
             String encodedPassword = appUserService.encodePassword(password);
             String token = command.getToken();
-            AppUser user = appUserService.getUserByToken(token);
+            AppUser user = appUserService.findUserByToken(token);
             appUserService.setPasswordToUser(user, encodedPassword);
             reply = confirmToken(token);
         } else {
