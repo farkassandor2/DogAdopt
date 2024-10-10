@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -94,7 +95,8 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUserInfo updateUser(Long userId, AppUserUpdateCommand command) {
 
         AppUser user = findActiveUserById(userId);
-        AppUser currentUser = (AppUser) authUserService.getUserFromSession();
+        AppUser currentUser = getLoggedInCustomer();
+
         if (user != null && user == currentUser) {
             if (command.getEmail() != null) {
                 user.setEmail(command.getEmail());
@@ -135,7 +137,9 @@ public class AppUserServiceImpl implements AppUserService {
     public void uploadPictureForUser(Long userId, ImageUploadCommand command) {
 
         AppUser user = findActiveUserById(userId);
-        if (user != null) {
+        AppUser currentUser = getLoggedInCustomer();
+
+        if (user != null && user == currentUser) {
             List<MultipartFile> multipartFiles = command.getImages();
 
             if (multipartFiles != null && !multipartFiles.isEmpty()) {
@@ -152,12 +156,19 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public void deleteUser(Long userId) {
+
         AppUser user = findActiveUserById(userId);
-        AppUser currentUser = (AppUser) authUserService.getUserFromSession();
+        AppUser currentUser = getLoggedInCustomer();
+
         if (user != null && user == currentUser) {
             user.setActive(false);
         } else throw new UserNotActiveException(USER_NOT_ACTIVE_MESSAGE + userId);
 
+    }
+
+    public AppUser getLoggedInCustomer() {
+        UserDetails userDetails = authUserService.getUserFromSession();
+        return findUserByEmail(userDetails.getUsername());
     }
 
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {

@@ -33,4 +33,6 @@ public interface AppUserService {
     void deleteUser(Long userId);
 
     AppUser findActiveUserById(Long userId);
+
+    AppUser getLoggedInCustomer();
 }

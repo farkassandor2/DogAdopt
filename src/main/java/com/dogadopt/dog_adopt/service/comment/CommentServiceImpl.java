@@ -24,7 +24,6 @@ public class CommentServiceImpl implements CommentService{
 
     private final CommentRepository commentRepository;
     private final AppUserService appUserService;
-    private final AuthUserService authUserService;
     private final DogService dogService;
     private final ModelMapper modelMapper;
 
@@ -33,11 +32,11 @@ public class CommentServiceImpl implements CommentService{
     public CommentInfo makeNewComment(Long userId, Long dogId, CommentCreateUpdateCommand command) {
 
         AppUser user = appUserService.findActiveUserById(userId);
-//        AppUser currentUser = (AppUser) authUserService.getUserFromSession();
+        AppUser currentUser = appUserService.getLoggedInCustomer();
         Dog dog = dogService.getOneDog(dogId);
         CommentInfo commentInfo = null;
 
-        if (user != null /*&& user == currentUser*/ && dog != null) {
+        if (user != null && user == currentUser && dog != null) {
             Comment comment = modelMapper.map(command, Comment.class);
             comment.setDog(dog);
             comment.setUser(user);
