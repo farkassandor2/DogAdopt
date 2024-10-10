@@ -37,6 +37,8 @@ public class AppUser implements UserDetails {
     @Email
     private String email;
 
+    private boolean isActive = false;
+
     private String countryTelephoneCode;
 
     private String phoneNumber;

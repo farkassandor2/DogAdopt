@@ -33,4 +33,18 @@ public class AppUserController {
         log.info("Http request / PUT / api / users / upload-picture / userId, body {}", command.toString());
         appUserService.uploadPictureForUser(userId, command);
     }
+
+    @DeleteMapping("/delete-picture/{pictureId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deletePictureForUser(@PathVariable Long pictureId) {
+        log.info("Http request / DELETE / api / users / delete-picture / pictureId");
+        appUserService.deletePictureForUser(pictureId);
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteUser(@PathVariable Long userId) {
+        log.info("Http request / DELETE / api / users / userId");
+        appUserService.deleteUser(userId);
+    }
 }

@@ -135,6 +135,17 @@ public class AppUserServiceImpl implements AppUserService {
         }
     }
 
+    @Override
+    public void deletePictureForUser(Long pictureId) {
+        imageService.deleteImage(pictureId, USER_FOLDER);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        AppUser user = findUserById(userId);
+        user.setActive(false);
+    }
+
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {
         if (!multipartFiles.isEmpty()) {
             List<Image> images = imageService.uploadFile(multipartFiles, USER_FOLDER, user.getId(), USER_IMAGE);

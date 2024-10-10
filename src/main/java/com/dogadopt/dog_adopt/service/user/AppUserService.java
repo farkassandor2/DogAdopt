@@ -27,4 +27,8 @@ public interface AppUserService {
     AppUser findUserByToken(String token);
 
     void uploadPictureForUser(Long userId, ImageUploadCommand command);
+
+    void deletePictureForUser(Long pictureId);
+
+    void deleteUser(Long userId);
 }
