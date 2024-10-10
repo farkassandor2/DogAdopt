@@ -27,7 +27,7 @@ public class AppUserController {
         return appUserService.updateUser(userId, command);
     }
 
-    @PutMapping("/upload-picture/{userId}")
+    @PostMapping("/upload-picture/{userId}")
     @ResponseStatus(OK)
     public void uploadPictureForUser(@PathVariable Long userId, @ModelAttribute ImageUploadCommand command) {
         log.info("Http request / PUT / api / users / upload-picture / userId, body {}", command.toString());

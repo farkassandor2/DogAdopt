@@ -137,4 +137,11 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
         return Collections.singletonList(new ErrorResponse("email", ex.getMessage()));
     }
+
+    @ExceptionHandler(UserNotActiveException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleUserNotActiveException(UserNotActiveException ex) {
+        return Collections.singletonList(new ErrorResponse("userId", ex.getMessage()));
+    }
 }

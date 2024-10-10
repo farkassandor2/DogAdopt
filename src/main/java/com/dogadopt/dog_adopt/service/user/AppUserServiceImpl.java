@@ -8,6 +8,7 @@ import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AppUserInfo;
 import com.dogadopt.dog_adopt.exception.UserAlreadyExistsException;
+import com.dogadopt.dog_adopt.exception.UserNotActiveException;
 import com.dogadopt.dog_adopt.exception.UserNotFoundException;
 import com.dogadopt.dog_adopt.exception.WrongCountryNameException;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
@@ -34,6 +35,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     private static final String USER_FOLDER = "users";
     private static final ImageType USER_IMAGE = ImageType.USER;
+    private static final String USER_NOT_ACTIVE_MESSAGE = "User not active with id ";
 
     private final AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -89,34 +91,36 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUserInfo updateUser(Long userId, AppUserUpdateCommand command) {
 
-        AppUser user = findUserById(userId);
+        AppUser user = findActiveUserById(userId);
+        if (user != null) {
+            if (command.getEmail() != null) {
+                user.setEmail(command.getEmail());
+            }
 
-        if (command.getEmail() != null) {
-            user.setEmail(command.getEmail());
-        }
+            if (command.getPassword() != null) {
+                user.setPassword(command.getPassword());
+            }
 
-        if (command.getPassword() != null) {
-            user.setPassword(command.getPassword());
-        }
+            if (command.getCountry() != null) {
+                user.setCountry(command.getCountry());
+            }
 
-        if (command.getCountry() != null) {
-            user.setCountry(command.getCountry());
-        }
+            if (command.getFirstName() != null) {
+                user.setFirstName(command.getFirstName());
+            }
 
-        if (command.getFirstName() != null) {
-            user.setFirstName(command.getFirstName());
-        }
+            if (command.getLastName() != null) {
+                user.setLastName(command.getLastName());
+            }
 
-        if (command.getLastName() != null) {
-            user.setLastName(command.getLastName());
-        }
+            if (command.getPhoneNumber() != null) {
+                user.setPhoneNumber(command.getPhoneNumber());
+            }
 
-        if (command.getPhoneNumber() != null) {
-            user.setPhoneNumber(command.getPhoneNumber());
-        }
+            appUserRepository.save(user);
+            return modelMapper.map(user, AppUserInfo.class);
 
-        appUserRepository.save(user);
-        return modelMapper.map(user, AppUserInfo.class);
+        } else throw new UserNotActiveException(USER_NOT_ACTIVE_MESSAGE + userId);
     }
 
     @Override
@@ -127,12 +131,15 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void uploadPictureForUser(Long userId, ImageUploadCommand command) {
 
-        AppUser user = findUserById(userId);
-        List<MultipartFile> multipartFiles = command.getImages();
+        AppUser user = findActiveUserById(userId);
+        if (user != null) {
+            List<MultipartFile> multipartFiles = command.getImages();
 
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            saveImagesOfUser(multipartFiles, user);
-        }
+            if (multipartFiles != null && !multipartFiles.isEmpty()) {
+                saveImagesOfUser(multipartFiles, user);
+            }
+        } else throw new UserNotActiveException(USER_NOT_ACTIVE_MESSAGE + userId);
+
     }
 
     @Override
@@ -142,8 +149,11 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public void deleteUser(Long userId) {
-        AppUser user = findUserById(userId);
-        user.setActive(false);
+        AppUser user = findActiveUserById(userId);
+        if (user != null) {
+            user.setActive(false);
+        } else throw new UserNotActiveException(USER_NOT_ACTIVE_MESSAGE + userId);
+
     }
 
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {
@@ -162,5 +172,10 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserRepository
                 .findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id " + userId));
+    }
+
+    private AppUser findActiveUserById(Long userId) {
+        AppUser user = findUserById(userId);
+        return user.isActive() ? user : null;
     }
 }
