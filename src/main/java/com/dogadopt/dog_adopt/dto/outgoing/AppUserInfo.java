@@ -35,7 +35,7 @@ public class AppUserInfo {
 
 //    private List<DogAndUserAdoptionInfo> dogAndUserAdoptionInfos;
 //
-//    private List<DogAndUserFavoriteInfo> dogAndUserFavoriteInfos;
+    private List<DogAndUserFavoriteInfo> dogAndUserFavoriteInfos;
 //
 //    private List<DonationInfo> donationInfos;
 //

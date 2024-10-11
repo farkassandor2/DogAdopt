@@ -1,6 +1,5 @@
 package com.dogadopt.dog_adopt.domain;
 
-import com.dogadopt.dog_adopt.domain.enums.adoption.AdoptionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

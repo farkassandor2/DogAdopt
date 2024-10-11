@@ -135,7 +135,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
     public List<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
-        return Collections.singletonList(new ErrorResponse("email", ex.getMessage()));
+        return Collections.singletonList(new ErrorResponse("id", ex.getMessage()));
     }
 
     @ExceptionHandler(UserNotActiveException.class)
@@ -143,5 +143,19 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public List<ErrorResponse> handleUserNotActiveException(UserNotActiveException ex) {
         return Collections.singletonList(new ErrorResponse("userId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(DogCannotBeAddedToFavoritesException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleDogCannotBeAddedToFavoritesException(DogCannotBeAddedToFavoritesException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(DogIsAlreadyOnFavoriteListOfUserException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleDogIsAlreadyOnFavoriteListOfUserException(DogIsAlreadyOnFavoriteListOfUserException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
     }
 }
