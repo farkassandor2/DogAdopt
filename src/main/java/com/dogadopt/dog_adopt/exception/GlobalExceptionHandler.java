@@ -186,4 +186,18 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleCommentDoesNotBelongToUserException(CommentDoesNotBelongToUserException ex) {
         return Collections.singletonList(new ErrorResponse("commentId", ex.getMessage()));
     }
+
+    @ExceptionHandler(IncorrectUsernameOrPasswordException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleIncorrectUsernameOrPasswordException(IncorrectUsernameOrPasswordException ex) {
+        return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(AccountHasNotBeenActivatedYetException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleAccountHasNotBeenActivatedYetException(AccountHasNotBeenActivatedYetException ex) {
+        return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
+    }
 }

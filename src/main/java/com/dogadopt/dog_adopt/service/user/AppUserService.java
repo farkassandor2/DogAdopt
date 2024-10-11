@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
+import com.dogadopt.dog_adopt.dto.incoming.ProfileLoadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AppUserInfo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -35,4 +36,6 @@ public interface AppUserService {
     AppUser findActiveUserById(Long userId);
 
     AppUser getLoggedInCustomer();
+
+    AppUserInfo getOwnProfileOfUser();
 }

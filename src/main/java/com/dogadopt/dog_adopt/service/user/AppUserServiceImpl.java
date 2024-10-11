@@ -7,11 +7,9 @@ import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
+import com.dogadopt.dog_adopt.dto.incoming.ProfileLoadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AppUserInfo;
-import com.dogadopt.dog_adopt.exception.UserAlreadyExistsException;
-import com.dogadopt.dog_adopt.exception.UserNotActiveException;
-import com.dogadopt.dog_adopt.exception.UserNotFoundException;
-import com.dogadopt.dog_adopt.exception.WrongCountryNameException;
+import com.dogadopt.dog_adopt.exception.*;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.repository.AppUserRepository;
@@ -169,6 +167,22 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUser getLoggedInCustomer() {
         UserDetails userDetails = authUserService.getUserFromSession();
         return findUserByEmail(userDetails.getUsername());
+    }
+
+    @Override
+    public AppUserInfo getOwnProfileOfUser() {
+
+        AppUser user = getLoggedInCustomer();
+
+        if (user != null) {
+            if (user.isActive()) {
+                return modelMapper.map(user, AppUserInfo.class);
+            } else {
+                throw new AccountHasNotBeenActivatedYetException("Account has not been activated!");
+            }
+        } else {
+            throw new IncorrectUsernameOrPasswordException("Incorrect username or password!");
+        }
     }
 
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {

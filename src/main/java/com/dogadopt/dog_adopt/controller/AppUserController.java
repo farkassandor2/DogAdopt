@@ -2,6 +2,7 @@ package com.dogadopt.dog_adopt.controller;
 
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
+import com.dogadopt.dog_adopt.dto.incoming.ProfileLoadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AppUserInfo;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.validation.Valid;
@@ -46,5 +47,12 @@ public class AppUserController {
     public void deleteUser(@PathVariable Long userId) {
         log.info("Http request / DELETE / api / users / userId");
         appUserService.deleteUser(userId);
+    }
+
+    @GetMapping("/me")
+    @ResponseStatus(OK)
+    public AppUserInfo getOwnProfileOfUser() {
+        log.info("Http request / GET / api / users / me");
+        return appUserService.getOwnProfileOfUser();
     }
 }

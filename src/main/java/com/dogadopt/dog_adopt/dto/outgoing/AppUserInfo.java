@@ -41,5 +41,4 @@ public class AppUserInfo {
 //
 //    private List<WalkingReservationInfo> walkingReservationInfos;
 
-
 }

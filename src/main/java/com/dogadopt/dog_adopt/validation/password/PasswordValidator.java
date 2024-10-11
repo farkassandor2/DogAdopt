@@ -8,10 +8,13 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        if (password == null || password.length() < 8 || password.length() > 16) return false;
-        if (!password.matches(".*[A-Z].*")) return false;
-        if (!password.matches(".*[!@#$%^&*()].*")) return false;
-        if (!password.matches(".*\\d.*")) return false;
-        return password.matches(".*[a-z].*");
+        if (password != null) {
+            if (password.length() < 8 || password.length() > 16) return false;
+            if (!password.matches(".*[A-Z].*")) return false;
+            if (!password.matches(".*[!@#$%^&*()].*")) return false;
+            if (!password.matches(".*\\d.*")) return false;
+            return password.matches(".*[a-z].*");
+        }
+        return true;
     }
 }
