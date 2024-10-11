@@ -58,21 +58,14 @@ public class CommentServiceImpl implements CommentService{
 
         if (user != null && user == currentUser) {
             Comment comment = getCommentById(commentId);
-            boolean isCommentBelongToUser = checkIfCommentBelongsToUser(user, comment);
 
-            if (isCommentBelongToUser) {
+            if (comment.getUser() == user) {
                 commentRepository.deleteById(commentId);
             } else {
                 throw new CommentDoesNotBelongToUserException(
                         "Comment with id " + commentId + " does not belong to id " + userId);
             }
         }
-    }
-
-    private boolean checkIfCommentBelongsToUser(AppUser user, Comment comment) {
-
-//        Comment comment1 = commentRepository
-        return true;
     }
 
     private Comment getCommentById(Long commentId) {
