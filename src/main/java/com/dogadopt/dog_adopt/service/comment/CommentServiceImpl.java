@@ -1,11 +1,12 @@
 package com.dogadopt.dog_adopt.service.comment;
 
-import com.dogadopt.dog_adopt.config.security.AuthUserService;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Comment;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.dto.incoming.CommentCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.CommentInfo;
+import com.dogadopt.dog_adopt.exception.CommentDoesNotBelongToUserException;
+import com.dogadopt.dog_adopt.exception.CommentNotFoundException;
 import com.dogadopt.dog_adopt.repository.CommentRepository;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
@@ -47,6 +48,42 @@ public class CommentServiceImpl implements CommentService{
         }
 
         return commentInfo;
+    }
+
+    @Override
+    public void deleteComment(Long userId, Long commentId) {
+
+        AppUser user = appUserService.findActiveUserById(userId);
+        AppUser currentUser = appUserService.getLoggedInCustomer();
+
+        if (user != null && user == currentUser) {
+            Comment comment = getCommentById(commentId);
+            boolean isCommentBelongToUser = checkIfCommentBelongsToUser(user, comment);
+
+            if (isCommentBelongToUser) {
+                commentRepository.deleteById(commentId);
+            } else {
+                throw new CommentDoesNotBelongToUserException(
+                        "Comment with id " + commentId + " does not belong to id " + userId);
+            }
+        }
+    }
+
+    private boolean checkIfCommentBelongsToUser(AppUser user, Comment comment) {
+
+//        Comment comment1 = commentRepository
+        return true;
+    }
+
+    private Comment getCommentById(Long commentId) {
+        return commentRepository
+                .findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("Comment don't exist with id " + commentId));
+    }
+
+    @Override
+    public void deleteCommentByAdmin(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 
     private CommentInfo generateCommentInfo(AppUser user, Dog dog, Comment comment) {

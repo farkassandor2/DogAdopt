@@ -26,4 +26,18 @@ public class CommentController {
         log.info("Http request / POST / api / userId/ dogId, body: {}", command.toString());
         return commentService.makeNewComment(userId, dogId, command);
     }
+
+    @DeleteMapping("/{userId}/{commentId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteComment(@PathVariable Long userId, @PathVariable Long commentId) {
+        log.info("Http request / DELETE / api / userId/ commentId");
+        commentService.deleteComment(userId, commentId);
+    }
+
+    @DeleteMapping("/admin/{commentId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteCommentByAdmin(@PathVariable Long commentId) {
+        log.info("Http request / DELETE / api / commentId");
+        commentService.deleteCommentByAdmin(commentId);
+    }
 }

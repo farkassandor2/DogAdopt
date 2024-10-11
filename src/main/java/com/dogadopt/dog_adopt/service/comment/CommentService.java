@@ -7,4 +7,8 @@ import jakarta.validation.Valid;
 public interface CommentService {
 
     CommentInfo makeNewComment(Long userId, Long dogId, @Valid CommentCreateUpdateCommand command);
+
+    void deleteComment(Long userId, Long commentId);
+
+    void deleteCommentByAdmin(Long commentId);
 }

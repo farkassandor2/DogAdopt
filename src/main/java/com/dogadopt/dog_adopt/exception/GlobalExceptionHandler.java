@@ -172,4 +172,18 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleDogCannotBeRemovedFromFavoritesException(DogCannotBeRemovedFromFavoritesException ex) {
         return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
     }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("commentId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CommentDoesNotBelongToUserException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleCommentDoesNotBelongToUserException(CommentDoesNotBelongToUserException ex) {
+        return Collections.singletonList(new ErrorResponse("commentId", ex.getMessage()));
+    }
 }
