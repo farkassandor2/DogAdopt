@@ -189,6 +189,12 @@ public class AppUserServiceImpl implements AppUserService {
                 List<DogAndUserFavoriteInfo> favoriteInfos = getDogAndUserFavoriteInfos(favoriteDogs);
                 info.setDogAndUserFavoriteInfos(favoriteInfos);
 
+                //TODO dogAndUserAdoptionInfos
+
+                //TODO donationInfos
+
+                //TODO walkingReservatoinInfos
+
                 return info;
             } else {
                 throw new AccountHasNotBeenActivatedYetException("Account has not been activated!");
