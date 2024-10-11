@@ -158,4 +158,18 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleDogIsAlreadyOnFavoriteListOfUserException(DogIsAlreadyOnFavoriteListOfUserException ex) {
         return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
     }
+
+    @ExceptionHandler(DogIsNotOnTheFavoriteListOfUserException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleDogIsNotOnTheFavoriteListOfUserException(DogIsNotOnTheFavoriteListOfUserException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(DogCannotBeRemovedFromFavoritesException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleDogCannotBeRemovedFromFavoritesException(DogCannotBeRemovedFromFavoritesException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
+    }
 }

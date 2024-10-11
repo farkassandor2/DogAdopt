@@ -19,7 +19,14 @@ public class DogAndUserFavoriteController {
     @PostMapping("/{userId}/{dogId}")
     @ResponseStatus(CREATED)
     public DogAndUserFavoriteInfo addNewFavorite(@PathVariable Long userId, @PathVariable Long dogId) {
-        log.info("Http request / POST / api / favorites / userId/ dogId, body ");
+        log.info("Http request / POST / api / favorites / userId/ dogId");
         return dogAndUserFavoriteService.addNewFavorite(userId, dogId);
+    }
+
+    @DeleteMapping("/{userId}/{dogId}")
+    @ResponseStatus(NO_CONTENT)
+    public void deleteDogFromFavorite(@PathVariable Long userId, @PathVariable Long dogId) {
+        log.info("Http request / DELETE / api / favorites / userId/ dogId");
+        dogAndUserFavoriteService.deleteDogFromFavorite(userId, dogId);
     }
 }

@@ -6,7 +6,9 @@ import com.dogadopt.dog_adopt.domain.DogAndUserFavorite;
 import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserFavoriteInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.exception.DogCannotBeAddedToFavoritesException;
+import com.dogadopt.dog_adopt.exception.DogCannotBeRemovedFromFavoritesException;
 import com.dogadopt.dog_adopt.exception.DogIsAlreadyOnFavoriteListOfUserException;
+import com.dogadopt.dog_adopt.exception.DogIsNotOnTheFavoriteListOfUserException;
 import com.dogadopt.dog_adopt.repository.DogAndUserFavoriteRepository;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
@@ -37,12 +39,9 @@ public class DogAndUserFavoriteServiceImpl implements DogAndUserFavoriteService{
         DogAndUserFavorite favorite = new DogAndUserFavorite();
 
         if (user != null && dog != null && user == currentUser) {
-            boolean dogIsNotOnFavoriteListOfUser = checkFavoriteList(user, dog);
-            if (dogIsNotOnFavoriteListOfUser) {
-                favorite.setUser(user);
-                favorite.setDog(dog);
-                dog.setDogAndUserFavorite(new ArrayList<>(List.of(favorite)));
-                user.setDogAndUserFavorite(new ArrayList<>(List.of(favorite)));
+            Long favId = checkFavoriteList(user, dog);
+            if (favId == null) {
+                setUserAndDogToFavorite(favorite, user, dog);
                 dogAndUserFavoriteRepository.save(favorite);
 
                 DogAndUserFavoriteInfo info = modelMapper.map(favorite, DogAndUserFavoriteInfo.class);
@@ -58,8 +57,40 @@ public class DogAndUserFavoriteServiceImpl implements DogAndUserFavoriteService{
         }
     }
 
-    private boolean checkFavoriteList(AppUser user, Dog dog) {
+    private void setUserAndDogToFavorite(DogAndUserFavorite favorite, AppUser user, Dog dog) {
+        favorite.setUser(user);
+        favorite.setDog(dog);
+        dog.setDogAndUserFavorite(new ArrayList<>(List.of(favorite)));
+        user.setDogAndUserFavorite(new ArrayList<>(List.of(favorite)));
+    }
+
+    @Override
+    public void deleteDogFromFavorite(Long userId, Long dogId) {
+
+        AppUser user = appUserService.findActiveUserById(userId);
+        AppUser currentUser = appUserService.getLoggedInCustomer();
+        Dog dog = dogService.getOneDog(dogId);
+
+        if (user != null && dog != null && user == currentUser) {
+            Long favId = checkFavoriteList(user, dog);
+            if (favId != null) {
+                dogAndUserFavoriteRepository.deleteById(favId);
+            } else {
+                throw new DogIsNotOnTheFavoriteListOfUserException(
+                        "Dog with id " + dogId + " is not on the favorite list of user with id " + userId);
+            }
+        } else {
+            throw new DogCannotBeRemovedFromFavoritesException(
+                    "Dog with id " + dogId + " cannot be removed from favorite list of user with id " + userId);
+        }
+    }
+
+    private Long checkFavoriteList(AppUser user, Dog dog) {
         DogAndUserFavorite favorite = dogAndUserFavoriteRepository.findFavoriteByUserAndDog(user, dog);
-        return favorite == null;
+        if (favorite != null) {
+            return favorite.getId();
+        } else {
+            return null;
+        }
     }
 }
