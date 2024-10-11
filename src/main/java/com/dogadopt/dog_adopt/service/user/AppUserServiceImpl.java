@@ -4,7 +4,6 @@ import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.config.security.AuthUserService;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
-import com.dogadopt.dog_adopt.domain.DogAndUserFavorite;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
