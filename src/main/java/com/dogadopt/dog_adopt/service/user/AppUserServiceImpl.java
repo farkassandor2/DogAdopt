@@ -1,18 +1,23 @@
 package com.dogadopt.dog_adopt.service.user;
 
+import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.config.security.AuthUserService;
 import com.dogadopt.dog_adopt.domain.AppUser;
+import com.dogadopt.dog_adopt.domain.Dog;
+import com.dogadopt.dog_adopt.domain.DogAndUserFavorite;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
-import com.dogadopt.dog_adopt.dto.incoming.ProfileLoadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AppUserInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserFavoriteInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.exception.*;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.repository.AppUserRepository;
+import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.image.ImageService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +31,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,6 +47,7 @@ public class AppUserServiceImpl implements AppUserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final ImageService imageService;
+    private final DogService dogService;
     private final AuthUserService authUserService;
     private final ModelMapper modelMapper;
 
@@ -176,13 +183,31 @@ public class AppUserServiceImpl implements AppUserService {
 
         if (user != null) {
             if (user.isActive()) {
-                return modelMapper.map(user, AppUserInfo.class);
+                AppUserInfo info = modelMapper.map(user, AppUserInfo.class);
+
+                List<Dog> favoriteDogs = dogService.getFavoriteDogsOfUser(user);
+                List<DogAndUserFavoriteInfo> favoriteInfos = getDogAndUserFavoriteInfos(favoriteDogs);
+                info.setDogAndUserFavoriteInfos(favoriteInfos);
+
+                return info;
             } else {
                 throw new AccountHasNotBeenActivatedYetException("Account has not been activated!");
             }
         } else {
             throw new IncorrectUsernameOrPasswordException("Incorrect username or password!");
         }
+    }
+
+    private List<DogAndUserFavoriteInfo> getDogAndUserFavoriteInfos(List<Dog> favoriteDogs) {
+        List<DogInfoOneDog> dogInfos = ObjectMapperUtil.mapAll(favoriteDogs, DogInfoOneDog.class);
+        List<DogAndUserFavoriteInfo> favoriteInfos = new ArrayList<>();
+        for (DogInfoOneDog dogInfo : dogInfos) {
+            DogAndUserFavoriteInfo dogFavInfo = new DogAndUserFavoriteInfo();
+            dogFavInfo.setId(dogInfo.getId());
+            dogFavInfo.setDogInfo(dogInfo);
+            favoriteInfos.add(dogFavInfo);
+        }
+        return favoriteInfos;
     }
 
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {

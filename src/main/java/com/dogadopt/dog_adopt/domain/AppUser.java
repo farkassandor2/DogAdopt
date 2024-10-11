@@ -116,7 +116,7 @@ public class AppUser implements UserDetails {
     private List<DogAndUserAdoption> dogAndUserAdoptions;
 
     @OneToMany(mappedBy = "user")
-    private List<DogAndUserFavorite> dogAndUserFavorite;
+    private List<DogAndUserFavorite> dogAndUserFavorites;
 
     @OneToMany(mappedBy = "user")
     private List<Donation> donations;

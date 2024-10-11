@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.service.dog;
 
 
+import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
@@ -31,4 +32,6 @@ public interface DogService {
     void uploadPictureForDog(Long dogId, ImageUploadCommand command);
 
     void deletePictureForDog(Long pictureId);
+
+    List<Dog> getFavoriteDogsOfUser(AppUser user);
 }

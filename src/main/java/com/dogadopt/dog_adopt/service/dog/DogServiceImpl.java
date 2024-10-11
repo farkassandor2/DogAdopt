@@ -1,6 +1,7 @@
 package com.dogadopt.dog_adopt.service.dog;
 
 import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
+import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.Shelter;
@@ -208,5 +209,10 @@ public class DogServiceImpl implements DogService{
     @Override
     public void deletePictureForDog(Long pictureId) {
         imageService.deleteImage(pictureId, DOG_FOLDER);
+    }
+
+    @Override
+    public List<Dog> getFavoriteDogsOfUser(AppUser user) {
+        return dogRepository.getFavoriteDogsOfUser(user);
     }
 }

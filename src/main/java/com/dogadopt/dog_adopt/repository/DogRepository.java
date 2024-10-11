@@ -1,8 +1,8 @@
 package com.dogadopt.dog_adopt.repository;
 
+import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.enums.dog.Status;
-import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +34,10 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
            "FROM Dog d " +
            "WHERE d.status NOT IN :statusesToLeaveOut")
     Stream<Dog> streamAllDogs(@Param("statusesToLeaveOut") List<Status> statusesToLeaveOut);
+
+    @Query("SELECT d " +
+           "FROM Dog d " +
+           "JOIN d.dogAndUserFavorites duf " +
+           "WHERE duf.user = ?1")
+    List<Dog> getFavoriteDogsOfUser(AppUser user);
 }

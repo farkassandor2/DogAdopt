@@ -60,8 +60,8 @@ public class DogAndUserFavoriteServiceImpl implements DogAndUserFavoriteService{
     private void setUserAndDogToFavorite(DogAndUserFavorite favorite, AppUser user, Dog dog) {
         favorite.setUser(user);
         favorite.setDog(dog);
-        dog.setDogAndUserFavorite(new ArrayList<>(List.of(favorite)));
-        user.setDogAndUserFavorite(new ArrayList<>(List.of(favorite)));
+        dog.setDogAndUserFavorites(new ArrayList<>(List.of(favorite)));
+        user.setDogAndUserFavorites(new ArrayList<>(List.of(favorite)));
     }
 
     @Override
