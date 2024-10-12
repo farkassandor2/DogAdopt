@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.domain;
 
+import com.dogadopt.dog_adopt.domain.enums.adoption.AdoptionStatus;
 import com.dogadopt.dog_adopt.domain.enums.adoption.AdoptionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,11 +33,13 @@ public class DogAndUserAdoption {
     @Enumerated(EnumType.STRING)
     private AdoptionType adoptionType;
 
+    @Enumerated(EnumType.STRING)
+    private AdoptionStatus adoptionStatus;
+
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
-        this.adoptionType = AdoptionType.NONE;
         this.createdAt = LocalDateTime.now();
     }
 }

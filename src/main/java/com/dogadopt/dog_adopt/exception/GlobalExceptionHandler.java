@@ -200,4 +200,18 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleAccountHasNotBeenActivatedYetException(AccountHasNotBeenActivatedYetException ex) {
         return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
     }
+
+    @ExceptionHandler(DogAlreadyAdoptedInRealLifeException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleDogAlreadyAdoptedInRealLifeException(DogAlreadyAdoptedInRealLifeException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(WrongCredentialsException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleWrongCredentialsException(WrongCredentialsException ex) {
+        return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
+    }
 }

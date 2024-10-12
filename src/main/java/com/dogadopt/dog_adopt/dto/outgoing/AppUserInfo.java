@@ -33,12 +33,12 @@ public class AppUserInfo {
 
     private LocalDateTime createdAt;
 
-//    private List<DogAndUserAdoptionInfo> dogAndUserAdoptionInfos;
-//
+    private List<DogAndUserAdoptionInfo> dogAndUserAdoptionInfos;
+
     private List<DogAndUserFavoriteInfo> dogAndUserFavoriteInfos;
-//
+
 //    private List<DonationInfo> donationInfos;
-//
+
 //    private List<WalkingReservationInfo> walkingReservationInfos;
 
 }
