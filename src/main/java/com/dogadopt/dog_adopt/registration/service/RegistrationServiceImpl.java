@@ -47,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
 
         String emailContent = emailTemplateService
-                .buildConfirmationEmail(letterTitle, command.getEmail(), text1, text2, text3, link);
+                .buildEmail(letterTitle, command.getEmail(), text1, text2, text3, link);
 
         try {
             emailSenderService.send(
@@ -105,7 +105,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
             emailSenderService.send(
                     emailAddress,
-                    emailTemplateService.buildConfirmationEmail(letterTitle, emailAddress, link, text1, text2, text3),
+                    emailTemplateService.buildEmail(letterTitle, emailAddress, link, text1, text2, text3),
                     "Change your password");
 
             reply.put(MESSAGE, "Please check your email to reset your password");

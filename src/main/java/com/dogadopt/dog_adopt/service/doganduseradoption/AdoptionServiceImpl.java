@@ -86,12 +86,12 @@ public class AdoptionServiceImpl implements AdoptionService {
         String linkToAdopter = "https://google.com";
         String textToAdopter3 = "Soon we will inform you about the process of the adoption.";
 
-        String emailContentAdopter = emailTemplateService.buildConfirmationEmail(letterTitleAdopter,
-                                                                                 user.getEmail(),
-                                                                                 textToAdopter1,
-                                                                                 textToAdopter2,
-                                                                                 textToAdopter3,
-                                                                                 linkToAdopter);
+        String emailContentAdopter = emailTemplateService.buildEmail(letterTitleAdopter,
+                                                                     user.getEmail(),
+                                                                     textToAdopter1,
+                                                                     textToAdopter2,
+                                                                     textToAdopter3,
+                                                                     linkToAdopter);
         emailSenderService.send(emailAdopter,
                                 emailContentAdopter,
                                 "Adoption Request Received");
@@ -106,12 +106,12 @@ public class AdoptionServiceImpl implements AdoptionService {
         String linkToAdmin = "https://google.com";
         String textToAdmin3 = "";
 
-        String emailContentAdmin = emailTemplateService.buildConfirmationEmail(letterTitleAdmin,
-                                                                               "DogAdopt Admin",
-                                                                               textToAdmin1,
-                                                                               textToAdmin2,
-                                                                               textToAdmin3,
-                                                                               linkToAdmin);
+        String emailContentAdmin = emailTemplateService.buildEmail(letterTitleAdmin,
+                                                                   "DogAdopt Admin",
+                                                                   textToAdmin1,
+                                                                   textToAdmin2,
+                                                                   textToAdmin3,
+                                                                   linkToAdmin);
         emailSenderService.send(ADMIN_EMAIL,
                                 emailContentAdmin,
                                 "Real Adoption Request");
