@@ -9,7 +9,7 @@ import com.dogadopt.dog_adopt.exception.DogCannotBeAddedToFavoritesException;
 import com.dogadopt.dog_adopt.exception.DogCannotBeRemovedFromFavoritesException;
 import com.dogadopt.dog_adopt.exception.DogIsAlreadyOnFavoriteListOfUserException;
 import com.dogadopt.dog_adopt.exception.DogIsNotOnTheFavoriteListOfUserException;
-import com.dogadopt.dog_adopt.repository.DogAndUserFavoriteRepository;
+import com.dogadopt.dog_adopt.repository.FavoriteRepository;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.transaction.Transactional;
@@ -23,9 +23,9 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DogAndUserFavoriteServiceImpl implements DogAndUserFavoriteService{
+public class FavoriteServiceImpl implements FavoriteService {
 
-    private final DogAndUserFavoriteRepository dogAndUserFavoriteRepository;
+    private final FavoriteRepository favoriteRepository;
     private final AppUserService appUserService;
     private final DogService dogService;
     private final ModelMapper modelMapper;
@@ -42,7 +42,7 @@ public class DogAndUserFavoriteServiceImpl implements DogAndUserFavoriteService{
             Long favId = checkFavoriteList(user, dog);
             if (favId == null) {
                 setUserAndDogToFavorite(favorite, user, dog);
-                dogAndUserFavoriteRepository.save(favorite);
+                favoriteRepository.save(favorite);
 
                 DogAndUserFavoriteInfo info = modelMapper.map(favorite, DogAndUserFavoriteInfo.class);
                 info.setDogInfo(modelMapper.map(dog, DogInfoOneDog.class));
@@ -74,7 +74,7 @@ public class DogAndUserFavoriteServiceImpl implements DogAndUserFavoriteService{
         if (user != null && dog != null && user == currentUser) {
             Long favId = checkFavoriteList(user, dog);
             if (favId != null) {
-                dogAndUserFavoriteRepository.deleteById(favId);
+                favoriteRepository.deleteById(favId);
             } else {
                 throw new DogIsNotOnTheFavoriteListOfUserException(
                         "Dog with id " + dogId + " is not on the favorite list of user with id " + userId);
@@ -86,7 +86,7 @@ public class DogAndUserFavoriteServiceImpl implements DogAndUserFavoriteService{
     }
 
     private Long checkFavoriteList(AppUser user, Dog dog) {
-        DogAndUserFavorite favorite = dogAndUserFavoriteRepository.findFavoriteByUserAndDog(user, dog);
+        DogAndUserFavorite favorite = favoriteRepository.findFavoriteByUserAndDog(user, dog);
         if (favorite != null) {
             return favorite.getId();
         } else {

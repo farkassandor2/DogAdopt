@@ -11,7 +11,7 @@ import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
 import com.dogadopt.dog_adopt.email.send.EmailSenderService;
 import com.dogadopt.dog_adopt.exception.DogAlreadyAdoptedInRealLifeException;
 import com.dogadopt.dog_adopt.exception.WrongCredentialsException;
-import com.dogadopt.dog_adopt.repository.DogAndUserAdoptionRepository;
+import com.dogadopt.dog_adopt.repository.AdoptionRepository;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.transaction.Transactional;
@@ -23,11 +23,11 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DogAndUserAdoptionServiceImpl implements DogAndUserAdoptionService{
+public class AdoptionServiceImpl implements AdoptionService {
 
     private static final String ADMIN_EMAIL = "farkas.sandor2@gmail.com";
 
-    private final DogAndUserAdoptionRepository dogAndUserAdoptionRepository;
+    private final AdoptionRepository adoptionRepository;
     private final AppUserService appUserService;
     private final DogService dogService;
     private final EmailSenderService emailSenderService;
@@ -63,12 +63,17 @@ public class DogAndUserAdoptionServiceImpl implements DogAndUserAdoptionService{
                         "Dog with id " + dogId + " has already been adopted by a loving family!");
             }
         }
-        dogAndUserAdoptionRepository.save(adoption);
+        adoptionRepository.save(adoption);
 
         DogAndUserAdoptionInfo info = modelMapper.map(adoption, DogAndUserAdoptionInfo.class);
         info.setUserId(userId);
         info.setDogId(dogId);
         return info;
+    }
+
+    @Override
+    public void deleteAdoption(Long adoptionId) {
+
     }
 
     private void sendEmailToUser(AppUser user) {
@@ -121,6 +126,6 @@ public class DogAndUserAdoptionServiceImpl implements DogAndUserAdoptionService{
     }
 
     private boolean checkIfRealAdopted(Dog dog) {
-        return dogAndUserAdoptionRepository.isDogRealAdopted(AdoptionType.REAL, dog);
+        return adoptionRepository.isDogRealAdopted(AdoptionType.REAL, dog);
     }
 }

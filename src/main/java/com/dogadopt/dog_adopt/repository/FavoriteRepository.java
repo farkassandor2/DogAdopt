@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DogAndUserFavoriteRepository extends JpaRepository<DogAndUserFavorite, Long> {
+public interface FavoriteRepository extends JpaRepository<DogAndUserFavorite, Long> {
 
     @Query("SELECT duf " +
            "FROM DogAndUserFavorite duf " +

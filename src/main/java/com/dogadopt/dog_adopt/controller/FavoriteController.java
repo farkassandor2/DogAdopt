@@ -1,7 +1,7 @@
 package com.dogadopt.dog_adopt.controller;
 
 import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserFavoriteInfo;
-import com.dogadopt.dog_adopt.service.doganduserfavorite.DogAndUserFavoriteService;
+import com.dogadopt.dog_adopt.service.doganduserfavorite.FavoriteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -12,21 +12,21 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/api/favorites")
 @RequiredArgsConstructor
 @Slf4j
-public class DogAndUserFavoriteController {
+public class FavoriteController {
 
-    private final DogAndUserFavoriteService dogAndUserFavoriteService;
+    private final FavoriteService favoriteService;
 
     @PostMapping("/{userId}/{dogId}")
     @ResponseStatus(CREATED)
     public DogAndUserFavoriteInfo addNewFavorite(@PathVariable Long userId, @PathVariable Long dogId) {
         log.info("Http request / POST / api / favorites / userId/ dogId");
-        return dogAndUserFavoriteService.addNewFavorite(userId, dogId);
+        return favoriteService.addNewFavorite(userId, dogId);
     }
 
     @DeleteMapping("/{userId}/{dogId}")
     @ResponseStatus(NO_CONTENT)
     public void deleteDogFromFavorite(@PathVariable Long userId, @PathVariable Long dogId) {
         log.info("Http request / DELETE / api / favorites / userId/ dogId");
-        dogAndUserFavoriteService.deleteDogFromFavorite(userId, dogId);
+        favoriteService.deleteDogFromFavorite(userId, dogId);
     }
 }

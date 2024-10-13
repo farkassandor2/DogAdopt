@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DogAndUserAdoptionRepository extends JpaRepository<DogAndUserAdoption, Long> {
+public interface AdoptionRepository extends JpaRepository<DogAndUserAdoption, Long> {
 
     @Query("SELECT CASE WHEN COUNT(dua) > 0 " +
            "THEN TRUE ELSE FALSE END " +
