@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DogAndUserFavoriteInfo {
+public class FavoriteInfo {
 
     private Long id;
 

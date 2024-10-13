@@ -1,7 +1,7 @@
 package com.dogadopt.dog_adopt.controller;
 
-import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserFavoriteInfo;
-import com.dogadopt.dog_adopt.service.doganduserfavorite.FavoriteService;
+import com.dogadopt.dog_adopt.dto.outgoing.FavoriteInfo;
+import com.dogadopt.dog_adopt.service.favorite.FavoriteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class FavoriteController {
 
     @PostMapping("/{userId}/{dogId}")
     @ResponseStatus(CREATED)
-    public DogAndUserFavoriteInfo addNewFavorite(@PathVariable Long userId, @PathVariable Long dogId) {
+    public FavoriteInfo addNewFavorite(@PathVariable Long userId, @PathVariable Long dogId) {
         log.info("Http request / POST / api / favorites / userId/ dogId");
         return favoriteService.addNewFavorite(userId, dogId);
     }

@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DogAndUserAdoptionInfo {
+public class AdoptionInfo {
 
     private Long id;
 
     private Long userId;
 
-    private Long dogId;
+    private DogInfoOneDog dogInfo;
 
     private AdoptionType adoptionType;
 

@@ -10,7 +10,7 @@ import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AppUserInfo;
-import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserFavoriteInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.FavoriteInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.exception.*;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
@@ -185,10 +185,10 @@ public class AppUserServiceImpl implements AppUserService {
                 AppUserInfo info = modelMapper.map(user, AppUserInfo.class);
 
                 List<Dog> favoriteDogs = dogService.getFavoriteDogsOfUser(user);
-                List<DogAndUserFavoriteInfo> favoriteInfos = getDogAndUserFavoriteInfos(favoriteDogs);
-                info.setDogAndUserFavoriteInfos(favoriteInfos);
+                List<FavoriteInfo> favoriteInfos = getDogAndUserFavoriteInfos(favoriteDogs);
+                info.setFavoriteInfos(favoriteInfos);
 
-                //TODO dogAndUserAdoptionInfos
+                //TODO adoptionInfos
 
                 //TODO donationInfos
 
@@ -203,11 +203,11 @@ public class AppUserServiceImpl implements AppUserService {
         }
     }
 
-    private List<DogAndUserFavoriteInfo> getDogAndUserFavoriteInfos(List<Dog> favoriteDogs) {
+    private List<FavoriteInfo> getDogAndUserFavoriteInfos(List<Dog> favoriteDogs) {
         List<DogInfoOneDog> dogInfos = ObjectMapperUtil.mapAll(favoriteDogs, DogInfoOneDog.class);
-        List<DogAndUserFavoriteInfo> favoriteInfos = new ArrayList<>();
+        List<FavoriteInfo> favoriteInfos = new ArrayList<>();
         for (DogInfoOneDog dogInfo : dogInfos) {
-            DogAndUserFavoriteInfo dogFavInfo = new DogAndUserFavoriteInfo();
+            FavoriteInfo dogFavInfo = new FavoriteInfo();
             dogFavInfo.setId(dogInfo.getId());
             dogFavInfo.setDogInfo(dogInfo);
             favoriteInfos.add(dogFavInfo);

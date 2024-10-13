@@ -1,4 +1,4 @@
-package com.dogadopt.dog_adopt.service.doganduseradoption;
+package com.dogadopt.dog_adopt.service.adoption;
 
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
@@ -6,7 +6,8 @@ import com.dogadopt.dog_adopt.domain.DogAndUserAdoption;
 import com.dogadopt.dog_adopt.domain.enums.adoption.AdoptionStatus;
 import com.dogadopt.dog_adopt.domain.enums.adoption.AdoptionType;
 import com.dogadopt.dog_adopt.dto.incoming.DogAndUserAdoptionCreateCommand;
-import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserAdoptionInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.AdoptionInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
 import com.dogadopt.dog_adopt.email.send.EmailSenderService;
 import com.dogadopt.dog_adopt.exception.AdoptionNotFoundException;
@@ -43,7 +44,7 @@ public class AdoptionServiceImpl implements AdoptionService {
     private final ModelMapper modelMapper;
 
     @Override
-    public DogAndUserAdoptionInfo adopt(Long userId, Long dogId, DogAndUserAdoptionCreateCommand command) {
+    public AdoptionInfo adopt(Long userId, Long dogId, DogAndUserAdoptionCreateCommand command) {
 
         AppUser user = appUserService.findActiveUserById(userId);
         AppUser loggedInCustomer = appUserService.getLoggedInCustomer();
@@ -73,9 +74,9 @@ public class AdoptionServiceImpl implements AdoptionService {
         }
         adoptionRepository.save(adoption);
 
-        DogAndUserAdoptionInfo info = modelMapper.map(adoption, DogAndUserAdoptionInfo.class);
+        AdoptionInfo info = modelMapper.map(adoption, AdoptionInfo.class);
         info.setUserId(userId);
-        info.setDogId(dogId);
+        info.setDogInfo(modelMapper.map(dog, DogInfoOneDog.class));
         return info;
     }
 

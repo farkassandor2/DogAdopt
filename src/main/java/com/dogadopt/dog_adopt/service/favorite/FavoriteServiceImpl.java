@@ -1,9 +1,9 @@
-package com.dogadopt.dog_adopt.service.doganduserfavorite;
+package com.dogadopt.dog_adopt.service.favorite;
 
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.DogAndUserFavorite;
-import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserFavoriteInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.FavoriteInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
 import com.dogadopt.dog_adopt.exception.DogCannotBeAddedToFavoritesException;
 import com.dogadopt.dog_adopt.exception.DogCannotBeRemovedFromFavoritesException;
@@ -31,7 +31,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final ModelMapper modelMapper;
 
     @Override
-    public DogAndUserFavoriteInfo addNewFavorite(Long userId, Long dogId) {
+    public FavoriteInfo addNewFavorite(Long userId, Long dogId) {
 
         AppUser user = appUserService.findActiveUserById(userId);
         AppUser currentUser = appUserService.getLoggedInCustomer();
@@ -44,7 +44,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 setUserAndDogToFavorite(favorite, user, dog);
                 favoriteRepository.save(favorite);
 
-                DogAndUserFavoriteInfo info = modelMapper.map(favorite, DogAndUserFavoriteInfo.class);
+                FavoriteInfo info = modelMapper.map(favorite, FavoriteInfo.class);
                 info.setDogInfo(modelMapper.map(dog, DogInfoOneDog.class));
                 return info;
             } else {
