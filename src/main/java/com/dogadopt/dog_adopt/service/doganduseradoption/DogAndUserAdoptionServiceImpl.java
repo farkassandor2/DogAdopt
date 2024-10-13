@@ -7,6 +7,8 @@ import com.dogadopt.dog_adopt.domain.enums.adoption.AdoptionStatus;
 import com.dogadopt.dog_adopt.domain.enums.adoption.AdoptionType;
 import com.dogadopt.dog_adopt.dto.incoming.DogAndUserAdoptionCreateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserAdoptionInfo;
+import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
+import com.dogadopt.dog_adopt.email.send.EmailSenderService;
 import com.dogadopt.dog_adopt.exception.DogAlreadyAdoptedInRealLifeException;
 import com.dogadopt.dog_adopt.exception.WrongCredentialsException;
 import com.dogadopt.dog_adopt.repository.DogAndUserAdoptionRepository;
@@ -23,9 +25,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DogAndUserAdoptionServiceImpl implements DogAndUserAdoptionService{
 
+    private static final String ADMIN_EMAIL = "farkas.sandor2@gmail.com";
+
     private final DogAndUserAdoptionRepository dogAndUserAdoptionRepository;
     private final AppUserService appUserService;
     private final DogService dogService;
+    private final EmailSenderService emailSenderService;
+    private final EmailTemplateService emailTemplateService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -40,15 +46,14 @@ public class DogAndUserAdoptionServiceImpl implements DogAndUserAdoptionService{
         if(dog != null) {
             boolean dogIsRealAdopted = checkIfRealAdopted(dog);
             if (!dogIsRealAdopted) {
-                if (user != null && user == loggedInCustomer) {
+                if (user == loggedInCustomer) {
                     setUserAndDogToAdoption(adoption, user, dog, adoptionType);
                     if (adoptionType == AdoptionType.VIRTUAL) {
                         adoption.setAdoptionStatus(AdoptionStatus.FULFILLED);
                     } else if (adoptionType == AdoptionType.REAL) {
                         adoption.setAdoptionStatus(AdoptionStatus.PENDING);
-                        //TODO
-                        //!!!! Send email to ADMIN to notify about the real adoption request
-                        //Send email to user that we took request
+                        sendEmailToAdmin(user);
+                        sendEmailToUser(user);
                     }
                 } else {
                     throw new WrongCredentialsException("Wrong credentials!");
@@ -64,6 +69,47 @@ public class DogAndUserAdoptionServiceImpl implements DogAndUserAdoptionService{
         info.setUserId(userId);
         info.setDogId(dogId);
         return info;
+    }
+
+    private void sendEmailToUser(AppUser user) {
+
+        String letterTitleAdopter = "Congratulations! Your Adoption Process Started!";
+        String emailAdopter = user.getEmail();
+        String textToAdopter1 = "We have received your adoption request!";
+        String textToAdopter2 = "Please make sure that you have provided your contact information on your profile.";
+        //TODO change to real URL to login page
+        String linkToAdopter = "https://google.com";
+        String textToAdopter3 = "Soon we will inform you about the process of the adoption.";
+
+        String emailContentAdopter = emailTemplateService.buildConfirmationEmail(letterTitleAdopter,
+                                                                                 user.getEmail(),
+                                                                                 textToAdopter1,
+                                                                                 textToAdopter2,
+                                                                                 textToAdopter3,
+                                                                                 linkToAdopter);
+        emailSenderService.send(emailAdopter,
+                                emailContentAdopter,
+                                "Adoption Request Received");
+    }
+
+    private void sendEmailToAdmin(AppUser user) {
+
+        String letterTitleAdmin = "Handle Adoption Request";
+        String textToAdmin1 = "There is a real adoption request from user with userId " + user.getId();
+        String textToAdmin2 = "Handle request on this link";
+        //TODO change to real URL to guide us to request
+        String linkToAdmin = "https://google.com";
+        String textToAdmin3 = "";
+
+        String emailContentAdmin = emailTemplateService.buildConfirmationEmail(letterTitleAdmin,
+                                                                               "DogAdopt Admin",
+                                                                               textToAdmin1,
+                                                                               textToAdmin2,
+                                                                               textToAdmin3,
+                                                                               linkToAdmin);
+        emailSenderService.send(ADMIN_EMAIL,
+                                emailContentAdmin,
+                                "Real Adoption Request");
     }
 
     private void setUserAndDogToAdoption(DogAndUserAdoption adoption,

@@ -1,6 +1,5 @@
 package com.dogadopt.dog_adopt.email.send;
 
-import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class EmailSenderServiceImpl implements EmailSenderService {
 
     private final JavaMailSender mailSender;
-    private final AppUserService appUserService;
 
 
     @Override

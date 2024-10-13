@@ -39,6 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         Map<String, String> reply = new HashMap<>();
         String token = appUserService.registerCustomer(command);
 
+        String letterTitle = "Confirm your email";
         String text1 = "Thank you for registering. Please click on the below link to activate your account:";
         String text2 = "Activate Now";
         String text3 = "Link will expire in 60 minutes.";
@@ -46,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
 
         String emailContent = emailTemplateService
-                .buildConfirmationEmail(command.getEmail(), link, text1, text2, text3);
+                .buildConfirmationEmail(letterTitle, command.getEmail(), text1, text2, text3, link);
 
         try {
             emailSenderService.send(
@@ -92,6 +93,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         String emailAddress = command.getEmail();
         Map<String, String> reply = new HashMap<>();
 
+        String letterTitle = "Change of Password";
         String text1 = "Please click on the below link to change your password:";
         String text2 = "Change Password Now";
         String text3 = "";
@@ -103,7 +105,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
             emailSenderService.send(
                     emailAddress,
-                    emailTemplateService.buildConfirmationEmail(emailAddress, link, text1, text2, text3),
+                    emailTemplateService.buildConfirmationEmail(letterTitle, emailAddress, link, text1, text2, text3),
                     "Change your password");
 
             reply.put(MESSAGE, "Please check your email to reset your password");
