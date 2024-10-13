@@ -9,6 +9,8 @@ import com.dogadopt.dog_adopt.dto.incoming.DogAndUserAdoptionCreateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.DogAndUserAdoptionInfo;
 import com.dogadopt.dog_adopt.email.build.EmailTemplateService;
 import com.dogadopt.dog_adopt.email.send.EmailSenderService;
+import com.dogadopt.dog_adopt.exception.AdoptionNotFoundException;
+import com.dogadopt.dog_adopt.exception.CannotDeleteAdoptionException;
 import com.dogadopt.dog_adopt.exception.DogAlreadyAdoptedInRealLifeException;
 import com.dogadopt.dog_adopt.exception.WrongCredentialsException;
 import com.dogadopt.dog_adopt.repository.AdoptionRepository;
@@ -18,6 +20,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 
 @Service
@@ -72,8 +80,51 @@ public class AdoptionServiceImpl implements AdoptionService {
     }
 
     @Override
-    public void deleteAdoption(Long adoptionId) {
+    public void deleteAdoptionByUser(Long adoptionId) {
+        DogAndUserAdoption adoption = getAdoptionById(adoptionId);
 
+        if (adoption.getAdoptionType() != AdoptionType.REAL && adoption.getAdoptionStatus() != AdoptionStatus.FULFILLED) {
+            adoptionRepository.deleteById(adoptionId);
+        } else {
+            throw new CannotDeleteAdoptionException("Adoption with id " + adoptionId + " is fulfilled and cannot be deleted");
+        }
+    }
+
+    @Override
+    public Map<String, String> updateAdoption(Long adoptionId, Map<String, Object> updates) {
+
+        Map<String, String> reply = new HashMap<>();
+        DogAndUserAdoption adoption = getAdoptionById(adoptionId);
+
+        if (adoption != null) {
+            updates.forEach((key, value) -> {
+                switch (key) {
+                    case "adoptionType":
+                        adoption.setAdoptionType(AdoptionType.valueOf(value.toString()));
+                        break;
+                    case "adoptionStatus":
+                        adoption.setAdoptionStatus(AdoptionStatus.valueOf(value.toString()));
+                        break;
+                    default:
+                        throw  new ResponseStatusException(BAD_REQUEST, "Unknown field: " + key);
+                }
+            });
+        } else {
+            reply.put("message", "Adoption not found");
+        }
+        reply.put("message", "Update successful!");
+        return reply;
+    }
+
+    @Override
+    public void deleteAdoptionByAdmin(Long adoptionId) {
+        adoptionRepository.deleteById(adoptionId);
+    }
+
+    private DogAndUserAdoption getAdoptionById(Long adoptionId) {
+        return adoptionRepository
+                .findById(adoptionId)
+                .orElseThrow(() -> new AdoptionNotFoundException("Adoption not found wiht id " + adoptionId));
     }
 
     private void sendEmailToUser(AppUser user) {
@@ -102,7 +153,7 @@ public class AdoptionServiceImpl implements AdoptionService {
         String letterTitleAdmin = "Handle Adoption Request";
         String textToAdmin1 = "There is a real adoption request from user with userId " + user.getId();
         String textToAdmin2 = "Handle request on this link";
-        //TODO change to real URL to guide us to request
+        //TODO change to real URL to guide us to request + add param adoptionId
         String linkToAdmin = "https://google.com";
         String textToAdmin3 = "";
 

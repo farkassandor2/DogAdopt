@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -27,13 +29,25 @@ public class AdoptionController {
         return adoptionService.adopt(userId, dogId, command);
     }
 
-    @PatchMapping("/{adoptionId}")
+    @DeleteMapping("/{adoptionId}")
     @ResponseStatus(OK)
-    public void deleteAdoption(@PathVariable Long adoptionId) {
+    public void deleteAdoptionByUser(@PathVariable Long adoptionId) {
         log.info("Http request / DELETE / api / adoption / adoptionId");
-        adoptionService.deleteAdoption(adoptionId);
+        adoptionService.deleteAdoptionByUser(adoptionId);
     }
 
+    @DeleteMapping("/admin/{adoptionId}")
+    @ResponseStatus(OK)
+    public void deleteAdoptionByAdmin(@PathVariable Long adoptionId) {
+        log.info("Http request / DELETE / api / adoption / admin / adoptionId");
+        adoptionService.deleteAdoptionByAdmin(adoptionId);
+    }
 
-    //admin -- to change dogs status
+    @PatchMapping("/admin/update/{adoptionId}")
+    @ResponseStatus(OK)
+    public Map<String, String> updateAdoptionStatus(@PathVariable Long adoptionId,
+                                                    @RequestBody Map<String, Object> updates) {
+        log.info("Http request / PATCH / api / adoption / admin / adoptionId / update");
+        return adoptionService.updateAdoption(adoptionId, updates);
+    }
 }

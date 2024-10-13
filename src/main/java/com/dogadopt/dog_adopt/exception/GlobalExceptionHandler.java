@@ -214,4 +214,18 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleWrongCredentialsException(WrongCredentialsException ex) {
         return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
     }
+
+    @ExceptionHandler(AdoptionNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleAdoptionNotFoundException(AdoptionNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("adoptionId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CannotDeleteAdoptionException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleCannotDeleteAdoptionException(CannotDeleteAdoptionException ex) {
+        return Collections.singletonList(new ErrorResponse("adoptionId", ex.getMessage()));
+    }
 }
