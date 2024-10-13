@@ -76,7 +76,10 @@ public class AdoptionServiceImpl implements AdoptionService {
 
         AdoptionInfo info = modelMapper.map(adoption, AdoptionInfo.class);
         info.setUserId(userId);
-        info.setDogInfo(modelMapper.map(dog, DogInfoOneDog.class));
+
+        DogInfoOneDog dogInfo = dogService.getDogInfoOneDog(dog);
+
+        info.setDogInfo(dogInfo);
         return info;
     }
 

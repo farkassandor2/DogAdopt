@@ -45,7 +45,8 @@ public class FavoriteServiceImpl implements FavoriteService {
                 favoriteRepository.save(favorite);
 
                 FavoriteInfo info = modelMapper.map(favorite, FavoriteInfo.class);
-                info.setDogInfo(modelMapper.map(dog, DogInfoOneDog.class));
+                DogInfoOneDog dogInfo = dogService.getDogInfoOneDog(dog);
+                info.setDogInfo(dogInfo);
                 return info;
             } else {
                 throw new DogIsAlreadyOnFavoriteListOfUserException(

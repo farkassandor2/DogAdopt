@@ -36,4 +36,6 @@ public interface DogService {
     List<Dog> getFavoriteDogsOfUser(AppUser user);
 
     List<Dog> getAdoptedDogsOfUser(AppUser user);
+
+    DogInfoOneDog getDogInfoOneDog(Dog dog);
 }

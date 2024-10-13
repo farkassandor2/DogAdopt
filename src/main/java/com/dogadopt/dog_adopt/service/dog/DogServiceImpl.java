@@ -1,19 +1,14 @@
 package com.dogadopt.dog_adopt.service.dog;
 
 import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
-import com.dogadopt.dog_adopt.domain.AppUser;
-import com.dogadopt.dog_adopt.domain.Dog;
-import com.dogadopt.dog_adopt.domain.Image;
-import com.dogadopt.dog_adopt.domain.Shelter;
+import com.dogadopt.dog_adopt.domain.*;
 import com.dogadopt.dog_adopt.domain.enums.dog.DonationGoal;
 import com.dogadopt.dog_adopt.domain.enums.dog.HealthStatus;
 import com.dogadopt.dog_adopt.domain.enums.dog.Status;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.DogCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
-import com.dogadopt.dog_adopt.dto.outgoing.DogInfoListOfDogs;
-import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
-import com.dogadopt.dog_adopt.dto.outgoing.ImageInfo;
+import com.dogadopt.dog_adopt.dto.outgoing.*;
 import com.dogadopt.dog_adopt.exception.DogNotFoundException;
 import com.dogadopt.dog_adopt.repository.DogRepository;
 import com.dogadopt.dog_adopt.service.image.ImageService;
@@ -219,5 +214,53 @@ public class DogServiceImpl implements DogService{
     @Override
     public List<Dog> getAdoptedDogsOfUser(AppUser user) {
         return dogRepository.getAdoptedDogsOfUser(user);
+    }
+
+    @Override
+    public DogInfoOneDog getDogInfoOneDog(Dog dog) {
+        DogInfoOneDog dogInfo = modelMapper.map(dog, DogInfoOneDog.class);
+        if (dog != null) {
+            List<ImageInfo> imageInfos = dog.getImages().stream()
+                                            .map(image -> {
+                                                ImageInfo imageInfo = new ImageInfo();
+                                                imageInfo.setId(image.getId());
+                                                imageInfo.setImgUrl(image.getImgUrl());
+                                                return imageInfo;
+                                            })
+                                            .toList();
+
+            List<CommentInfo> commentInfos = dog.getComments().stream()
+                    .map(comment -> {
+                        CommentInfo commentInfo = modelMapper.map(comment, CommentInfo.class);
+                        commentInfo.setIdUser(comment.getUser().getId());
+                        commentInfo.setUserFirstName(comment.getUser().getFirstName());
+                        commentInfo.setUserLastName(comment.getUser().getLastName());
+                        commentInfo.setIdDog(comment.getDog().getId());
+                        commentInfo.setDogName(comment.getDog().getName());
+                        return commentInfo;
+                    })
+                    .toList();
+
+//            List<WalkingReservationInfo> walkingReservationInfos = dog.getWalkingReservations().stream()
+//                                                       .map(walkingReservation -> {
+//                                                           WalkingReservationInfo commentInfo = modelMapper.map(walkingReservation, WalkingReservationInfo.class);
+//                                                           WalkingReservationInfo.setIdUser(walkingReservation.getUser().getId());
+//                                                           WalkingReservationInfo.setUserFirstName(walkingReservation.getUser().getFirstName());
+//                                                           WalkingReservationInfo.setUserLastName(walkingReservation.getUser().getLastName());
+//                                                           WalkingReservationInfo.setIdDog(walkingReservation.getDog().getId());
+//                                                           WalkingReservationInfo.setDogName(walkingReservation.getDog().getName());
+//                                                    return walkingReservation;
+//                                                })
+//                                                       .toList();
+
+
+
+            dogInfo.setImageInfos(imageInfos);
+            dogInfo.setShelterId(dog.getShelter().getId());
+            dogInfo.setDescription(dog.getDescription());
+            dogInfo.setCommentInfos(commentInfos);
+//            dogInfo.setWalkingReservationInfos(walkingReservationInfos);
+        }
+        return dogInfo;
     }
 }

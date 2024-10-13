@@ -1,6 +1,5 @@
 package com.dogadopt.dog_adopt.service.user;
 
-import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.config.security.AuthUserService;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
@@ -15,7 +14,6 @@ import com.dogadopt.dog_adopt.exception.*;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.repository.AppUserRepository;
-import com.dogadopt.dog_adopt.service.adoption.AdoptionService;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.image.ImageService;
 import jakarta.transaction.Transactional;
@@ -30,10 +28,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -215,7 +211,7 @@ public class AppUserServiceImpl implements AppUserService {
                                                               .collect(Collectors.toMap(adoption -> adoption.getDog().getId(), adoption -> adoption));
 
         return adoptedDogs.stream().map(dog -> {
-            DogInfoOneDog dogInfo = getDogInfoOneDog(dog);
+            DogInfoOneDog dogInfo = dogService.getDogInfoOneDog(dog);
 
             AdoptionInfo adoptionInfo = new AdoptionInfo();
             adoptionInfo.setId(dogInfo.getId());
@@ -236,7 +232,7 @@ public class AppUserServiceImpl implements AppUserService {
     private List<FavoriteInfo> getDogAndUserFavoriteInfos(List<Dog> favoriteDogs) {
         return favoriteDogs.stream().map(dog -> {
 
-            DogInfoOneDog dogInfo = getDogInfoOneDog(dog);
+            DogInfoOneDog dogInfo = dogService.getDogInfoOneDog(dog);
 
             dogInfo.setDescription(dog.getDescription());
 
@@ -246,24 +242,6 @@ public class AppUserServiceImpl implements AppUserService {
 
             return favoriteInfo;
         }).toList();
-    }
-
-    private DogInfoOneDog getDogInfoOneDog(Dog dog) {
-        DogInfoOneDog dogInfo = modelMapper.map(dog, DogInfoOneDog.class);
-
-        List<ImageInfo> imageInfos = dog.getImages().stream()
-                                        .map(image -> {
-                                            ImageInfo imageInfo = new ImageInfo();
-                                            imageInfo.setId(image.getId());
-                                            imageInfo.setImgUrl(image.getImgUrl());
-                                            return imageInfo;
-                                        })
-                                        .toList();
-
-        dogInfo.setImageInfos(imageInfos);
-
-        dogInfo.setShelterId(dog.getShelter().getId());
-        return dogInfo;
     }
 
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {
