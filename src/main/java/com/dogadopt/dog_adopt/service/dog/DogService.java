@@ -34,4 +34,6 @@ public interface DogService {
     void deletePictureForDog(Long pictureId);
 
     List<Dog> getFavoriteDogsOfUser(AppUser user);
+
+    List<Dog> getAdoptedDogsOfUser(AppUser user);
 }

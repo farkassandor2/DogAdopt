@@ -4,18 +4,18 @@ import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.config.security.AuthUserService;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
+import com.dogadopt.dog_adopt.domain.DogAndUserAdoption;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserUpdateCommand;
 import com.dogadopt.dog_adopt.dto.incoming.ImageUploadCommand;
-import com.dogadopt.dog_adopt.dto.outgoing.AppUserInfo;
-import com.dogadopt.dog_adopt.dto.outgoing.FavoriteInfo;
-import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
+import com.dogadopt.dog_adopt.dto.outgoing.*;
 import com.dogadopt.dog_adopt.exception.*;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationToken;
 import com.dogadopt.dog_adopt.registration.token.ConfirmationTokenService;
 import com.dogadopt.dog_adopt.repository.AppUserRepository;
+import com.dogadopt.dog_adopt.service.adoption.AdoptionService;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.image.ImageService;
 import jakarta.transaction.Transactional;
@@ -32,6 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -188,7 +191,9 @@ public class AppUserServiceImpl implements AppUserService {
                 List<FavoriteInfo> favoriteInfos = getDogAndUserFavoriteInfos(favoriteDogs);
                 info.setFavoriteInfos(favoriteInfos);
 
-                //TODO adoptionInfos
+                List<Dog> adoptedDogs = dogService.getAdoptedDogsOfUser(user);
+                List<AdoptionInfo> adoptionInfos = getDogAndUserAdoptionInfos(user, adoptedDogs);
+                info.setAdoptionInfos(adoptionInfos);
 
                 //TODO donationInfos
 
@@ -203,16 +208,62 @@ public class AppUserServiceImpl implements AppUserService {
         }
     }
 
+    private List<AdoptionInfo> getDogAndUserAdoptionInfos(AppUser user, List<Dog> adoptedDogs) {
+
+        List<DogAndUserAdoption> adoptions = appUserRepository.getAdoptionsOfUser(user);
+        Map<Long, DogAndUserAdoption> adoptionsMap = adoptions.stream()
+                                                              .collect(Collectors.toMap(adoption -> adoption.getDog().getId(), adoption -> adoption));
+
+        return adoptedDogs.stream().map(dog -> {
+            DogInfoOneDog dogInfo = getDogInfoOneDog(dog);
+
+            AdoptionInfo adoptionInfo = new AdoptionInfo();
+            adoptionInfo.setId(dogInfo.getId());
+            adoptionInfo.setDogInfo(dogInfo);
+            adoptionInfo.setUserId(user.getId());
+
+            DogAndUserAdoption adoption = adoptionsMap.get(dog.getId());
+            if (adoption != null) {
+                adoptionInfo.setAdoptionType(adoption.getAdoptionType());
+                adoptionInfo.setAdoptionStatus(adoption.getAdoptionStatus());
+                adoptionInfo.setCreatedAt(adoption.getCreatedAt());
+            }
+
+            return adoptionInfo;
+        }).toList();
+    }
+
     private List<FavoriteInfo> getDogAndUserFavoriteInfos(List<Dog> favoriteDogs) {
-        List<DogInfoOneDog> dogInfos = ObjectMapperUtil.mapAll(favoriteDogs, DogInfoOneDog.class);
-        List<FavoriteInfo> favoriteInfos = new ArrayList<>();
-        for (DogInfoOneDog dogInfo : dogInfos) {
-            FavoriteInfo dogFavInfo = new FavoriteInfo();
-            dogFavInfo.setId(dogInfo.getId());
-            dogFavInfo.setDogInfo(dogInfo);
-            favoriteInfos.add(dogFavInfo);
-        }
-        return favoriteInfos;
+        return favoriteDogs.stream().map(dog -> {
+
+            DogInfoOneDog dogInfo = getDogInfoOneDog(dog);
+
+            dogInfo.setDescription(dog.getDescription());
+
+            FavoriteInfo favoriteInfo = new FavoriteInfo();
+            favoriteInfo.setId(dogInfo.getId());
+            favoriteInfo.setDogInfo(dogInfo);
+
+            return favoriteInfo;
+        }).toList();
+    }
+
+    private DogInfoOneDog getDogInfoOneDog(Dog dog) {
+        DogInfoOneDog dogInfo = modelMapper.map(dog, DogInfoOneDog.class);
+
+        List<ImageInfo> imageInfos = dog.getImages().stream()
+                                        .map(image -> {
+                                            ImageInfo imageInfo = new ImageInfo();
+                                            imageInfo.setId(image.getId());
+                                            imageInfo.setImgUrl(image.getImgUrl());
+                                            return imageInfo;
+                                        })
+                                        .toList();
+
+        dogInfo.setImageInfos(imageInfos);
+
+        dogInfo.setShelterId(dog.getShelter().getId());
+        return dogInfo;
     }
 
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {

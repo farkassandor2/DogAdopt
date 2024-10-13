@@ -40,4 +40,10 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
            "JOIN d.dogAndUserFavorites duf " +
            "WHERE duf.user = ?1")
     List<Dog> getFavoriteDogsOfUser(AppUser user);
+
+    @Query("SELECT d " +
+           "FROM Dog d " +
+           "JOIN d.dogAndUserAdoptions dua " +
+           "WHERE dua.user = ?1")
+    List<Dog> getAdoptedDogsOfUser(AppUser user);
 }

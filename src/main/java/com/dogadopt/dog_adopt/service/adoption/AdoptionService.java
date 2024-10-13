@@ -15,4 +15,5 @@ public interface AdoptionService {
     Map<String, String> updateAdoption(Long adoptionId, Map<String, Object> updates);
 
     void deleteAdoptionByAdmin(Long adoptionId);
+
 }

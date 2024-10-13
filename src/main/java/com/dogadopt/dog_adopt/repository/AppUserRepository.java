@@ -1,12 +1,14 @@
 package com.dogadopt.dog_adopt.repository;
 
 import com.dogadopt.dog_adopt.domain.AppUser;
+import com.dogadopt.dog_adopt.domain.DogAndUserAdoption;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,4 +37,10 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
            "JOIN au.confirmationTokens ct " +
            "WHERE ct.token = ?1")
     AppUser getUserByToken(String token);
+
+    @Query("SELECT a " +
+           "FROM AppUser au " +
+           "JOIN au.dogAndUserAdoptions a " +
+           "WHERE a.user = ?1")
+    List<DogAndUserAdoption> getAdoptionsOfUser(AppUser user);
 }

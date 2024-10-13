@@ -215,4 +215,9 @@ public class DogServiceImpl implements DogService{
     public List<Dog> getFavoriteDogsOfUser(AppUser user) {
         return dogRepository.getFavoriteDogsOfUser(user);
     }
+
+    @Override
+    public List<Dog> getAdoptedDogsOfUser(AppUser user) {
+        return dogRepository.getAdoptedDogsOfUser(user);
+    }
 }
