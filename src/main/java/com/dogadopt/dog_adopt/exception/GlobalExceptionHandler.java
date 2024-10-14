@@ -263,4 +263,11 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleTimeWindowNotValidException(TimeWindowNotValidException ex) {
         return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
     }
+
+    @ExceptionHandler(WalkingReservationNotFoundException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleWalkingReservationNotFoundException(WalkingReservationNotFoundException ex) {
+        return Collections.singletonList(new ErrorResponse("reservationId", ex.getMessage()));
+    }
 }

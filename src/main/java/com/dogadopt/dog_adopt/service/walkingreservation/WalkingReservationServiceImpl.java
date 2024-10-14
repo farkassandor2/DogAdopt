@@ -113,6 +113,47 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
         return ObjectMapperUtil.mapAll(walkingReservations, WalkingReservationInfo.class);
     }
 
+    @Override
+    public WalkingReservationInfo changeReservationTime(Long userId,
+                                                        Long reservationId,
+                                                        WalkingReservationCreateUpdateCommand command) {
+
+        WalkingReservation walkingReservation = getWalkingReservation(reservationId);
+        AppUser user = appUserService.findActiveUserById(userId);
+        AppUser loggedInUser = appUserService.getLoggedInCustomer();
+
+        if (user != null && user == loggedInUser && walkingReservation != null) {
+            AppUser userOfReservation = walkingReservation.getUser();
+
+            if (user == userOfReservation) {
+                Dog dog = walkingReservation.getDog();
+                LocalDateTime startTime = command.getStartTime();
+                LocalDateTime endTime = command.getEndTime();
+                boolean timeWindowValid = isTimeWindowValid(startTime, endTime);
+
+                if (timeWindowValid) {
+                    walkingReservation.setStartTime(startTime);
+                    walkingReservation.setEndTime(endTime);
+                    walkingReservationRepository.save(walkingReservation);
+                    return getWalkingReservationInfo(walkingReservation, user, dog);
+                } else {
+                    throw new TimeWindowNotValidException("Reserved time can be maximum " + TIME_WINDOW + " hours");
+                }
+            } else {
+                throw new WrongCredentialsException(
+                        "User with id " + userId + " does not belong to reservation with id " + reservationId);
+            }
+        } else {
+            throw new WalkingReservationNotPossibleException("Walking reservation cannot be accomplished");
+        }
+    }
+
+    private WalkingReservation getWalkingReservation(Long reservationId) {
+        return walkingReservationRepository
+                .findById(reservationId)
+                .orElseThrow(() -> new WalkingReservationNotFoundException("Reservation not found with with id " + reservationId));
+    }
+
     private boolean checkIfTimeWindowForWalkAlreadyTaken(Dog dog, LocalDateTime start, LocalDateTime end) {
         return walkingReservationRepository.checkIfTimeWindowForWalkAlreadyTaken(dog, start, end);
     }

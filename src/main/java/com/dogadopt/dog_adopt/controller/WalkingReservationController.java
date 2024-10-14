@@ -36,6 +36,15 @@ public class WalkingReservationController {
         walkingReservationService.deleteWalkingReservationByUser(userId, reservationId);
     }
 
+    @PatchMapping("/change-time/{userId}/{reservationId}")
+    @ResponseStatus(OK)
+    public WalkingReservationInfo changeReservationTime(@PathVariable Long userId,
+                                                        @PathVariable Long reservationId,
+                                                        @RequestBody WalkingReservationCreateUpdateCommand command) {
+        log.info("Http request / PATCH / api / walking / change-time / userId / reservationId, body: {}", command.toString());
+        return walkingReservationService.changeReservationTime(userId, reservationId, command);
+    }
+
     @DeleteMapping("/admin/delete/{reservationId}")
     @ResponseStatus(OK)
     public void deleteWalkingReservationByAdmin(@PathVariable Long reservationId) {

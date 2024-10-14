@@ -19,4 +19,6 @@ public interface WalkingReservationService {
     List<WalkingReservationInfo> getAllReservationsByAdminForUser(Long userId);
 
     List<WalkingReservationInfo> getAllReservationsByAdminForDog(Long dogId);
+
+    WalkingReservationInfo changeReservationTime(Long userId, Long reservationId, WalkingReservationCreateUpdateCommand command);
 }
