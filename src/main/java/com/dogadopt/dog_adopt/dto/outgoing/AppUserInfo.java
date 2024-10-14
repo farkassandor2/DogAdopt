@@ -39,6 +39,6 @@ public class AppUserInfo {
 
 //    private List<DonationInfo> donationInfos;
 
-//    private List<WalkingReservationInfo> walkingReservationInfos;
+    private List<WalkingReservationInfo> walkingReservationInfos;
 
 }
