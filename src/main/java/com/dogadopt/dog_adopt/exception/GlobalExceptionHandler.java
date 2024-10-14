@@ -228,4 +228,39 @@ public class GlobalExceptionHandler {
     public List<ErrorResponse> handleCannotDeleteAdoptionException(CannotDeleteAdoptionException ex) {
         return Collections.singletonList(new ErrorResponse("adoptionId", ex.getMessage()));
     }
+
+    @ExceptionHandler(WalkingReservationNotPossibleException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleWalkingReservationNotPossibleException(WalkingReservationNotPossibleException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(WalkingTimeWindowAlreadyTakenException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleWalkingTimeWindowAlreadyTakenException(WalkingTimeWindowAlreadyTakenException ex) {
+        return Collections.singletonList(new ErrorResponse("dogId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ReservationDoesNotBelongToUserException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleReservationDoesNotBelongToUserException(ReservationDoesNotBelongToUserException ex) {
+        return Collections.singletonList(new ErrorResponse("reservationId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(UserHasALreadyHaveReservedWalkingException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleUserHasALreadyHaveReservedWalkingException(UserHasALreadyHaveReservedWalkingException ex) {
+        return Collections.singletonList(new ErrorResponse("userId", ex.getMessage()));
+    }
+
+    @ExceptionHandler(TimeWindowNotValidException.class)
+    @ResponseStatus(BAD_REQUEST)
+    @ResponseBody
+    public List<ErrorResponse> handleTimeWindowNotValidException(TimeWindowNotValidException ex) {
+        return Collections.singletonList(new ErrorResponse("message", ex.getMessage()));
+    }
 }

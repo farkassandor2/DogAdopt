@@ -2,13 +2,9 @@ package com.dogadopt.dog_adopt.domain;
 
 import com.dogadopt.dog_adopt.domain.enums.reservation.ReservationStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,10 +18,13 @@ public class WalkingReservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     private LocalDateTime startTime;
 
+    @NonNull
     private LocalDateTime endTime;
 
+    @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
     @ManyToOne
@@ -35,4 +34,9 @@ public class WalkingReservation {
     @ManyToOne
     @JoinColumn(name = "dog_id")
     private Dog dog;
+
+    @PrePersist
+    protected void onCreate() {
+        this.reservationStatus = ReservationStatus.ACTIVE;
+    }
 }
