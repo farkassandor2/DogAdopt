@@ -14,16 +14,20 @@ import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class WalkingReservationServiceImpl implements WalkingReservationService{
 
     private static final int TIME_WINDOW = 4;
@@ -145,6 +149,14 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
             }
         } else {
             throw new WalkingReservationNotPossibleException("Walking reservation cannot be accomplished");
+        }
+    }
+
+    public void setWalkingStatusToFulfilled() {
+        try (Stream<WalkingReservation> reservations = walkingReservationRepository.streamAllReservation(LocalDateTime.now())) {
+            reservations.forEach(reservation -> reservation.setReservationStatus(ReservationStatus.FULFILLED));
+        } catch (Exception e) {
+            log.info("Failed to update reservation: {}.", e.getMessage());
         }
     }
 

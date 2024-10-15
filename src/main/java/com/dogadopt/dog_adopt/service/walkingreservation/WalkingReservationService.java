@@ -21,4 +21,6 @@ public interface WalkingReservationService {
     List<WalkingReservationInfo> getAllReservationsByAdminForDog(Long dogId);
 
     WalkingReservationInfo changeReservationTime(Long userId, Long reservationId, WalkingReservationCreateUpdateCommand command);
+
+    void setWalkingStatusToFulfilled();
 }

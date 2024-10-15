@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 public interface WalkingReservationRepository extends JpaRepository<WalkingReservation, Long> {
@@ -53,4 +54,9 @@ public interface WalkingReservationRepository extends JpaRepository<WalkingReser
            "FROM WalkingReservation wr " +
            "WHERE wr.dog.id = ?1")
     List<WalkingReservation> findReservationByDog(Long dogId);
+
+    @Query("SELECT wr " +
+           "FROM WalkingReservation wr " +
+           "WHERE wr.endTime < ?1")
+    Stream<WalkingReservation> streamAllReservation(LocalDateTime time);
 }
