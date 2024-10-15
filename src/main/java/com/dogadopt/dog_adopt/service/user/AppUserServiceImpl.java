@@ -204,6 +204,11 @@ public class AppUserServiceImpl implements AppUserService {
         }
     }
 
+    @Override
+    public boolean checkIfEmailAlreadyRegisteredAndInactive(String email) {
+        return appUserRepository.checkIfEmailAlreadyRegisteredAndInactive(email);
+    }
+
     private List<AdoptionInfo> getDogAndUserAdoptionInfos(AppUser user, List<Dog> adoptedDogs) {
 
         List<DogAndUserAdoption> adoptions = appUserRepository.getAdoptionsOfUser(user);

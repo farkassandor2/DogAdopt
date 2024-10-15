@@ -43,4 +43,11 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
            "JOIN au.dogAndUserAdoptions a " +
            "WHERE a.user = ?1")
     List<DogAndUserAdoption> getAdoptionsOfUser(AppUser user);
+
+    @Query("SELECT CASE WHEN COUNT(au) > 0  " +
+           "THEN TRUE ELSE FALSE END " +
+           "FROM AppUser au " +
+           "WHERE au.email = ?1 " +
+           "AND au.isActive = FALSE")
+    boolean checkIfEmailAlreadyRegisteredAndInactive(String email);
 }

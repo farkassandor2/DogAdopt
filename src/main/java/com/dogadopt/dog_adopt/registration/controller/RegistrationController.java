@@ -35,6 +35,13 @@ public class RegistrationController {
         return registrationService.confirmToken(token);
     }
 
+    @PostMapping("/resend/confirmation")
+    @ResponseStatus(OK)
+    public Map<String, String> resendConfirmationEmail(@RequestBody Map<String, String> email) {
+        log.info("Http request, POST / api / registration / resend / confirmation, body: {}", email);
+        return registrationService.resendConfirmationEmail(email);
+    }
+
     @PostMapping("/password/request")
     @ResponseStatus(OK)
     public Map<String, String> requestResetPassword(@Valid @RequestBody PasswordResetRequest command) {

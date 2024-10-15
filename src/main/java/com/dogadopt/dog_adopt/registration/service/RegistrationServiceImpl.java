@@ -37,29 +37,26 @@ public class RegistrationServiceImpl implements RegistrationService{
     public Map<String, String> registerUser(AppUserCreateCommand command) {
 
         Map<String, String> reply = new HashMap<>();
-        String token = appUserService.registerCustomer(command);
+        String email = command.getEmail();
 
-        String letterTitle = "Confirm your email";
-        String text1 = "Thank you for registering. Please click on the below link to activate your account:";
-        String text2 = "Activate Now";
-        String text3 = "Link will expire in 60 minutes.";
+        boolean isExistingEmailInactiveUSer = checkIfEmailAlreadyRegisteredAndInactive(email);
 
-        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-
-        String emailContent = emailTemplateService
-                .buildEmail(letterTitle, command.getEmail(), text1, text2, text3, link);
-
-        try {
-            emailSenderService.send(
-                    command.getEmail(),
-                    emailContent,
-                    "Confirm your email");
-        } catch (Exception e) {
-            reply.put(MESSAGE, "Failed to send email to" + command.getEmail());
+        if (isExistingEmailInactiveUSer) {
+            reply.put(MESSAGE, "E-mail already registered. If you wish to activate select 'Resend confirmation e-mail'");
+        } else {
+            String token = appUserService.registerCustomer(command);
+            sendConfirmationEmail(token, email, reply);
         }
+        return reply;
+    }
 
-        reply.put(MESSAGE, "Registration successful. Please check your email to confirm.");
-
+    @Override
+    public Map<String, String> resendConfirmationEmail(Map<String, String> email) {
+        Map<String, String> reply = new HashMap<>();
+        String emailString = email.get("email");
+        AppUser user = appUserService.findUserByEmail(emailString);
+        ConfirmationToken token = confirmationTokenService.generateToken(user);
+        sendConfirmationEmail(token.getToken(), emailString, reply);
         return reply;
     }
 
@@ -132,5 +129,31 @@ public class RegistrationServiceImpl implements RegistrationService{
         }
 
         return reply;
+    }
+
+    private boolean checkIfEmailAlreadyRegisteredAndInactive(String email) {
+        return appUserService.checkIfEmailAlreadyRegisteredAndInactive(email);
+    }
+
+    private void sendConfirmationEmail(String token, String email, Map<String, String> reply) {
+        String letterTitle = "Confirm your email";
+        String text1 = "Thank you for registering. Please click on the below link to activate your account:";
+        String text2 = "Activate Now";
+        String text3 = "Link will expire in 60 minutes.";
+
+        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+
+        String emailContent = emailTemplateService
+                .buildEmail(letterTitle, email, text1, text2, text3, link);
+
+        try {
+            emailSenderService.send(
+                    email,
+                    emailContent,
+                    "Confirm your email");
+        } catch (Exception e) {
+            reply.put(MESSAGE, "Failed to send email to" + email);
+        }
+        reply.put(MESSAGE, "Registration successful. Please check your email to confirm.");
     }
 }

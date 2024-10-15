@@ -16,4 +16,6 @@ public interface RegistrationService {
     Map<String, String> requestResetPassword(PasswordResetRequest command);
 
     Map<String, String> resetPassword(PasswordResetCommand command);
+
+    Map<String, String> resendConfirmationEmail(Map<String, String> email);
 }

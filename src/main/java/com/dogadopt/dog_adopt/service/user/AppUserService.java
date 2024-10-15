@@ -38,4 +38,6 @@ public interface AppUserService {
     AppUser getLoggedInCustomer();
 
     AppUserInfo getOwnProfileOfUser();
+
+    boolean checkIfEmailAlreadyRegisteredAndInactive(String email);
 }
