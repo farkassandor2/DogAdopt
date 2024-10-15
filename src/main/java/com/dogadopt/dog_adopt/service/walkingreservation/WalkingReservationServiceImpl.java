@@ -208,7 +208,7 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
 
     private boolean isTimeWindowValid(LocalDateTime startTime, LocalDateTime endTime) {
         long minutesBetween = Duration.between(startTime, endTime).toMinutes();
-        return minutesBetween < 241;
+        return minutesBetween < 241 && startTime.isAfter(LocalDateTime.now()) && endTime.isAfter(startTime);
     }
 
     public WalkingReservationInfo getWalkingReservationInfo(WalkingReservation walkingReservation,
