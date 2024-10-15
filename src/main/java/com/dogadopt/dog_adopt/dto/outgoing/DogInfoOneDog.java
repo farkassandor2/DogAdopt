@@ -41,8 +41,6 @@ public class DogInfoOneDog {
 
     private LocalDateTime takenToAdoptionCenter;
 
-    //private int donationsTotal;
-
     private List<CommentInfo> commentInfos;
 
     private List<WalkingReservationInfo> walkingReservationInfos;

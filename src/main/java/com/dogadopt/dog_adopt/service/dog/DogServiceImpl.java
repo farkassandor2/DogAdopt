@@ -241,25 +241,10 @@ public class DogServiceImpl implements DogService{
                     })
                     .toList();
 
-//            List<WalkingReservationInfo> walkingReservationInfos = dog.getWalkingReservations().stream()
-//                                                       .map(walkingReservation -> {
-//                                                           WalkingReservationInfo commentInfo = modelMapper.map(walkingReservation, WalkingReservationInfo.class);
-//                                                           WalkingReservationInfo.setIdUser(walkingReservation.getUser().getId());
-//                                                           WalkingReservationInfo.setUserFirstName(walkingReservation.getUser().getFirstName());
-//                                                           WalkingReservationInfo.setUserLastName(walkingReservation.getUser().getLastName());
-//                                                           WalkingReservationInfo.setIdDog(walkingReservation.getDog().getId());
-//                                                           WalkingReservationInfo.setDogName(walkingReservation.getDog().getName());
-//                                                    return walkingReservation;
-//                                                })
-//                                                       .toList();
-
-
-
             dogInfo.setImageInfos(imageInfos);
             dogInfo.setShelterId(dog.getShelter().getId());
             dogInfo.setDescription(dog.getDescription());
             dogInfo.setCommentInfos(commentInfos);
-//            dogInfo.setWalkingReservationInfos(walkingReservationInfos);
         }
         return dogInfo;
     }

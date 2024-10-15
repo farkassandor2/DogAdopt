@@ -1,6 +1,5 @@
 package com.dogadopt.dog_adopt.service.walkingreservation;
 
-import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.WalkingReservation;
@@ -19,7 +18,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -55,19 +53,12 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
 
             boolean timeWindowValid = isTimeWindowValid(command.getStartTime(), command.getEndTime());
 
-            boolean userAlreadyHasReservedWalking = checkIfUserAlreadyHasActiveReservedWalking(user);
-
             if (!timeWindowAlreadyTaken) {
                 if (timeWindowValid) {
-                    if (!userAlreadyHasReservedWalking) {
                         walkingReservation.setDog(dog);
                         walkingReservation.setUser(user);
                         walkingReservationRepository.save(walkingReservation);
                         return getWalkingReservationInfo(walkingReservation, user, dog);
-                    } else {
-                        throw new UserHasALreadyHaveReservedWalkingException(
-                                "User with id " + userId + " already has a reserved walking time. Please delete active reservation to make a new one.");
-                    }
                 } else {
                     throw new TimeWindowNotValidException("Reserved time can be maximum " + TIME_WINDOW + " hours");
                 }
@@ -95,6 +86,45 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
     }
 
     @Override
+    public List<WalkingReservationInfo> getWalkingReservationsByUserForUser(Long userId) {
+        AppUser user = appUserService.findActiveUserById(userId);
+        AppUser loggedInUser = appUserService.getLoggedInCustomer();
+
+        if (user != null && user == loggedInUser) {
+            List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationForUser(userId);
+            return walkingReservations.stream()
+                                      .map(reservation -> getWalkingReservationInfo(reservation, reservation.getUser(), reservation.getDog()))
+                                      .toList();
+        } else {
+            throw new WrongCredentialsException("Wrong credentials.");
+        }
+    }
+
+    @Override
+    public List<WalkingReservationInfo> getWalkingReservationsByUserForDog(Long userId, Long dogId) {
+
+        AppUser user = appUserService.findActiveUserById(userId);
+        AppUser loggedInUser = appUserService.getLoggedInCustomer();
+
+        if (user != null && user == loggedInUser) {
+            List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationForDog(dogId);
+            AppUser blankUser = new AppUser();
+
+            return walkingReservations.stream()
+                                      .map(reservation -> {
+                                          if (user == reservation.getUser()) {
+                                              return getWalkingReservationInfo(reservation, reservation.getUser(), reservation.getDog());
+                                          } else {
+                                             return getWalkingReservationInfo(reservation, blankUser, reservation.getDog());
+                                          }
+                                      })
+                                      .toList();
+        } else {
+            throw new  WrongCredentialsException("Wrong credentials.");
+        }
+    }
+
+    @Override
     public void deleteWalkingReservationByAdmin(Long reservationId) {
         walkingReservationRepository.deleteReservationOfUserByAdmin(reservationId);
     }
@@ -102,19 +132,25 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
     @Override
     public List<WalkingReservationInfo> getAllReservationsByAdmin() {
         List<WalkingReservation> walkingReservations = walkingReservationRepository.findAll();
-        return ObjectMapperUtil.mapAll(walkingReservations, WalkingReservationInfo.class);
+        return walkingReservations.stream()
+                                  .map(reservation -> getWalkingReservationInfo(reservation, reservation.getUser(), reservation.getDog()))
+                                  .toList();
     }
 
     @Override
     public List<WalkingReservationInfo> getAllReservationsByAdminForUser(Long userId) {
-        List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationByUser(userId);
-        return ObjectMapperUtil.mapAll(walkingReservations, WalkingReservationInfo.class);
+        List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationForUser(userId);
+        return walkingReservations.stream()
+                                  .map(reservation -> getWalkingReservationInfo(reservation, reservation.getUser(), reservation.getDog()))
+                                  .toList();
     }
 
     @Override
-    public List<WalkingReservationInfo> getAllReservationsByAdminForDog(Long dogId) {
-        List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationByDog(dogId);
-        return ObjectMapperUtil.mapAll(walkingReservations, WalkingReservationInfo.class);
+    public List<WalkingReservationInfo> getWalkingReservationsByAdminForDog(Long dogId) {
+        List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationForDog(dogId);
+        return walkingReservations.stream()
+                                  .map(reservation -> getWalkingReservationInfo(reservation, reservation.getUser(), reservation.getDog()))
+                                  .toList();
     }
 
     @Override
@@ -168,10 +204,6 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
 
     private boolean checkIfTimeWindowForWalkAlreadyTaken(Dog dog, LocalDateTime start, LocalDateTime end) {
         return walkingReservationRepository.checkIfTimeWindowForWalkAlreadyTaken(dog, start, end);
-    }
-
-    private boolean checkIfUserAlreadyHasActiveReservedWalking(AppUser user) {
-        return walkingReservationRepository.checkIfUserAlreadyHasActiveReservedWalking(user, ReservationStatus.ACTIVE);
     }
 
     private boolean isTimeWindowValid(LocalDateTime startTime, LocalDateTime endTime) {

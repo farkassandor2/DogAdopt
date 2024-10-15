@@ -48,12 +48,12 @@ public interface WalkingReservationRepository extends JpaRepository<WalkingReser
     @Query("SELECT wr " +
            "FROM WalkingReservation wr " +
            "WHERE wr.user.id = ?1")
-    List<WalkingReservation> findReservationByUser(Long userId);
+    List<WalkingReservation> findReservationForUser(Long userId);
 
     @Query("SELECT wr " +
            "FROM WalkingReservation wr " +
            "WHERE wr.dog.id = ?1")
-    List<WalkingReservation> findReservationByDog(Long dogId);
+    List<WalkingReservation> findReservationForDog(Long dogId);
 
     @Query("SELECT wr " +
            "FROM WalkingReservation wr " +

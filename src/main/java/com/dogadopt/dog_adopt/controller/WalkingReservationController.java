@@ -45,6 +45,21 @@ public class WalkingReservationController {
         return walkingReservationService.changeReservationTime(userId, reservationId, command);
     }
 
+    @GetMapping("/{userId}/{dogId}")
+    @ResponseStatus(OK)
+    public List<WalkingReservationInfo> getWalkingReservationsByUserForDog(@PathVariable Long userId,
+                                                                           @PathVariable Long dogId) {
+        log.info("Http request / GET / api / walking / userId / dogId");
+        return walkingReservationService.getWalkingReservationsByUserForDog(userId, dogId);
+    }
+
+    @GetMapping("/{userId}")
+    @ResponseStatus(OK)
+    public List<WalkingReservationInfo> getWalkingReservationsByUserForUser(@PathVariable Long userId) {
+        log.info("Http request / GET / api / walking / userId");
+        return walkingReservationService.getWalkingReservationsByUserForUser(userId);
+    }
+
     @DeleteMapping("/admin/delete/{reservationId}")
     @ResponseStatus(OK)
     public void deleteWalkingReservationByAdmin(@PathVariable Long reservationId) {
@@ -66,10 +81,10 @@ public class WalkingReservationController {
         return walkingReservationService.getAllReservationsByAdminForUser(userId);
     }
 
-    @GetMapping("/admin/reservations/{dogId}")
+    @GetMapping("/admin/{dogId}")
     @ResponseStatus(OK)
-    public List<WalkingReservationInfo> getAllReservationsByAdminForDog(@PathVariable Long dogId) {
-        log.info("Http request / GET / api / walking / admin / reservations / dogId");
-        return walkingReservationService.getAllReservationsByAdminForDog(dogId);
+    public List<WalkingReservationInfo> getWalkingReservationsByAdminForDog(@PathVariable Long dogId) {
+        log.info("Http request / GET / api / walking / admin / dogId");
+        return walkingReservationService.getWalkingReservationsByAdminForDog(dogId);
     }
 }
