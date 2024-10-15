@@ -43,5 +43,4 @@ public class DogInfoOneDog {
 
     private List<CommentInfo> commentInfos;
 
-    private List<WalkingReservationInfo> walkingReservationInfos;
 }

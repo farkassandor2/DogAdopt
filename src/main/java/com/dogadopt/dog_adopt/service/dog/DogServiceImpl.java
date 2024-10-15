@@ -220,32 +220,38 @@ public class DogServiceImpl implements DogService{
     public DogInfoOneDog getDogInfoOneDog(Dog dog) {
         DogInfoOneDog dogInfo = modelMapper.map(dog, DogInfoOneDog.class);
         if (dog != null) {
-            List<ImageInfo> imageInfos = dog.getImages().stream()
-                                            .map(image -> {
-                                                ImageInfo imageInfo = new ImageInfo();
-                                                imageInfo.setId(image.getId());
-                                                imageInfo.setImgUrl(image.getImgUrl());
-                                                return imageInfo;
-                                            })
-                                            .toList();
-
-            List<CommentInfo> commentInfos = dog.getComments().stream()
-                    .map(comment -> {
-                        CommentInfo commentInfo = modelMapper.map(comment, CommentInfo.class);
-                        commentInfo.setIdUser(comment.getUser().getId());
-                        commentInfo.setUserFirstName(comment.getUser().getFirstName());
-                        commentInfo.setUserLastName(comment.getUser().getLastName());
-                        commentInfo.setIdDog(comment.getDog().getId());
-                        commentInfo.setDogName(comment.getDog().getName());
-                        return commentInfo;
-                    })
-                    .toList();
-
+            List<ImageInfo> imageInfos = getImageInfos(dog);
+            List<CommentInfo> commentInfos = getCommentInfos(dog);
             dogInfo.setImageInfos(imageInfos);
             dogInfo.setShelterId(dog.getShelter().getId());
             dogInfo.setDescription(dog.getDescription());
             dogInfo.setCommentInfos(commentInfos);
         }
         return dogInfo;
+    }
+
+    private List<CommentInfo> getCommentInfos(Dog dog) {
+        return dog.getComments().stream()
+                                            .map(comment -> {
+                    CommentInfo commentInfo = modelMapper.map(comment, CommentInfo.class);
+                    commentInfo.setIdUser(comment.getUser().getId());
+                    commentInfo.setUserFirstName(comment.getUser().getFirstName());
+                    commentInfo.setUserLastName(comment.getUser().getLastName());
+                    commentInfo.setIdDog(comment.getDog().getId());
+                    commentInfo.setDogName(comment.getDog().getName());
+                    return commentInfo;
+                })
+                                            .toList();
+    }
+
+    private List<ImageInfo> getImageInfos(Dog dog) {
+        return dog.getImages().stream()
+                                        .map(image -> {
+                                            ImageInfo imageInfo = new ImageInfo();
+                                            imageInfo.setId(image.getId());
+                                            imageInfo.setImgUrl(image.getImgUrl());
+                                            return imageInfo;
+                                        })
+                                        .toList();
     }
 }
