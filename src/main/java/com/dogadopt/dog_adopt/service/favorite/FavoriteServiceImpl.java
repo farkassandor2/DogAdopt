@@ -12,15 +12,18 @@ import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
@@ -91,11 +94,25 @@ public class FavoriteServiceImpl implements FavoriteService {
         AppUser currentUser = appUserService.getLoggedInCustomer();
 
         if (user != null && user == currentUser) {
-            List<DogAndUserFavorite> favorites = favoriteRepository.getFavoritesOfUser(userId);
-            return ObjectMapperUtil.mapAll(favorites, FavoriteInfo.class);
+            return getFavoriteInfos(user);
         } else {
             throw new WrongCredentialsException("Wrong credentials.");
         }
+    }
+
+    private List<FavoriteInfo> getFavoriteInfos(AppUser user) {
+        List<DogAndUserFavorite> favorites = favoriteRepository.getFavoritesOfUser(user);
+        List<FavoriteInfo> favoriteInfos = ObjectMapperUtil.mapAll(favorites, FavoriteInfo.class);
+
+        List<DogInfoOneDog> dogInfos = favorites.stream()
+                .map(DogAndUserFavorite::getDog)
+                .map(dog -> modelMapper.map(dog, DogInfoOneDog.class))
+                .toList();
+
+        IntStream.range(0, favoriteInfos.size())
+                 .forEach(i -> favoriteInfos.get(i).setDogInfo(dogInfos.get(i)));
+
+        return favoriteInfos;
     }
 
     private Long checkFavoriteList(AppUser user, Dog dog) {

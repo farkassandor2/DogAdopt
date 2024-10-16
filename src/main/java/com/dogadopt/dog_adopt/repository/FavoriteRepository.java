@@ -19,7 +19,7 @@ public interface FavoriteRepository extends JpaRepository<DogAndUserFavorite, Lo
     DogAndUserFavorite findFavoriteByUserAndDog(AppUser user, Dog dog);
 
     @Query("SELECT duf " +
-           "FROM DogAndUserAdoption duf " +
-           "WHERE duf.user =?1")
-    List<DogAndUserFavorite> getFavoritesOfUser(Long userId);
+           "FROM DogAndUserFavorite duf " +
+           "WHERE duf.user = ?1")
+    List<DogAndUserFavorite> getFavoritesOfUser(AppUser user);
 }
