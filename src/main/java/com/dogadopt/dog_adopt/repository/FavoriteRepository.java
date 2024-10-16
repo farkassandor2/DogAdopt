@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FavoriteRepository extends JpaRepository<DogAndUserFavorite, Long> {
 
@@ -15,4 +17,9 @@ public interface FavoriteRepository extends JpaRepository<DogAndUserFavorite, Lo
            "WHERE duf.user = ?1 " +
            "AND duf.dog = ?2")
     DogAndUserFavorite findFavoriteByUserAndDog(AppUser user, Dog dog);
+
+    @Query("SELECT duf " +
+           "FROM DogAndUserAdoption duf " +
+           "WHERE duf.user =?1")
+    List<DogAndUserFavorite> getFavoritesOfUser(Long userId);
 }

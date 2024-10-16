@@ -1,14 +1,12 @@
 package com.dogadopt.dog_adopt.service.favorite;
 
+import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.DogAndUserFavorite;
 import com.dogadopt.dog_adopt.dto.outgoing.FavoriteInfo;
 import com.dogadopt.dog_adopt.dto.outgoing.DogInfoOneDog;
-import com.dogadopt.dog_adopt.exception.DogCannotBeAddedToFavoritesException;
-import com.dogadopt.dog_adopt.exception.DogCannotBeRemovedFromFavoritesException;
-import com.dogadopt.dog_adopt.exception.DogIsAlreadyOnFavoriteListOfUserException;
-import com.dogadopt.dog_adopt.exception.DogIsNotOnTheFavoriteListOfUserException;
+import com.dogadopt.dog_adopt.exception.*;
 import com.dogadopt.dog_adopt.repository.FavoriteRepository;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
@@ -83,6 +81,20 @@ public class FavoriteServiceImpl implements FavoriteService {
         } else {
             throw new DogCannotBeRemovedFromFavoritesException(
                     "Dog with id " + dogId + " cannot be removed from favorite list of user with id " + userId);
+        }
+    }
+
+    @Override
+    public List<FavoriteInfo> getFavoritesOfUser(Long userId) {
+
+        AppUser user = appUserService.findActiveUserById(userId);
+        AppUser currentUser = appUserService.getLoggedInCustomer();
+
+        if (user != null && user == currentUser) {
+            List<DogAndUserFavorite> favorites = favoriteRepository.getFavoritesOfUser(userId);
+            return ObjectMapperUtil.mapAll(favorites, FavoriteInfo.class);
+        } else {
+            throw new WrongCredentialsException("Wrong credentials.");
         }
     }
 

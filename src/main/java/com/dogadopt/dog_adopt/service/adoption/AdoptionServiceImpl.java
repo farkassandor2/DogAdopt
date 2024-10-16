@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.service.adoption;
 
+import com.dogadopt.dog_adopt.config.ObjectMapperUtil;
 import com.dogadopt.dog_adopt.domain.AppUser;
 import com.dogadopt.dog_adopt.domain.Dog;
 import com.dogadopt.dog_adopt.domain.DogAndUserAdoption;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -123,6 +125,25 @@ public class AdoptionServiceImpl implements AdoptionService {
     @Override
     public void deleteAdoptionByAdmin(Long adoptionId) {
         adoptionRepository.deleteById(adoptionId);
+    }
+
+    @Override
+    public List<AdoptionInfo> getAdoptionsOfUser(Long userId) {
+        AppUser user = appUserService.findActiveUserById(userId);
+        AppUser loggedInUser = appUserService.getLoggedInCustomer();
+
+        if (user != null && user == loggedInUser) {
+            List<DogAndUserAdoption> adoptions = adoptionRepository.getAdoptionOfUser(user);
+            return ObjectMapperUtil.mapAll(adoptions, AdoptionInfo.class);
+        } else {
+            throw new WrongCredentialsException("Wrong credentials");
+        }
+    }
+
+    @Override
+    public List<AdoptionInfo> getAllAdoptions() {
+        List<DogAndUserAdoption> adoptions = adoptionRepository.findAll();
+        return ObjectMapperUtil.mapAll(adoptions, AdoptionInfo.class);
     }
 
     private DogAndUserAdoption getAdoptionById(Long adoptionId) {

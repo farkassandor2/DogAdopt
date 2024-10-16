@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -28,5 +30,12 @@ public class FavoriteController {
     public void deleteDogFromFavorite(@PathVariable Long userId, @PathVariable Long dogId) {
         log.info("Http request / DELETE / api / favorites / userId/ dogId");
         favoriteService.deleteDogFromFavorite(userId, dogId);
+    }
+
+    @GetMapping("/{userId}")
+    @ResponseStatus(OK)
+    public List<FavoriteInfo> getFavoritesOfUser(@PathVariable Long userId) {
+        log.info("Http request / GET / api / favorites / userId");
+        return favoriteService.getFavoritesOfUser(userId);
     }
 }

@@ -4,6 +4,7 @@ import com.dogadopt.dog_adopt.dto.incoming.DogAndUserAdoptionCreateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.AdoptionInfo;
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AdoptionService {
@@ -16,4 +17,7 @@ public interface AdoptionService {
 
     void deleteAdoptionByAdmin(Long adoptionId);
 
+    List<AdoptionInfo> getAdoptionsOfUser(Long userId);
+
+    List<AdoptionInfo> getAllAdoptions();
 }

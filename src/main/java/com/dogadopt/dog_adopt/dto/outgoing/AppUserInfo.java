@@ -33,12 +33,4 @@ public class AppUserInfo {
 
     private LocalDateTime createdAt;
 
-    private List<AdoptionInfo> adoptionInfos;
-
-    private List<FavoriteInfo> favoriteInfos;
-
-//    private List<DonationInfo> donationInfos;
-
-    private List<WalkingReservationInfo> walkingReservationInfos;
-
 }

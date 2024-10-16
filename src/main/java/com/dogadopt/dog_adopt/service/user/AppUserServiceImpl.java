@@ -2,8 +2,6 @@ package com.dogadopt.dog_adopt.service.user;
 
 import com.dogadopt.dog_adopt.config.security.AuthUserService;
 import com.dogadopt.dog_adopt.domain.AppUser;
-import com.dogadopt.dog_adopt.domain.Dog;
-import com.dogadopt.dog_adopt.domain.DogAndUserAdoption;
 import com.dogadopt.dog_adopt.domain.Image;
 import com.dogadopt.dog_adopt.domain.enums.image.ImageType;
 import com.dogadopt.dog_adopt.dto.incoming.AppUserCreateCommand;
@@ -29,8 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -181,21 +177,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         if (user != null) {
             if (user.isActive()) {
-                AppUserInfo info = modelMapper.map(user, AppUserInfo.class);
-
-                List<Dog> favoriteDogs = dogService.getFavoriteDogsOfUser(user);
-                List<FavoriteInfo> favoriteInfos = getDogAndUserFavoriteInfos(favoriteDogs);
-                info.setFavoriteInfos(favoriteInfos);
-
-                List<Dog> adoptedDogs = dogService.getAdoptedDogsOfUser(user);
-                List<AdoptionInfo> adoptionInfos = getDogAndUserAdoptionInfos(user, adoptedDogs);
-                info.setAdoptionInfos(adoptionInfos);
-
-                //TODO donationInfos
-
-                //TODO walkingReservatoinInfos
-
-                return info;
+                return modelMapper.map(user, AppUserInfo.class);
             } else {
                 throw new AccountHasNotBeenActivatedYetException("Account has not been activated!");
             }
@@ -207,46 +189,6 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public boolean checkIfEmailAlreadyRegisteredAndInactive(String email) {
         return appUserRepository.checkIfEmailAlreadyRegisteredAndInactive(email);
-    }
-
-    private List<AdoptionInfo> getDogAndUserAdoptionInfos(AppUser user, List<Dog> adoptedDogs) {
-
-        List<DogAndUserAdoption> adoptions = appUserRepository.getAdoptionsOfUser(user);
-        Map<Long, DogAndUserAdoption> adoptionsMap = adoptions.stream()
-                                                              .collect(Collectors.toMap(adoption -> adoption.getDog().getId(), adoption -> adoption));
-
-        return adoptedDogs.stream().map(dog -> {
-            DogInfoOneDog dogInfo = dogService.getDogInfoOneDog(dog);
-
-            AdoptionInfo adoptionInfo = new AdoptionInfo();
-            adoptionInfo.setId(dogInfo.getId());
-            adoptionInfo.setDogInfo(dogInfo);
-            adoptionInfo.setUserId(user.getId());
-
-            DogAndUserAdoption adoption = adoptionsMap.get(dog.getId());
-            if (adoption != null) {
-                adoptionInfo.setAdoptionType(adoption.getAdoptionType());
-                adoptionInfo.setAdoptionStatus(adoption.getAdoptionStatus());
-                adoptionInfo.setCreatedAt(adoption.getCreatedAt());
-            }
-
-            return adoptionInfo;
-        }).toList();
-    }
-
-    private List<FavoriteInfo> getDogAndUserFavoriteInfos(List<Dog> favoriteDogs) {
-        return favoriteDogs.stream().map(dog -> {
-
-            DogInfoOneDog dogInfo = dogService.getDogInfoOneDog(dog);
-
-            dogInfo.setDescription(dog.getDescription());
-
-            FavoriteInfo favoriteInfo = new FavoriteInfo();
-            favoriteInfo.setId(dogInfo.getId());
-            favoriteInfo.setDogInfo(dogInfo);
-
-            return favoriteInfo;
-        }).toList();
     }
 
     private void saveImagesOfUser(List<MultipartFile> multipartFiles, AppUser user) {

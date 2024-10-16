@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
@@ -36,6 +37,13 @@ public class AdoptionController {
         adoptionService.deleteAdoptionByUser(adoptionId);
     }
 
+    @GetMapping("/{userId}")
+    @ResponseStatus(OK)
+    public List<AdoptionInfo> getAdoptionsOfUser(@PathVariable Long userId) {
+        log.info("Http request / GET / api / adoption / userId");
+        return adoptionService.getAdoptionsOfUser(userId);
+    }
+
     @DeleteMapping("/admin/{adoptionId}")
     @ResponseStatus(OK)
     public void deleteAdoptionByAdmin(@PathVariable Long adoptionId) {
@@ -50,4 +58,12 @@ public class AdoptionController {
         log.info("Http request / PATCH / api / adoption / admin / adoptionId / update");
         return adoptionService.updateAdoption(adoptionId, updates);
     }
+
+    @GetMapping("/admin/all")
+    @ResponseStatus(OK)
+    public List<AdoptionInfo> getAllAdoptions() {
+        log.info("Http request / GET / api / adoption / admin / all");
+        return adoptionService.getAllAdoptions();
+    }
+
 }
