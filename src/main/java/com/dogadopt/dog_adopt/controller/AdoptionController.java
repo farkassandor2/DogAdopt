@@ -41,7 +41,7 @@ public class AdoptionController {
     @ResponseStatus(OK)
     public List<AdoptionInfo> getAdoptionsOfUser(@PathVariable Long userId) {
         log.info("Http request / GET / api / adoption / userId");
-        return adoptionService.getAdoptionsOfUser(userId);
+        return adoptionService.getAdoptionsOfUserByUser(userId);
     }
 
     @DeleteMapping("/admin/{adoptionId}")
@@ -61,9 +61,9 @@ public class AdoptionController {
 
     @GetMapping("/admin/all")
     @ResponseStatus(OK)
-    public List<AdoptionInfo> getAllAdoptions() {
+    public List<AdoptionInfo> getAllAdoptionsByAdmin() {
         log.info("Http request / GET / api / adoption / admin / all");
-        return adoptionService.getAllAdoptions();
+        return adoptionService.getAllAdoptionInfosByAdmin();
     }
 
 }

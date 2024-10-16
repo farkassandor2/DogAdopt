@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -80,8 +81,8 @@ public class AdoptionServiceImpl implements AdoptionService {
         info.setUserId(userId);
 
         DogInfoOneDog dogInfo = dogService.getDogInfoOneDog(dog);
-
         info.setDogInfo(dogInfo);
+
         return info;
     }
 
@@ -128,22 +129,45 @@ public class AdoptionServiceImpl implements AdoptionService {
     }
 
     @Override
-    public List<AdoptionInfo> getAdoptionsOfUser(Long userId) {
+    public List<AdoptionInfo> getAdoptionsOfUserByUser(Long userId) {
         AppUser user = appUserService.findActiveUserById(userId);
         AppUser loggedInUser = appUserService.getLoggedInCustomer();
 
         if (user != null && user == loggedInUser) {
-            List<DogAndUserAdoption> adoptions = adoptionRepository.getAdoptionOfUser(user);
-            return ObjectMapperUtil.mapAll(adoptions, AdoptionInfo.class);
+            return getAdoptionInfosForUser(user);
         } else {
             throw new WrongCredentialsException("Wrong credentials");
         }
     }
 
+    private List<AdoptionInfo> getAdoptionInfosForUser(AppUser user) {
+        List<DogAndUserAdoption> adoptions = adoptionRepository.getAdoptionOfUser(user);
+        return getAdoptionInfos(adoptions);
+    }
+
     @Override
-    public List<AdoptionInfo> getAllAdoptions() {
+    public List<AdoptionInfo> getAllAdoptionInfosByAdmin() {
         List<DogAndUserAdoption> adoptions = adoptionRepository.findAll();
-        return ObjectMapperUtil.mapAll(adoptions, AdoptionInfo.class);
+        return getAdoptionInfos(adoptions);
+    }
+
+    private List<AdoptionInfo> getAdoptionInfos(List<DogAndUserAdoption> adoptions) {
+        List<AdoptionInfo> adoptionInfos = ObjectMapperUtil.mapAll(adoptions, AdoptionInfo.class);
+
+        List<Dog> dogs = adoptions.stream()
+                                  .map(DogAndUserAdoption::getDog)
+                                  .toList();
+
+        List<DogInfoOneDog> dogInfos = dogs.stream()
+                .map(dog -> modelMapper.map(dog, DogInfoOneDog.class))
+                .toList();
+
+        IntStream.range(0, adoptionInfos.size())
+                .forEach(i -> {
+                    adoptionInfos.get(i).setDogInfo(dogInfos.get(i));
+                    adoptionInfos.get(i).setUserId(adoptions.get(i).getUser().getId());
+                });
+        return adoptionInfos;
     }
 
     private DogAndUserAdoption getAdoptionById(Long adoptionId) {

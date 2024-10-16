@@ -17,7 +17,7 @@ public interface AdoptionService {
 
     void deleteAdoptionByAdmin(Long adoptionId);
 
-    List<AdoptionInfo> getAdoptionsOfUser(Long userId);
+    List<AdoptionInfo> getAdoptionsOfUserByUser(Long userId);
 
-    List<AdoptionInfo> getAllAdoptions();
+    List<AdoptionInfo> getAllAdoptionInfosByAdmin();
 }

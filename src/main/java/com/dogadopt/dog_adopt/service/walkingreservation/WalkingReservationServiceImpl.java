@@ -47,24 +47,31 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
 
         if (user != null && user == loggedInUser && dog != null) {
             walkingReservation = modelMapper.map(command, WalkingReservation.class);
-            boolean timeWindowAlreadyTaken = checkIfTimeWindowForWalkAlreadyTaken(dog,
-                                                                                  command.getStartTime(),
-                                                                                  command.getEndTime());
 
-            boolean timeWindowValid = isTimeWindowValid(command.getStartTime(), command.getEndTime());
+            boolean isTimeInTheFuture = isTimeInTheFuture(command.getStartTime(), command.getEndTime());
 
-            if (!timeWindowAlreadyTaken) {
-                if (timeWindowValid) {
+            boolean isTimeWindowAlreadyTaken = checkIfTimeWindowForWalkAlreadyTaken(dog,
+                                                                                    command.getStartTime(),
+                                                                                    command.getEndTime());
+
+            boolean istimeWindowValid = isTimeWindowValid(command.getStartTime(), command.getEndTime());
+
+            if (isTimeInTheFuture) {
+                if (!isTimeWindowAlreadyTaken) {
+                    if (istimeWindowValid) {
                         walkingReservation.setDog(dog);
                         walkingReservation.setUser(user);
                         walkingReservationRepository.save(walkingReservation);
                         return getWalkingReservationInfo(walkingReservation, user, dog);
+                    } else {
+                        throw new TimeWindowNotValidException("Reserved time can be maximum " + TIME_WINDOW + " hours");
+                    }
                 } else {
-                    throw new TimeWindowNotValidException("Reserved time can be maximum " + TIME_WINDOW + " hours");
+                    throw new WalkingTimeWindowAlreadyTakenException(
+                            "Sorry the required time window is already taken for dog " + dogId);
                 }
             } else {
-                throw new WalkingTimeWindowAlreadyTakenException(
-                        "Sorry the required time window is already taken for dog " + dogId);
+                throw new TimeWindowNotValidException("Reserved time must be in the future");
             }
         } else {
             throw new WalkingReservationNotPossibleException("Walking reservation cannot be accomplished");
@@ -92,7 +99,7 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
 
         if (user != null && user == loggedInUser) {
             List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationForUser(userId);
-            return walkingReservations.stream()
+            return sortListInOrderOfActiveAndOther(walkingReservations)
                                       .map(reservation -> getWalkingReservationInfo(reservation, reservation.getUser(), reservation.getDog()))
                                       .toList();
         } else {
@@ -110,18 +117,30 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
             List<WalkingReservation> walkingReservations = walkingReservationRepository.findReservationForDog(dogId);
             AppUser blankUser = new AppUser();
 
-            return walkingReservations.stream()
+            return sortListInOrderOfActiveAndOther(walkingReservations)
                                       .map(reservation -> {
-                                          if (user == reservation.getUser()) {
+                                          if (user.equals(reservation.getUser())) {
                                               return getWalkingReservationInfo(reservation, reservation.getUser(), reservation.getDog());
                                           } else {
-                                             return getWalkingReservationInfo(reservation, blankUser, reservation.getDog());
+                                              return getWalkingReservationInfo(reservation, blankUser, reservation.getDog());
                                           }
                                       })
                                       .toList();
         } else {
             throw new  WrongCredentialsException("Wrong credentials.");
         }
+    }
+
+    private Stream<WalkingReservation> sortListInOrderOfActiveAndOther(List<WalkingReservation> walkingReservations) {
+        return walkingReservations.stream()
+                                  .sorted((r1, r2) -> {
+                                      if (r1.getReservationStatus() == ReservationStatus.ACTIVE && r2.getReservationStatus() != ReservationStatus.ACTIVE) {
+                                          return -1;
+                                      } else if (r1.getReservationStatus() != ReservationStatus.ACTIVE && r2.getReservationStatus() == ReservationStatus.ACTIVE) {
+                                          return 1;
+                                      }
+                                      return 0;
+                                  });
     }
 
     @Override
@@ -208,7 +227,11 @@ public class WalkingReservationServiceImpl implements WalkingReservationService{
 
     private boolean isTimeWindowValid(LocalDateTime startTime, LocalDateTime endTime) {
         long minutesBetween = Duration.between(startTime, endTime).toMinutes();
-        return minutesBetween < 241 && startTime.isAfter(LocalDateTime.now()) && endTime.isAfter(startTime);
+        return minutesBetween < 241;
+    }
+
+    private boolean isTimeInTheFuture(LocalDateTime startTime, LocalDateTime endTime) {
+        return startTime.isAfter(LocalDateTime.now()) && endTime.isAfter(startTime);
     }
 
     public WalkingReservationInfo getWalkingReservationInfo(WalkingReservation walkingReservation,

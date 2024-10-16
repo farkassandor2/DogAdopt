@@ -7,6 +7,7 @@ import com.dogadopt.dog_adopt.dto.incoming.CommentCreateUpdateCommand;
 import com.dogadopt.dog_adopt.dto.outgoing.CommentInfo;
 import com.dogadopt.dog_adopt.exception.CommentDoesNotBelongToUserException;
 import com.dogadopt.dog_adopt.exception.CommentNotFoundException;
+import com.dogadopt.dog_adopt.exception.WrongCredentialsException;
 import com.dogadopt.dog_adopt.repository.CommentRepository;
 import com.dogadopt.dog_adopt.service.dog.DogService;
 import com.dogadopt.dog_adopt.service.user.AppUserService;
@@ -35,7 +36,7 @@ public class CommentServiceImpl implements CommentService{
         AppUser user = appUserService.findActiveUserById(userId);
         AppUser currentUser = appUserService.getLoggedInCustomer();
         Dog dog = dogService.getOneDog(dogId);
-        CommentInfo commentInfo = null;
+        CommentInfo commentInfo;
 
         if (user != null && user == currentUser && dog != null) {
             Comment comment = modelMapper.map(command, Comment.class);
@@ -45,6 +46,8 @@ public class CommentServiceImpl implements CommentService{
             user.setComments(new ArrayList<>(List.of(comment)));
             dog.setComments(new ArrayList<>(List.of(comment)));
             commentInfo = generateCommentInfo(user, dog, comment);
+        } else {
+            throw new WrongCredentialsException("Wrong credentials");
         }
 
         return commentInfo;
@@ -65,6 +68,8 @@ public class CommentServiceImpl implements CommentService{
                 throw new CommentDoesNotBelongToUserException(
                         "Comment with id " + commentId + " does not belong to id " + userId);
             }
+        } else {
+            throw new WrongCredentialsException("Wrong credentials");
         }
     }
 
