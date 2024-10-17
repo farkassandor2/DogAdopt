@@ -40,8 +40,3 @@ logging:
     security: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-
-paypal:
-  client-id: AbP6iKvblPkL90V8CYNofKKDdVrAYQT3vEMPULqcK2eCJbtvawawjMw-yUy0hN7b8bv7D1VcDH22-DpK
-  client-secret: EP_0eLDvGw8c6Otv3hEuPb_ubbpE7af3oMbvXmpEIiVfBks1Qzqx1i4r5k658p6N8bfQGDbW1E8g2Wrs
-  mode: sandbox # Use #sandbox' for testing and 'live' for Production
