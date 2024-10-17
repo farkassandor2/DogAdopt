@@ -1,5 +1,6 @@
 package com.dogadopt.dog_adopt.domain;
 
+import com.dogadopt.dog_adopt.domain.enums.payment.Currency;
 import com.dogadopt.dog_adopt.domain.enums.payment.PaymentMethod;
 import com.dogadopt.dog_adopt.domain.enums.payment.PaymentStatus;
 import jakarta.persistence.*;
@@ -31,6 +32,8 @@ public class Donation {
     private PaymentMethod paymentMethod;
 
     private PaymentStatus paymentStatus;
+
+    private Currency currency;
 
     private String transactionId;
 

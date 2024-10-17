@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/paypal")
 @RequiredArgsConstructor
 @Slf4j
-public class PaypalController {
+public class PayPalController {
 
-    private final PaypalService paypalService;
+    private final PayPalService paypalService;
 
 }

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class PaypalConfig {
+public class PayPalConfig {
 
     @Value("${paypal.client-id}")
     private String clientId;

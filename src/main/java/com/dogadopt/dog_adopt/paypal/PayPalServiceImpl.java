@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PaypalServiceImpl implements PaypalService{
+public class PayPalServiceImpl implements PayPalService {
 
     private final APIContext apiContext;
 

@@ -1,7 +1,5 @@
 package com.dogadopt.dog_adopt.dto.outgoing;
 
-import com.dogadopt.dog_adopt.domain.Comment;
-import com.dogadopt.dog_adopt.domain.WalkingReservation;
 import com.dogadopt.dog_adopt.domain.enums.dog.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
