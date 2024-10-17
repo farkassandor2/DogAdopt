@@ -124,7 +124,8 @@ public class AppUserServiceImpl implements AppUserService {
             appUserRepository.save(user);
             return modelMapper.map(user, AppUserInfo.class);
 
-        } else throw new UserNotActiveException(USER_NOT_ACTIVE_MESSAGE + userId);
+        } else throw new WrongCredentialsException("Wrong credentials");
+//                UserNotActiveException(USER_NOT_ACTIVE_MESSAGE + userId);
     }
 
     @Override

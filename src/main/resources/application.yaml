@@ -32,3 +32,16 @@ spring:
           auth: true
           starttls:
             enable: true
+logging:
+  level:
+    com.progmasters: debug
+    org.springframework.web: info
+    org.hibernate: error
+    security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+paypal:
+  client-id: AU8FQmKZDnSleHaYkVO7nftwkY6y9E4ee8IamTRYRocIQSPYEo5iqH0A4wQwIpoHwYFteTFgJO4lR7LV
+  client-secret: ELYpaok92wPWK0WUqj7JAdpxXiCGIQPpz59JZrx0SMRho3Ux9wvIMGm5pdpUl9SU6fj-NRk6mmE-rct0
+  mode: sandbox # Use #sandbox' for testing and 'live' for Production
