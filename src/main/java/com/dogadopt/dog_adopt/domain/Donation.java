@@ -37,6 +37,10 @@ public class Donation {
 
     private String transactionId;
 
+    private String guestEmail;
+
+    private String guestName;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AppUser user;
