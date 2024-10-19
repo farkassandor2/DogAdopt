@@ -178,6 +178,8 @@ public class AppUserServiceImpl implements AppUserService {
 
         if (user != null) {
             if (user.isActive()) {
+                //TODO egy JWT token-t kell generálni és visszaküldeni az AppUserInfo-ban, Ezzel biztosítható, hogy a server felismeri a felhasználót (COOKIE)
+                //Hogyan lehet megcsinálni, hogy ne generáljon új token minden profil oldal meghívásnél???
                 return modelMapper.map(user, AppUserInfo.class);
             } else {
                 throw new AccountHasNotBeenActivatedYetException("Account has not been activated!");

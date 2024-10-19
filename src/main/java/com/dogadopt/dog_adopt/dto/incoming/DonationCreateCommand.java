@@ -26,4 +26,8 @@ public class DonationCreateCommand {
 
     @NotNull
     private Currency currency;
+
+//    private Long dogId;
+//
+//    private Long shelterId;
 }

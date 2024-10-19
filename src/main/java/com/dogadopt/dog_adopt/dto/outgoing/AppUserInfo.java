@@ -33,4 +33,6 @@ public class AppUserInfo {
 
     private LocalDateTime createdAt;
 
+//    private String cookieToken;
+
 }
