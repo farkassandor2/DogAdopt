@@ -29,10 +29,13 @@ public class Donation {
 
     private LocalDateTime donationDate;
 
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
+    @Enumerated(EnumType.STRING)
     private Currency currency;
 
     private String transactionId;

@@ -23,7 +23,7 @@ public class PayPalServiceImpl implements PayPalService {
                                 String successUrl) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(currency);
-        amount.setTotal(String.format("%.2f", total));
+        amount.setTotal(total.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
 
         Transaction transaction = new Transaction();
         transaction.setDescription(description);
